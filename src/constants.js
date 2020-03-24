@@ -1,0 +1,171 @@
+const IS_RPI = process.platform === 'linux' && process.arch == 'arm';
+const PORT = {
+  name: IS_RPI ? '/dev/ttyS0' : 'COM5',
+  baudRate: 230400,
+};
+
+const SEPARATORS = Buffer.alloc(4);
+SEPARATORS.writeUInt16BE(7589);
+SEPARATORS.writeUInt16BE(3333, 2);
+
+const STATE_DATA = [
+  { label: 'Задерка продувки', units: 'с', name: 'blowDelay' },
+  { label: 'Режим', name: 'loadMode' },
+  { label: 'Режим', name: 'boostMode' },
+  { label: 'Длительность КЗ', units: 'мс', name: 'shortCircuitDuration' },
+  { label: 'Задержка КЗ', units: 'с', name: 'shortCircuitDelay' },
+  { label: 'Продука до КЗ за', units: 'с', name: 'blowBeforeShortCircuit' },
+  { name: 'start' },
+];
+
+const PARAMS_DATA = [
+  { label: 'Длительность продувки', units: 'мс', name: 'blowDuration' },
+  { label: 'Тепература 1', units: '\u00b0C', name: 'temp1', divider: 10 },
+  { label: 'Тепература 2', units: '\u00b0C', name: 'temp2', divider: 10 },
+  { label: 'Номер топливника', name: 'experimentNumber' },
+  {
+    label: 'Напряжение вентилятора',
+    units: 'В',
+    name: 'fanVoltage',
+    divider: 1000,
+  },
+  { label: 'Загрузка вентилятора', units: '%', name: 'fanLoad' },
+  {
+    label: 'Температура стабилизации',
+    units: '\u00b0C',
+    name: 'stabilizationTemp',
+    divider: 10,
+  },
+  {
+    label: 'Напряжение',
+    units: 'В',
+    name: 'FCVoltage',
+    divider: 1000,
+    signed: true,
+  },
+  { label: 'Ток', units: 'А', name: 'FCCurrent', divider: 1000, signed: true },
+  {
+    label: 'Давление H<sub>2</sub>',
+    units: 'бар',
+    name: 'hydrogenPressure',
+    divider: 1000,
+  },
+  { label: 'Нагрузка', name: 'load', divider: 1000 },
+  {
+    label: 'Температура радиатора',
+    units: '\u00b0C',
+    name: 'radiatorTemp',
+    divider: 10,
+  },
+  { label: 'Min обороты', units: 'об/мин', name: 'fanMinRPM' },
+  { label: 'Max напряжение', units: '', name: 'fanMaxVoltage', divider: 1000 },
+  { label: 'Шаг ВАХ', units: 'А', name: 'IVCStep' },
+  {
+    label: 'Отсечка по температуре',
+    units: '\u00b0C',
+    name: 'maxTemp',
+    divider: 10,
+  },
+  {
+    label: 'Отсечка по давлению',
+    units: 'бар',
+    name: 'maxPressure',
+    divider: 1000,
+    signed: true,
+  },
+  {
+    label: 'Отсечка по напряжению',
+    units: 'В',
+    name: 'maxVoltage',
+    sined: true,
+  },
+  {
+    label: 'Раход H<sub>2</sub>',
+    units: 'мл/мин',
+    name: 'hydrogenConsumption',
+    sined: true,
+  },
+  { label: 'Начальный ток', units: 'А', name: 'startCurrent', divider: 1000 },
+  { label: 'Шаг тока', units: 'А', name: 'currentStep', divider: 1000 },
+  { label: 'Конечный ток', units: 'А', name: 'endCurrent', divider: 1000 },
+  { label: 'Временной шаг', units: 'с', name: 'timeStep' },
+  { label: 'До конца шага', units: 'с', name: 'stepRemain' },
+];
+
+const DATA_BYTE_LENGTH =
+  STATE_DATA.length + PARAMS_DATA.length * 2 + SEPARATORS.length;
+
+const COMMANDS = {
+  loadMode: v => [4, v],
+  boostMode: v => [8, v],
+  blowDelay: v => [12, v],
+  blowDuration: v => [16, v],
+  experimentNumber: v => [20, v],
+  fanLoad: v => [24, v * 10],
+  stabilizationTemp: v => [28, v],
+  load: v => [32, v *10],
+  fanMinRPM: v => [36, v * 10],
+  fanMaxVoltage: v => [40, v * 1000],
+  IVCStep: v => [44, v * 1000],
+  maxTemp: v => [48, v],
+  maxPressure: v => [52, v * 100],
+  maxVoltage: v => [56, v * 10],
+  startCurrent: v => [60, v * 1000],
+  currentStep: v => [64, v * 1000],
+  endCurrent: v => [68, v * 1000],
+  timeStep: v => [72, v],
+};
+
+const CONSTRAINTS = {
+  blowDelay: [1, 200],
+  blowDuration: [20, 400],
+  experimentNumber: [0, 99999],
+  fanLoad: [0, 100],
+  stabilizationTemp: [20, 60],
+  loadCurrent: [0, 14],
+  loadVoltage: [2, 50],
+  loadPower: [1, 150],
+  fanMinRPM: [0, 100],
+  fanMaxVoltage: [3, 12],
+  IVCStep: [0.1, 14],
+  maxTemp: [-10, 100],
+  maxPressure: [-1, 4],
+  maxVoltage: [-10, 40],
+  startCurrent: [0.1, 14],
+  currentStep: [0.1, 14],
+  endCurrent: [0.1, 14],
+  timeStep: [10, 990],
+};
+
+const STEPS = {
+  blowDelay: 1,
+  blowDuration: 10,
+  experimentNumber: 1,
+  fanLoad: 0.5,
+  stabilizationTemp: 1,
+  loadCurrent: 0.1,
+  loadVoltage: 0.1,
+  loadPower: 1,
+  fanMinRPM: 0.5,
+  fanMaxVoltage: 0.1,
+  IVCStep: 0.1,
+  maxTemp: 1,
+  maxPressure: 0.05,
+  maxVoltage: 0.1,
+  startCurrent: 0.1,
+  currentStep: 0.1,
+  endCurrent: 0.1,
+  timeStep: 1,
+};
+
+module.exports = {
+  IS_RPI,
+  PORT,
+  SEPARATORS,
+  COMMANDS,
+  PARAMS_DATA,
+  STATE_DATA,
+  DATA_BYTE_LENGTH,
+  CONSTRAINTS,
+  STEPS,
+};

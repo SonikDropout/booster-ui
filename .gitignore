@@ -1,0 +1,4 @@
+node_modules
+dist
+app/renderer.js
+app/svelte.css

@@ -1,0 +1,124 @@
+<script>
+  import blocks from './blocks';
+  import { COMMANDS, STEPS, CONSTRAINTS, SERIAL_DATA } from '../constants';
+  import { serialData, getValue } from '../stores';
+  import Select from '../molecules/Select';
+  import Value from '../atoms/Value';
+  import RangeInput from '../molecules/RangeInput';
+  import { ipcRenderer } from 'electron';
+
+  const initialData = getValue(serialData);
+
+  const loadModeOptions = [
+    { value: 0, name: '', label: 'Нагрузка отключена' },
+    { rangeLabel: 'Ток', value: 1, name: 'Current', label: 'Постоянный ток' },
+    {
+      rangeLabel: 'Напряжение',
+      value: 2,
+      name: 'Voltage',
+      label: 'Постоянное напряжение',
+    },
+    {
+      rangeLabel: 'Мощность',
+      value: 3,
+      name: 'Power',
+      label: 'Постоянная мощность',
+    },
+  ];
+
+  let selectedLoadMode = loadModeOptions[initialData.loadMode.value];
+
+  function sendCommand(value, name) {
+    ipcRenderer.send('serialCommand', ...COMMANDS[name](value));
+  }
+
+  function selectLoadMode(mode) {
+    selectedLoadMode = loadModeOptions[mode];
+    ipcRenderer.send('serialCommand', ...COMMANDS.loadMode(mode));
+  }
+</script>
+
+<main>
+  {#each blocks as column, idx}
+    <div class="col-{idx}">
+      {#if idx === 2}
+        <h3>Нагрузка</h3>
+        <Select
+          onChange={selectLoadMode}
+          name="loadMode"
+          defaultValue={initialData.loadMode.value}
+          label={initialData.loadMode.label}
+          options={loadModeOptions} />
+        {#if selectedLoadMode.value}
+          <RangeInput
+            name="load"
+            defaultValue={initialData.load.value}
+            step={STEPS['load' + selectedLoadMode.name]}
+            label={selectedLoadMode.rangeLabel}
+            onChange={sendCommand} />
+        {:else}
+          <div class="input-placeholder" />
+        {/if}
+      {/if}
+      {#each column as block}
+        <h3>{block.title}</h3>
+        {#if block.selects}
+          {#each block.selects as { label, name, options }}
+            <Select
+              {options}
+              {name}
+              onChange={sendCommand}
+              defaultValue={initialData[name].value}
+              label={initialData[name].label} />
+          {/each}
+        {/if}
+        {#if block.inputs}
+          {#each block.inputs as name}
+            <RangeInput
+              step={STEPS[name]}
+              range={CONSTRAINTS[name]}
+              defaultValue={initialData[name].value}
+              label={initialData[name].label}
+              {name}
+              onChange={sendCommand} />
+          {/each}
+        {/if}
+        {#if block.values}
+          {#each block.values as id}
+            <Value
+              units={initialData[id].units}
+              value={$serialData[id].value}
+              label={initialData[id].label} />
+          {/each}
+        {/if}
+      {/each}
+    </div>
+  {/each}
+</main>
+
+<style>
+  main {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-column-gap: 24px;
+    padding: 0 24px;
+    height: 100%;
+  }
+  h3 {
+    margin-top: 3.2rem;
+    margin-bottom: 1.6rem;
+  }
+  .col-0 {
+    grid-column: 1 / 2;
+  }
+  .col-1 {
+    grid-column: 2 / 3;
+  }
+  .col-2 {
+    grid-column: 3 / 4;
+  }
+  .input-placeholder {
+    height: 3.2rem;
+    margin-bottom: 1.6rem;
+  }
+</style>
