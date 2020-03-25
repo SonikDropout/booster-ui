@@ -16,6 +16,13 @@ const STATE_DATA = [
   { label: 'Задержка КЗ', units: 'с', name: 'shortCircuitDelay' },
   { label: 'Продука до КЗ за', units: 'с', name: 'blowBeforeShortCircuit' },
   { name: 'start' },
+  { label: 'Был ли продув', name: 'isBlow' },
+  { label: 'Было ли КЗ', name: 'isShortCirsuit' },
+  { name: 'tempError' },
+  { name: 'pressureError' },
+  { name: 'voltageError' },
+  { name: 'stopBit' },
+  { name: 'stopPressed' },
 ];
 
 const PARAMS_DATA = [
@@ -103,7 +110,7 @@ const COMMANDS = {
   experimentNumber: v => [20, v],
   fanLoad: v => [24, v * 10],
   stabilizationTemp: v => [28, v],
-  load: v => [32, v *10],
+  load: v => [32, v * 10],
   fanMinRPM: v => [36, v * 10],
   fanMaxVoltage: v => [40, v * 1000],
   IVCStep: v => [44, v * 1000],
@@ -158,6 +165,33 @@ const STEPS = {
   timeStep: 1,
 };
 
+const LOGGED_VALUES = [
+  'load',
+  'FCCurrent',
+  'FCVoltage',
+  'FCPower',
+  'hydrogenPressure',
+  'hydrogenConsumption',
+  'temp1',
+  'temp2',
+  'fanVoltage',
+  'blowDuration',
+  'blowDelay',
+  'shortCircuitDuration',
+  'shortCircuitDelay',
+  'isBlow',
+  'isShortCircuit',
+];
+
+const SERIAL_DATA = {};
+
+PARAMS_DATA.forEach(addParamToMap);
+STATE_DATA.forEach(addParamToMap);
+
+function addParamToMap(param) {
+  SERIAL_DATA[param.name] = param;
+}
+
 module.exports = {
   IS_RPI,
   PORT,
@@ -168,4 +202,6 @@ module.exports = {
   DATA_BYTE_LENGTH,
   CONSTRAINTS,
   STEPS,
+  LOGGED_VALUES,
+  SERIAL_DATA,
 };
