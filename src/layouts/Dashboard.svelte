@@ -29,12 +29,12 @@
   let selectedLoadMode = loadModeOptions[initialData.loadMode.value];
 
   function sendCommand(value, name) {
-    ipcRenderer.send('serialCommand', ...COMMANDS[name](value));
+    ipcRenderer.send('serialCommand', ...COMMANDS[name](+value));
   }
 
   function selectLoadMode(mode) {
     selectedLoadMode = loadModeOptions[mode];
-    ipcRenderer.send('serialCommand', ...COMMANDS.loadMode(mode));
+    ipcRenderer.send('serialCommand', ...COMMANDS.loadMode(+mode));
   }
 </script>
 
@@ -105,8 +105,8 @@
     height: 100%;
   }
   h3 {
-    margin-top: 3.2rem;
-    margin-bottom: 1.6rem;
+    margin-top: 2.4rem;
+    margin-bottom: 1.2rem;
   }
   .col-0 {
     grid-column: 1 / 2;
@@ -119,6 +119,6 @@
   }
   .input-placeholder {
     height: 3.2rem;
-    margin-bottom: 1.6rem;
+    margin-bottom: 1.2rem;
   }
 </style>

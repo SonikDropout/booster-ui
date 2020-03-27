@@ -1,17 +1,10 @@
 const { writable, derived } = require('svelte/store');
 const { ipcRenderer } = require('electron');
 const { clone } = require('./utils/others');
-const { PARAMS_DATA, STATE_DATA } = require('./constants');
+const { SERIAL_DATA } = require('./constants');
 const { formatSeconds } = require('./utils/others');
 
-const dataMap = {};
-
-PARAMS_DATA.forEach(addParamToMap);
-STATE_DATA.forEach(addParamToMap);
-
-function addParamToMap(param) {
-  dataMap[param.name] = clone(param);
-}
+const dataMap = clone(SERIAL_DATA);
 
 const dataKeys = Object.keys(dataMap);
 const serialData = writable(dataMap);

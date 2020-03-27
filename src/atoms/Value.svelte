@@ -6,18 +6,18 @@
 
 <div class="wrap">
   <div class="label">
-    {@html label}
+    {@html label},
+    <em>{@html units}</em>
   </div>
   <div class="value">
-    <strong>{value},</strong>
-    <em>{@html units}</em>
+    <strong>{value}</strong>
   </div>
 </div>
 
 <style>
   .wrap {
     display: flex;
-    flex-wrap: wrap;
+    /* flex-wrap: wrap; */
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1.6rem;

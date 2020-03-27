@@ -77,7 +77,7 @@
     if (startX === void 0) return;
     e.preventDefault();
     const diff = startX - e.clientX;
-    const inc = (diff / 50) * (max - min) * 0.5;
+    const inc = (diff / 100) * (max - min) * 0.5;
     value = constraint(value - inc, range);
     startX = e.clientX;
   }
@@ -128,7 +128,7 @@
 <style>
   label {
     display: flex;
-    margin-bottom: 1.6rem;
+    margin-bottom: 1.2rem;
     justify-content: space-between;
     align-items: center;
   }

@@ -61,12 +61,22 @@ header {
 
 footer {
   height: 2rem;
-  font-size: 0.8rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 24px;
   color: #74787f;
+}
+
+.meta {
+  flex: 1 1;
+}
+.meta.id {
+  text-align: center;
+}
+.meta.version {
+  font-size: 0.8rem;
+  text-align: right;
 }
 
 h1,h2,h3,h4,h5,h6 {
