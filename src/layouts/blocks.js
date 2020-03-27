@@ -12,7 +12,7 @@ module.exports = [
     },
     {
       title: 'Температуры',
-      values: ['temp1', 'temp2'],
+      values: ['temp1', 'temp2', 'radiatorTemp'],
     },
   ],
   [
@@ -48,6 +48,7 @@ module.exports = [
     {
       title: 'Вентилятор',
       inputs: ['fanLoad', 'fanMinRPM', 'fanMaxVoltage'],
+      values: ['fanVoltage'],
     },
   ],
 ];

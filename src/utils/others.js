@@ -52,6 +52,8 @@ const formatSeconds = seconds => {
   return `${zeroPad(h, 2)}:${zeroPad(m, 2)}:${zeroPad(s, 2)}`;
 };
 
+const zip = (arr1, arr2) => arr1.map((v1, i) => v1 + arr2[i]);
+
 module.exports = {
   clone,
   mergeRename,
@@ -64,4 +66,5 @@ module.exports = {
   getPercentage,
   zeroPad,
   formatSeconds,
+  zip,
 };

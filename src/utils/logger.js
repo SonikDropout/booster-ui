@@ -1,76 +1,38 @@
-const { Workbook } = require('excel4node');
+const fs = require('fs');
+const homeDir = require('os').homedir;
 const path = require('path');
+const { getFileDate, zip } = require('./others');
+const { LOGGED_VALUES, SERIAL_DATA } = require('../constants');
 
-let wb,
-  ws,
-  fileName,
-  headerStyle,
-  dataStyle,
-  row = 1;
+let log;
 
-function createFile(fileName, headers) {
-  fileName = fileName;
-  wb = new Workbook();
-  ws = wb.addWorksheet('Результаты');
-  if (!headerStyle) createStyles();
-  for (let i = 0; i < headers.length; i++) {
-    ws.cell(row, i + 1)
-      .string(headers[i])
-      .style(headerStyle);
-  }
-  row++;
+const logHeader = LOGGED_VALUES.map(
+  key => `${SERIAL_DATA[key].label}, ${SERIAL_DATA[key].units || ''}`
+);
+logHeader.unshift('Время');
+
+function createLog() {
+  log = fs.createWriteStream(
+    path.join(homeDir, 'Documents', `log${getFileDate()}.tsv`)
+  );
+  log.write(logHeader.join('\t'));
 }
 
-function writeRow(entries) {
-  for (let i = 0; i < entries.length; i++) {
-    ws.cell(row, i + 1)
-      .number(entries[i])
-      .style(dataStyle);
-  }
-  row++;
-}
-
-function saveFile(dir) {
-  wb.write(path.join(dir, fileName));
-  wb = ws = fileName = void 0;
-}
-
-function createStyles() {
-  headerStyle = wb.createStyle({
-    font: {
-      bold: true,
-      color: 'ffffff',
-    },
-    fill: {
-      type: 'pattern',
-      patternType: 'solid',
-      fgColor: '8bc041',
-    },
-  });
-  headerStyle.border = generateBorders();
-  dataStyle = wb.createStyle({
-    alignment: {
-      horizontal: 'right',
-    },
-  });
-  dataStyle.border = generateBorders();
-}
-
-function generateBorders() {
-  return ['left', 'right', 'top', 'bottom'].reduce(
-    (acc, key) => {
-      acc[key] = {
-        style: 'thin',
-        color: 'black',
-      };
-      return acc;
-    },
-    { outline: false }
+function writeRow(row) {
+  log.write(
+    zip(numbers, units)
+      .concat('\n')
+      .join('\t')
   );
 }
 
+function saveLog() {
+  log.end();
+  log = void 0;
+}
+
 module.exports = {
+  createLog,
   writeRow,
-  createFile,
-  saveFile,
+  saveLog,
 };

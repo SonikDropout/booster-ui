@@ -83,7 +83,7 @@
     height: 3.2rem;
     line-height: 3.2rem;
     width: 100%;
-    margin-bottom: 1.6rem;
+    margin-bottom: 1.2rem;
   }
 
   .select {
