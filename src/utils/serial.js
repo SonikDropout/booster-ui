@@ -46,15 +46,12 @@ function writeCommandFromQueue() {
   }
   const cmd = commandQueue.shift();
   console.log('Sending command to serial:', cmd);
-  const transmissionStart = Date.now();
   serial.write(cmd);
   serial.once('data', buf => {
     console.log('Recieved answer:', buf);
-    if (!buf.toString('ascii').startsWith('ok')) {
-      setTimeout(() => {
-        commandQueue.unshift(cmd);
-        writeCommandFromQueue();
-      }, Math.max(0, 300 - (Date.now() - transmissionStart)));
+    if (!buf.toString('ascii').includes('ok')) {
+      commandQueue.unshift(cmd);
+      writeCommandFromQueue();
     }
   });
 }
