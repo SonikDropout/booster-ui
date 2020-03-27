@@ -88,6 +88,11 @@
     e.target.releasePointerCapture(e.pointerId);
     onChange(value, name);
   }
+
+  function handleInputChange(e) {
+    value = +e.target.value.toFixed(precision);
+    onChange(value)
+  }
 </script>
 
 <label>
@@ -112,8 +117,8 @@
       {max}
       {step}
       {name}
-      value={value.toFixed(precision)}
-      on:change={e => onChange(e.target.value)} />
+      {value}
+      on:change={handleInputChange} />
     <button
       disabled={value >= max || disabled}
       class="incrementer"
