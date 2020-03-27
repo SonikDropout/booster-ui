@@ -59,7 +59,7 @@ const PARAMS_DATA = [
   },
   { label: 'Нагрузка', name: 'load', divider: 1000 },
   {
-    label: 'Температура радиатора',
+    label: 'Температура\nрадиатора',
     units: '\u00b0C',
     name: 'radiatorTemp',
     divider: 10,
@@ -121,6 +121,7 @@ const COMMANDS = {
   currentStep: v => [64, v * 1000],
   endCurrent: v => [68, v * 1000],
   timeStep: v => [72, v],
+  stop: () => [76, 0],
 };
 
 const CONSTRAINTS = {

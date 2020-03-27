@@ -1,7 +1,7 @@
 <script>
-  export let value;
-  export let label;
-  export let units;
+  export let value = 0;
+  export let label = '';
+  export let units = '';
 </script>
 
 <div class="wrap">
