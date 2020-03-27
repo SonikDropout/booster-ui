@@ -11,14 +11,14 @@ const serialData = writable(dataMap);
 
 const appInitialized = writable(false);
 
-const experiementError = derived(
-  [serialData, lastExperiment],
-  ([$data, $exp]) => $data.start && $exp === $data.experimentNumber
-);
-
 const lastExperiment = derived(
   serialData,
   $data => $data.stopPressed ? $data.experimentNumber : void 0
+);
+
+const experiementError = derived(
+  [serialData, lastExperiment],
+  ([$data, $exp]) => $data.start && $exp === $data.experimentNumber
 );
 
 
