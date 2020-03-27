@@ -15,7 +15,6 @@ function handleData(buf) {
   idx = buf.indexOf(SEPARATORS);
   if (idx != -1) {
     buffer = Buffer.concat([buffer, buf.slice(0, idx)]);
-    console.log(buffer);
     try {
       emitter.emit('data', parse(buffer));
     } catch (e) {

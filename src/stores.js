@@ -27,8 +27,8 @@ ipcRenderer
   .on('serialData', handleSerialData);
 
 function handleSerialData(event, arr) {
-  for (let i = 0; i < arr.length; ++i) {
-    dataMap[dataKeys[i]].value = arr[i];
+  for (let i = 0; i < dataKeys.length; ++i) {
+    dataMap[dataKeys[i]].value = arr[i] || 0;
   }
   serialData.set(dataMap);
 }
