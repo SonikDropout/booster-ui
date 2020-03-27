@@ -1,13 +1,25 @@
 <script>
   import blocks from './blocks';
   import { COMMANDS, STEPS, CONSTRAINTS, SERIAL_DATA } from '../constants';
-  import { serialData, getValue } from '../stores';
+  import { serialData, getValue, experimentError } from '../stores';
   import Select from '../molecules/Select';
   import Value from '../atoms/Value';
   import RangeInput from '../molecules/RangeInput';
   import { ipcRenderer } from 'electron';
 
   const initialData = getValue(serialData);
+
+  const disabledOnStart = [
+    'boostMode',
+    'experimentNumber',
+    'maxTemp',
+    'maxPressure',
+    'maxVoltage',
+    'startCurrent',
+    'currentStep',
+    'endCurrent',
+    'timeStep',
+  ];
 
   const loadModeOptions = [
     { value: 0, name: '', label: 'Нагрузка отключена' },
@@ -75,6 +87,8 @@
         {#if block.inputs}
           {#each block.inputs as name}
             <RangeInput
+              errorMessage={name === 'experimentNumber' && $experimentError ? 'Обновите номер эксперимента' : ''}
+              disabeld={$serialData.start.value && disabledOnStart.includes(name)}
               step={STEPS[name]}
               range={CONSTRAINTS[name]}
               defaultValue={initialData[name].value}

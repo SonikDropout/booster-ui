@@ -1,7 +1,7 @@
 const fs = require('fs');
 const homeDir = require('os').homedir;
 const path = require('path');
-const { getFileDate, zip } = require('./others');
+const { getFormatedDate } = require('./others');
 const { LOGGED_VALUES, SERIAL_DATA } = require('../constants');
 
 let log;
@@ -13,18 +13,35 @@ tableHeader.unshift('Время');
 
 function createLog(boosterState) {
   log = fs.createWriteStream(
-    path.join(homeDir, 'Documents', `log${getFileDate()}.tsv`)
+    path.join(
+      homeDir,
+      'Documents',
+      `log_${getFormatedDate('YYYY-MM-DD_HH-mm-ss')}.tsv`
+    )
   );
   logWrite(generateLogHeader(boosterState));
   log.write(tableHeader.concat('\n').join('\t'));
 }
 
-function writeRow(row) {
+function writeRow(boosterState) {
   log.write(
-    zip(numbers, units)
+    getLogRow(boosterState)
       .concat('\n')
       .join('\t')
   );
+}
+
+function getLogRow(boosterState) {
+  const row = [getFormatedDate('YYYY:MM:DD HH:mm:ss')];
+  row.push.apply(
+    row,
+    LOGGED_VALUES.map(
+      key => `${boosterState[key].value}${boosterState[key].units}`
+    )
+  );
+  row.push(boosterState.isBlow ? 'П' : '-');
+  row.push(boosterState.isShortCircuit ? 'КЗ' : '-');
+  return row;
 }
 
 function generateLogHeader(boosterState) {
@@ -46,17 +63,10 @@ function saveLog(boosterState) {
 }
 
 function writeTerminateMessage(boosterState) {
-  for (const signal of [35, 36, 37, 39]) {
-    log.write(SIGNALS[signal]);
+  for (const key of Object.keys(SIGNALS)) {
+    if (boosterState[key].value) log.write(SIGNALS[key]);
   }
-  switch (boosterState[38]) {
-    case 1:
-      log.write('Разгон завершен, снятие ВАХ\n');
-    case 2:
-      log.write('Снятие ВАХ завершено, холостой ход\n');
-    case 3:
-      log.write('Окончание авторазгона\n\n\n\n');
-  }
+  log.write(STOP_BITS[boosterState.stopBit]);
 }
 
 module.exports = {

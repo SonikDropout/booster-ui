@@ -4,34 +4,27 @@ const { clone } = require('./utils/others');
 const { SERIAL_DATA } = require('./constants');
 const { formatSeconds } = require('./utils/others');
 
-const dataMap = clone(SERIAL_DATA);
-
-const dataKeys = Object.keys(dataMap);
-const serialData = writable(dataMap);
+const serialData = writable();
 
 const appInitialized = writable(false);
 
-const lastExperiment = derived(
-  serialData,
-  $data => $data.stopPressed ? $data.experimentNumber : void 0
-);
+let lastExperiment;
+
+const unsub = serialData.subscribe($data => {
+  if ($data.stopPressed) {
+    lastExperiment = $data.experimentNumber;
+    unsub();
+  }
+});
 
 const experiementError = derived(
-  [serialData, lastExperiment],
-  ([$data, $exp]) => $data.start && $exp === $data.experimentNumber
+  serialData,
+  $data => $data.start.value && lastExperiment === $data.experimentNumber
 );
-
 
 ipcRenderer
   .once('serialData', () => appInitialized.set(true))
-  .on('serialData', handleSerialData);
-
-function handleSerialData(event, arr) {
-  for (let i = 0; i < dataKeys.length; ++i) {
-    dataMap[dataKeys[i]].value = arr[i] || 0;
-  }
-  serialData.set(dataMap);
-}
+  .on('serialData', (_, data) => serialData.set(data));
 
 function getValue(store) {
   let $val;

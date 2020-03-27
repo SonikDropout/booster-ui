@@ -51,8 +51,8 @@ function writeCommandFromQueue() {
     console.log('Recieved answer:', buf);
     if (!buf.toString('ascii').includes('ok')) {
       commandQueue.unshift(cmd);
-      writeCommandFromQueue();
     }
+    writeCommandFromQueue();
   });
 }
 

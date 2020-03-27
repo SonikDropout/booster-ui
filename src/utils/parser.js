@@ -5,6 +5,8 @@ const {
   DATA_BYTE_LENGTH,
 } = require('../constants');
 
+const dataMap = clone(SERIAL_DATA);
+
 function validate(buffer) {
   if (buffer.indexOf(SEPARATORS) != 0 /*|| buffer.length != DATA_BYTE_LENGTH*/)
     throw new Error('Invalid buffer recieved');
@@ -12,14 +14,15 @@ function validate(buffer) {
 
 module.exports = function parse(buf) {
   validate(buf);
-  const result = [];
   let i = SEPARATORS.length;
   for (let j = 0; j < PARAMS_DATA.length; j++) {
-    result.push(+(buf.readInt16BE(i) / 1000).toPrecision(4));
+    dataMap[PARAMS_DATA[j].name].value = +(
+      buf[`read${PARAMS_DATA[j].singed ? '' : 'U'}Int16BE`](i) / 1000
+    ).toPrecision(4);
     i += 2;
   }
   for (let j = 0; j < STATE_DATA.length; j++) {
-    result.push(buf[i++]);
+    dataMap[STATE_DATA[j].name].value = buf[i++];
   }
-  return result;
+  return dataMap;
 };

@@ -18,10 +18,15 @@ const mergeKeysValues = (keys, values) =>
 
 const capitalize = s => s[0].toUpperCase() + s.slice(1);
 
-const getFileDate = () => {
+const getFormatedDate = formatStr => {
   const date = new Date();
-  return `${date.getDate()}-${date.getMonth() +
-    1}-${date.getFullYear()}_${date.getHours()}-${date.getMinutes()}`;
+  return formatStr
+    .replace('YYYYY', date.getFullYear())
+    .replace('MM', date.getMonth() + 1)
+    .replace('DD', date.getDay())
+    .replace('HH', date.getHours())
+    .replace('mm', date.getMinutes())
+    .replace('ss', date.getSeconds());
 };
 
 const countKeys = obj => {
@@ -58,7 +63,7 @@ module.exports = {
   clone,
   mergeRename,
   capitalize,
-  getFileDate,
+  getFormatedDate,
   countKeys,
   randInt,
   mergeKeysValues,

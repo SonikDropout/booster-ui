@@ -8,6 +8,7 @@
   export let style;
   export let step = 1;
   export let label;
+  export let errorMessage;
 
   $: min = Math.min.apply(null, range);
   $: max = Math.max.apply(null, range);
@@ -91,7 +92,7 @@
 
   function handleInputChange(e) {
     value = +e.target.value.toFixed(precision);
-    onChange(value)
+    onChange(value);
   }
 </script>
 
@@ -128,6 +129,9 @@
       <span>+</span>
     </button>
   </span>
+  {#if errorMessage}
+    <span class="error">{errorMessage}</span>
+  {/if}
 </label>
 
 <style>
@@ -179,5 +183,8 @@
   }
   button:disabled {
     opacity: 0.5;
+  }
+  .error {
+    color: var(--error-color);
   }
 </style>

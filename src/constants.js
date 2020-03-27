@@ -25,6 +25,8 @@ const STATE_DATA = [
   { name: 'stopPressed' },
 ];
 
+const TERMINATE_SIGNALS = STATE_DATA.slice(-5).map(v => v.name);
+
 const PARAMS_DATA = [
   { label: 'Длительность продувки', units: 'мс', name: 'blowDuration' },
   { label: 'Тепература 1', units: '\u00b0C', name: 'temp1', divider: 10 },
@@ -193,6 +195,20 @@ function addParamToMap(param) {
   SERIAL_DATA[param.name] = param;
 }
 
+const SIGNALS = {
+  tempError: 'Высокая температура, остановка',
+  pressureError: 'Низкое давление, остановка',
+  voltageError: 'Низкое напряжение, остановка',
+  stopPressed: 'Сброс всех параметров',
+};
+
+const STOP_BITS = [
+  '',
+  'Разгон завершен, снятие ВАХ\n',
+  'Снятие ВАХ завершено, холостой ход\n',
+  'Окончание авторазгона\n\n\n\n',
+];
+
 module.exports = {
   IS_RPI,
   PORT,
@@ -205,4 +221,7 @@ module.exports = {
   STEPS,
   LOGGED_VALUES,
   SERIAL_DATA,
+  TERMINATE_SIGNALS,
+  SIGNALS,
+  STOP_BITS,
 };
