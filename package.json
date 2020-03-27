@@ -33,10 +33,6 @@
     "webpack-cli": "^3.3.10"
   },
   "dependencies": {
-    "chart.js": "^2.9.3",
-    "chartjs-plugin-zoom": "^0.7.5",
-    "drivelist": "^8.0.9",
-    "excel4node": "^1.7.2",
     "serialport": "^8.0.7",
     "usb-detection": "^4.7.0"
   },
