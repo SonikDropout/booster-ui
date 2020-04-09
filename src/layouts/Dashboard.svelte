@@ -107,7 +107,7 @@
         {#if block.values}
           {#each block.values as val}
             <Value
-              error={val.maxCompare ? $serialData[val.maxCompare].value > $serialData[val.name].value : val.minCompare ? $serialData[val.minCompare].value < $serialData[val.name].value : false}
+              error={val.maxCompare ? $serialData[val.maxCompare].value < $serialData[val.name].value : val.minCompare ? $serialData[val.minCompare].value > $serialData[val.name].value : false}
               units={initialData[val.name].units}
               value={$serialData[val.name].value}
               label={initialData[val.name].label} />
