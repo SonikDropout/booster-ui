@@ -151,7 +151,7 @@ const STEPS = {
   blowDelay: 1,
   blowDuration: 10,
   experimentNumber: 1,
-  fanLoad: 0.5,
+  fanLoad: 1,
   stabilizationTemp: 1,
   loadCurrent: 0.1,
   loadVoltage: 0.1,

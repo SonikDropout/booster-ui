@@ -4,15 +4,19 @@ module.exports = [
       title: 'БТЭ',
       inputs: ['experimentNumber'],
       values: [
-        'FCVoltage',
-        'FCCurrent',
-        'hydrogenPressure',
-        'hydrogenConsumption',
+        { name: 'FCVoltage' },
+        { name: 'FCCurrent', errorIndicator: 'voltageError' },
+        { name: 'hydrogenPressure', errorIndicator: 'pressureError' },
+        { name: 'hydrogenConsumption' },
       ],
     },
     {
       title: 'Температуры',
-      values: ['temp1', 'temp2', 'radiatorTemp'],
+      values: [
+        { name: 'temp1', errorIndicator: 'tempError' },
+        { name: 'temp2', errorIndicator: 'tempError' },
+        { name: 'radiatorTemp' },
+      ],
     },
   ],
   [
@@ -48,7 +52,7 @@ module.exports = [
     {
       title: 'Вентилятор',
       inputs: ['fanLoad', 'fanMinRPM', 'fanMaxVoltage'],
-      values: ['fanVoltage'],
+      values: [{ name: 'fanVoltage' }],
     },
   ],
 ];

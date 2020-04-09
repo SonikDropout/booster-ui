@@ -5,6 +5,7 @@
   import Select from '../molecules/Select';
   import Value from '../atoms/Value';
   import RangeInput from '../molecules/RangeInput';
+  import Warning from '../atoms/Warning';
   import { ipcRenderer } from 'electron';
 
   const initialData = getValue(serialData);
@@ -19,6 +20,12 @@
     'currentStep',
     'endCurrent',
     'timeStep',
+  ];
+
+  const warnings = [
+    { message: 'Превышена температура!', name: 'tempError' },
+    { message: 'Низкое давление!', name: 'pressureError' },
+    { message: 'Превышено напряжение!', name: 'voltageError' },
   ];
 
   const loadModeOptions = [
@@ -98,14 +105,22 @@
           {/each}
         {/if}
         {#if block.values}
-          {#each block.values as id}
+          {#each block.values as val}
             <Value
-              units={initialData[id].units}
-              value={$serialData[id].value}
-              label={initialData[id].label} />
+              error={val.errorIndicator ? $serialData[val.errorIndicator].value : false}
+              units={initialData[val.name].units}
+              value={$serialData[val.name].value}
+              label={initialData[val.name].label} />
           {/each}
         {/if}
       {/each}
+      {#if idx === 1}
+        {#each warnings as { name, message }}
+          {#if $serialData[name]}
+            <Warning {message} />
+          {/if}
+        {/each}
+      {/if}
     </div>
   {/each}
 </main>

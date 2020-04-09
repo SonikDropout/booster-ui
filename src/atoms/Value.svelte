@@ -2,6 +2,7 @@
   export let value = 0;
   export let label = '';
   export let units = '';
+  export let error;
 </script>
 
 <div class="wrap">
@@ -9,7 +10,7 @@
     {@html label},
     <em>{@html units}</em>
   </div>
-  <div class="value">
+  <div class="value" class:error>
     <strong>{value}</strong>
   </div>
 </div>
@@ -24,6 +25,9 @@
   }
   .value {
     min-width: 10rem;
+  }
+  .value.error {
+    color: var(--danger-color);
   }
   strong {
     font-weight: 500;
