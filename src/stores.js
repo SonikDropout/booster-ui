@@ -11,7 +11,7 @@ const appInitialized = writable(false);
 let lastExperiment;
 
 const unsub = serialData.subscribe($data => {
-  if ($data.stopPressed) {
+  if ($data.stopPressed.value) {
     lastExperiment = $data.experimentNumber;
     unsub();
   }
