@@ -30,7 +30,7 @@ let commandQueue = [];
 let portBusy = false;
 
 function sendCommand(id, cmd) {
-  const buf = Buffer.from([40, id, 0, 0, id + cmd + 40]);
+  const buf = Buffer.from([40, id, 0, 0, id + cmd + 40 + (cmd < 0 ? 1 : 0)]);
   buf.writeInt16BE(cmd, 2);
   commandQueue.push(buf);
   if (!portBusy) {
@@ -47,7 +47,7 @@ function writeCommandFromQueue() {
   const cmd = commandQueue.shift();
   console.log('Sending command to serial:', cmd);
   serial.write(cmd);
-  serial.once('data', buf => {
+  serial.once('data', (buf) => {
     console.log('Recieved answer:', buf);
     if (!buf.toString('ascii').includes('ok')) {
       commandQueue.unshift(cmd);

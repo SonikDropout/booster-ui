@@ -19,7 +19,7 @@ module.exports = function parse(buf) {
   let i = SEPARATORS.length;
   for (let j = 0; j < PARAMS_DATA.length; j++) {
     dataMap[PARAMS_DATA[j].name].value = +(
-      buf[`read${PARAMS_DATA[j].singed ? '' : 'U'}Int16BE`](i) / 1000
+      buf.readInt16BE(i) / 1000
     ).toPrecision(4);
     i += 2;
   }
