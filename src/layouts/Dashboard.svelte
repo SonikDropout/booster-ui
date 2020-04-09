@@ -23,13 +23,13 @@
 
   const loadModeOptions = [
     { value: 0, name: '', label: 'Нагрузка отключена' },
-    { rangeLabel: 'Ток', value: 1, name: 'Current', label: 'Постоянный ток' },
     {
       rangeLabel: 'Напряжение',
-      value: 2,
+      value: 1,
       name: 'Voltage',
       label: 'Постоянное напряжение',
     },
+    { rangeLabel: 'Ток', value: 2, name: 'Current', label: 'Постоянный ток' },
     {
       rangeLabel: 'Мощность',
       value: 3,
