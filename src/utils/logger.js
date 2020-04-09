@@ -51,7 +51,7 @@ ${boosterState.boostMode}
 Номер блока ${blockNumber}
 Номер эксперимента ${boosterState.experimentNumber}
 Авторазгон от ${boosterState.startCurrent} до ${boosterState.endCurrent} с шагом ${boosterState.currentStep}, время вверх ${boosterState.timeStep}сб время вниз 20с
-Отсечка: ${boosterState.maxPressure}бар, ${boosterState.maxVoltage}В, ${boosterState.maxTemp}\u00b0С
+Отсечка: ${boosterState.minPressure}бар, ${boosterState.maxVoltage}В, ${boosterState.maxTemp}\u00b0С
 КЗ: ${boosterState.shortCircuitDuration}мс ${boosterState.shortCircuitDelay}с
   `;
 }

@@ -14,7 +14,7 @@
     'boostMode',
     'experimentNumber',
     'maxTemp',
-    'maxPressure',
+    'minPressure',
     'maxVoltage',
     'startCurrent',
     'currentStep',
@@ -107,16 +107,16 @@
         {#if block.values}
           {#each block.values as val}
             <Value
-              error={val.errorIndicator ? $serialData[val.errorIndicator].value : false}
+              error={val.maxCompare ? $serialData[val.maxCompare].value > $serialData[val.name].value : val.minCompare ? $serialData[val.minCompare].value < $serialData[val.name].value : false}
               units={initialData[val.name].units}
               value={$serialData[val.name].value}
               label={initialData[val.name].label} />
           {/each}
         {/if}
       {/each}
-      {#if idx === 1}
+      {#if idx === 0}
         {#each warnings as { name, message }}
-          {#if $serialData[name]}
+          {#if $serialData[name].value}
             <Warning {message} />
           {/if}
         {/each}

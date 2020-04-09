@@ -5,16 +5,16 @@ module.exports = [
       inputs: ['experimentNumber'],
       values: [
         { name: 'FCVoltage' },
-        { name: 'FCCurrent', errorIndicator: 'voltageError' },
-        { name: 'hydrogenPressure', errorIndicator: 'pressureError' },
+        { name: 'FCCurrent', maxCompare: 'maxVoltage' },
+        { name: 'hydrogenPressure', minCompare: 'minPressure' },
         { name: 'hydrogenConsumption' },
       ],
     },
     {
       title: 'Температуры',
       values: [
-        { name: 'temp1', errorIndicator: 'tempError' },
-        { name: 'temp2', errorIndicator: 'tempError' },
+        { name: 'temp1', maxCompare: 'maxTemp' },
+        { name: 'temp2', maxCompare: 'maxTemp' },
         { name: 'radiatorTemp' },
       ],
     },
@@ -36,7 +36,7 @@ module.exports = [
       inputs: [
         'IVCStep',
         'maxTemp',
-        'maxPressure',
+        'minPressure',
         'maxVoltage',
         'startCurrent',
         'currentStep',
