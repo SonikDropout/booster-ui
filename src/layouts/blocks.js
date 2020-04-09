@@ -4,7 +4,7 @@ module.exports = [
       title: 'БТЭ',
       inputs: ['experimentNumber'],
       values: [
-        { name: 'FCVoltage', maxCompare: 'maxVoltage' },
+        { name: 'FCVoltage', minCompare: 'minVoltage' },
         { name: 'FCCurrent' },
         { name: 'hydrogenPressure', minCompare: 'minPressure' },
         { name: 'hydrogenConsumption' },
@@ -37,7 +37,7 @@ module.exports = [
         'IVCStep',
         'maxTemp',
         'minPressure',
-        'maxVoltage',
+        'minVoltage',
         'startCurrent',
         'currentStep',
         'endCurrent',

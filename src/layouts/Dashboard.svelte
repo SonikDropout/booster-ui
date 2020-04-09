@@ -15,7 +15,7 @@
     'experimentNumber',
     'maxTemp',
     'minPressure',
-    'maxVoltage',
+    'minVoltage',
     'startCurrent',
     'currentStep',
     'endCurrent',
@@ -25,7 +25,7 @@
   const warnings = [
     { message: 'Превышена температура!', name: 'tempError' },
     { message: 'Низкое давление!', name: 'pressureError' },
-    { message: 'Превышено напряжение!', name: 'voltageError' },
+    { message: 'Низкое напряжение!', name: 'voltageError' },
   ];
 
   const loadModeOptions = [
