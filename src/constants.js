@@ -25,7 +25,7 @@ const STATE_DATA = [
   { name: 'stopPressed' },
 ];
 
-const TERMINATE_SIGNALS = STATE_DATA.slice(-5).map(v => v.name);
+const TERMINATE_SIGNALS = STATE_DATA.slice(-5).map((v) => v.name);
 
 const PARAMS_DATA = [
   { label: 'Длительность продувки', units: 'мс', name: 'blowDuration' },
@@ -105,24 +105,24 @@ const DATA_BYTE_LENGTH =
   STATE_DATA.length + PARAMS_DATA.length * 2 + SEPARATORS.length;
 
 const COMMANDS = {
-  loadMode: v => [4, v],
-  boostMode: v => [8, v],
-  blowDelay: v => [12, v],
-  blowDuration: v => [16, v],
-  experimentNumber: v => [20, v],
-  fanLoad: v => [24, v * 10],
-  stabilizationTemp: v => [28, v],
-  load: v => [32, v * 10],
-  fanMinRPM: v => [36, v * 10],
-  fanMaxVoltage: v => [40, v * 1000],
-  IVCStep: v => [44, v * 1000],
-  maxTemp: v => [48, v],
-  maxPressure: v => [52, v * 100],
-  maxVoltage: v => [56, v * 10],
-  startCurrent: v => [60, v * 1000],
-  currentStep: v => [64, v * 1000],
-  endCurrent: v => [68, v * 1000],
-  timeStep: v => [72, v],
+  loadMode: (v) => [4, v],
+  boostMode: (v) => [8, v],
+  blowDelay: (v) => [12, v],
+  blowDuration: (v) => [16, v],
+  experimentNumber: (v) => [20, v],
+  fanLoad: (v) => [24, v * 10],
+  stabilizationTemp: (v) => [28, v],
+  load: (v) => [32, v * 10],
+  fanMinRPM: (v) => [36, v * 10],
+  fanMaxVoltage: (v) => [40, v * 1000],
+  IVCStep: (v) => [44, v * 1000],
+  maxTemp: (v) => [48, v],
+  maxPressure: (v) => [52, v * 100],
+  maxVoltage: (v) => [56, v * 10],
+  startCurrent: (v) => [60, v * 1000],
+  currentStep: (v) => [64, v * 1000],
+  endCurrent: (v) => [68, v * 1000],
+  timeStep: (v) => [72, v],
   stop: () => [76, 0],
 };
 
@@ -187,6 +187,11 @@ const LOGGED_VALUES = [
 ];
 
 const SERIAL_DATA = {};
+
+for (let i = 0; i < PARAMS_DATA.length; ++i)
+  SERIAL_DATA[PARAMS_DATA[i].name] = PARAMS_DATA[i];
+for (let i = 0; i < STATE_DATA.length; ++i)
+  SERIAL_DATA[STATE_DATA[i].name] = STATE_DATA[i];
 
 PARAMS_DATA.forEach(addParamToMap);
 STATE_DATA.forEach(addParamToMap);
