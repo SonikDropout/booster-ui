@@ -3,7 +3,9 @@ const {
   PARAMS_DATA,
   STATE_DATA,
   DATA_BYTE_LENGTH,
+  SERIAL_DATA,
 } = require('../constants');
+const { clone } = require('./others');
 
 const dataMap = clone(SERIAL_DATA);
 
