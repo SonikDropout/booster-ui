@@ -17,7 +17,7 @@ const STATE_DATA = [
   { label: 'Продука до КЗ за', units: 'с', name: 'blowBeforeShortCircuit' },
   { name: 'start' },
   { label: 'Был ли продув', name: 'isBlow' },
-  { label: 'Было ли КЗ', name: 'isShortCirsuit' },
+  { label: 'Было ли КЗ', name: 'isShortCircuit' },
   { name: 'tempError' },
   { name: 'pressureError' },
   { name: 'voltageError' },
@@ -186,7 +186,9 @@ const LOGGED_VALUES = [
   'isShortCircuit',
 ];
 
-const SERIAL_DATA = {};
+const SERIAL_DATA = {
+  FCPower: {label: 'Мощность ТЭ', units: 'Вт'}
+};
 
 for (let i = 0; i < PARAMS_DATA.length; ++i)
   SERIAL_DATA[PARAMS_DATA[i].name] = PARAMS_DATA[i];
