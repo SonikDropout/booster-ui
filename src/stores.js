@@ -4,7 +4,7 @@ const { clone } = require('./utils/others');
 const { SERIAL_DATA } = require('./constants');
 const { formatSeconds } = require('./utils/others');
 
-const serialData = writable();
+const serialData = writable(clone(SERIAL_DATA));
 
 const appInitialized = writable(false);
 
