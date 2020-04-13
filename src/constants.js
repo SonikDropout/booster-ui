@@ -107,6 +107,7 @@ const PARAMS_DATA = [
     name: 'minVoltage',
     sined: true,
     editable: true,
+    divider: 10,
   },
   {
     label: 'Раход H<sub>2</sub>',
@@ -150,7 +151,7 @@ const COMMANDS = {
   experimentNumber: (v) => [20, v],
   fanLoad: (v) => [24, (v * 10) | 0],
   stabilizationTemp: (v) => [28, v],
-  load: (v) => [32, (v * 100) | 0],
+  load: (v) => [32, (v * 1000) | 0],
   fanMinRPM: (v) => [36, (v * 10) | 0],
   fanMaxVoltage: (v) => [40, (v * 1000) | 0],
   IVCStep: (v) => [44, (v * 1000) | 0],
