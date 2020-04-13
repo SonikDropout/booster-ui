@@ -106,9 +106,11 @@
   }
 </script>
 
-<label>
-  <span class="label">{label}</span>
-  <span class="input-wrapper" {style} class:disabled>
+<label {style}>
+  {#if label}
+    <span class="label">{label}</span>
+  {/if}
+  <span class="input-wrapper" class:disabled>
     <button
       disabled={value <= min || disabled}
       class="decrementer"

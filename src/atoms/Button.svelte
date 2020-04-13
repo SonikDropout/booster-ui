@@ -1,11 +1,12 @@
 <script>
-  export let className;
+  export let className = '';
   export let disabled;
   export let style;
   export let name;
+  export let size = '';
 </script>
 
-<button {style} {disabled} class={className} {name} on:click>
+<button {style} {disabled} class="{className} {size}" {name} on:click>
   <slot />
 </button>
 
@@ -18,6 +19,11 @@
     padding: 1.2rem;
     font-size: 2rem;
     box-shadow: 0 3px 0 var(--corporate-grey-darken);
+  }
+
+  button.sm {
+    padding: 0.8rem;
+    font-size: 1.6rem;
   }
 
   button:disabled {

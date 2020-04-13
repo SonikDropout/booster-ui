@@ -26,8 +26,8 @@ module.exports = function parse(buf) {
   for (let j = 0; j < STATE_DATA.length; j++) {
     dataMap[STATE_DATA[j].name].value = buf[i++];
   }
-  dataMap.FCPower.value = Math.abs(
+  dataMap.FCPower.value = +Math.abs(
     dataMap.FCCurrent.value * dataMap.FCVoltage.value
-  );
+  ).toPrecision(4);
   return dataMap;
 };

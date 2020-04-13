@@ -1,5 +1,6 @@
 const path = require('path');
 const url = require('url');
+const fs = require('fs');
 const electron = require('electron');
 const { IS_RPI: isPi, TERMINATE_SIGNALS } = require('./src/constants');
 const { app, BrowserWindow, ipcMain } = electron;
@@ -26,7 +27,7 @@ function initPeripherals(win) {
   const serial = require(`./src/utils/serial${isPi ? '' : '.mock'}`);
   const logger = require('./src/utils/logger');
   let logCreated;
-  serial.on('data', data => {
+  serial.on('data', (data) => {
     win.webContents.send('serialData', data);
     if (data.start.value && logCreated) {
       logger.createLog(data);
@@ -34,7 +35,7 @@ function initPeripherals(win) {
       serial.on('data', writeDataToLog);
     }
   });
-  const containsTerminateSignal = data =>
+  const containsTerminateSignal = (data) =>
     TERMINATE_SIGNALS.reduce((flag, key) => data[key].value || flag, false);
   function writeDataToLog(data) {
     if (containsTerminateSignal(data)) {
@@ -46,6 +47,11 @@ function initPeripherals(win) {
     logger.writeRow(data);
   }
   ipcMain.on('serialCommand', (_, ...args) => serial.sendCommand(...args));
+  ipcMain.on('setBlockId', (_, id) => {
+    const settings = require('./settings.json');
+    settings.id = id;
+    fs.writeFile('./settings.json', JSON.stringify(settings), () => {});
+  });
   return {
     removeAllListeners() {
       serial.close();
@@ -77,7 +83,7 @@ function launch() {
   const watcher = reloadOnChange(win);
   const peripherals = initPeripherals(win);
 
-  win.on('closed', function() {
+  win.on('closed', function () {
     peripherals.removeAllListeners();
     win = null;
     watcher.close();

@@ -7,6 +7,7 @@
   import RangeInput from '../molecules/RangeInput';
   import Warning from '../atoms/Warning';
   import Button from '../atoms/Button';
+  import BlockIdSetter from '../organisms/BlockIdSetter';
   import { ipcRenderer } from 'electron';
 
   const initialData = getValue(serialData);
@@ -62,6 +63,7 @@
   }
 </script>
 
+<BlockIdSetter />
 <main>
   {#each blocks as column, idx}
     <div class="col-{idx}">
