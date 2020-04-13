@@ -18,9 +18,8 @@ module.exports = function parse(buf) {
   validate(buf);
   let i = SEPARATORS.length;
   for (let j = 0; j < PARAMS_DATA.length; j++) {
-    dataMap[PARAMS_DATA[j].name].value = +(
-      buf.readInt16BE(i) / 1000
-    ).toPrecision(4);
+    const { name, divider = 1 } = PARAMS_DATA[j];
+    dataMap[name].value = +(buf.readInt16BE(i) / divider).toPrecision(4);
     i += 2;
   }
   for (let j = 0; j < STATE_DATA.length; j++) {
