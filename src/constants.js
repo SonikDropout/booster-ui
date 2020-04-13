@@ -58,7 +58,7 @@ const PARAMS_DATA = [
     label: 'Напряжение',
     units: 'В',
     name: 'FCVoltage',
-    divider: 1000,
+    divider: 10,
     signed: true,
   },
   { label: 'Ток', units: 'А', name: 'FCCurrent', divider: 1000, signed: true },
