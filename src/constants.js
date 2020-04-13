@@ -155,6 +155,8 @@ const COMMANDS = {
   timeStep: (v) => [72, v],
   stop: () => [76, 0],
   startCalibration: () => [80, 0],
+  shortCircuitDuration: (v) => [84, v],
+  shortCircuitDelay: (v) => [88, v],
 };
 
 const CONSTRAINTS = {
@@ -176,6 +178,8 @@ const CONSTRAINTS = {
   currentStep: [0.1, 14],
   endCurrent: [0.1, 14],
   timeStep: [10, 990],
+  shortCircuitDuration: [0, 200],
+  shortCircuitDelay: [0, 100],
 };
 
 const STEPS = {
@@ -197,6 +201,8 @@ const STEPS = {
   currentStep: 0.1,
   endCurrent: 0.1,
   timeStep: 1,
+  shortCircuitDelay: 1,
+  shortCircuitDuration: 1,
 };
 
 const LOGGED_VALUES = [
