@@ -14,7 +14,7 @@
   let max = Math.max.apply(null, range);
   let value = Math.min(Math.max(suggestedValue, min), max);
 
-  $: if (Math.abs(suggestedValue - value) > 0.01) {
+  $: if (Math.abs(suggestedValue - value) > 0.01 && min < suggestedValue && max > suggestedValue) {
     clearTimeout(updateTimeout);
     updateTimeout = setTimeout(updateValue, 3000);
   }
