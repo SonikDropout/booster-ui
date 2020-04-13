@@ -48,6 +48,7 @@ const PARAMS_DATA = [
     units: '%',
     name: 'fanLoad',
     editable: true,
+    divider: 10,
   },
   {
     label: 'Температура стабилизации',
