@@ -35,7 +35,7 @@
 
   function increment() {
     if (value + step <= max) {
-      value = +(value + step).toFixed(precision);
+      value += step;
     } else {
       clearTimers();
     }
@@ -43,7 +43,7 @@
 
   function decrement() {
     if (value - step >= min) {
-      value = +(value - step).toFixed(precision);
+      value -= step;
     } else {
       clearTimers();
     }
@@ -101,8 +101,8 @@
   }
 
   function handleInputChange(e) {
-    value = +e.target.value.toFixed(precision);
-    onChange(value);
+    value = +e.target.value;
+    onChange(value, name);
   }
 </script>
 
@@ -130,7 +130,7 @@
       {max}
       {step}
       {name}
-      {value}
+      value={value.toFixed(precision)}
       on:change={handleInputChange} />
     <button
       disabled={value >= max || disabled}

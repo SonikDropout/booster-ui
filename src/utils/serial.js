@@ -34,7 +34,7 @@ function sendCommand(id, cmd) {
   buf[0] = 40;
   buf[1] = id;
   buf.writeInt16BE(cmd, 2);
-  buf[4] = id + cmd + 40;
+  buf[4] = buf[0] + buf[1] + buf[2] + buf[3];
   commandQueue.push(buf);
   if (!portBusy) {
     portBusy = true;
