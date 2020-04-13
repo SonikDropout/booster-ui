@@ -10,8 +10,6 @@
   import BlockIdSetter from '../organisms/BlockIdSetter';
   import { ipcRenderer } from 'electron';
 
-  $: console.log($serialData.minVoltage.value, $serialData.FCVoltage.value);
-
   const initialData = getValue(serialData);
 
   const disabledOnStart = [

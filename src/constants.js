@@ -101,7 +101,7 @@ const PARAMS_DATA = [
     units: 'В',
     name: 'minVoltage',
     sined: true,
-    divider: 10,
+    divider: 1000,
   },
   {
     label: 'Раход H<sub>2</sub>',
