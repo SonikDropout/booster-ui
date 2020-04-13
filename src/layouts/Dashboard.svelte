@@ -10,6 +10,8 @@
   import BlockIdSetter from '../organisms/BlockIdSetter';
   import { ipcRenderer } from 'electron';
 
+  $: console.log($serialData.minVoltage.value, $serialData.FCVoltage.value);
+
   const initialData = getValue(serialData);
 
   const disabledOnStart = [
@@ -123,7 +125,9 @@
         {/if}
       {/each}
       {#if idx === 0}
-        <Button className="calibrate" on:click={startCalibration}>Калибровка</Button>
+        <Button className="calibrate" on:click={startCalibration}>
+          Калибровка
+        </Button>
       {/if}
     </div>
   {/each}
