@@ -1,16 +1,16 @@
 const EventEmitter = require('events');
-const { STATE_DATA, PARAMS_DATA } = require('../constants');
+const { SERIAL_DATA } = require('../constants');
+const { clone } = require('./others');
 
 const emitter = new EventEmitter();
 
 let interval = setInterval(sendData, 1000);
 
-function sendData() {
-  emitter.emit('data', getRandomData());
-}
+const dataMap = clone(SERIAL_DATA);
+for (const key in dataMap) dataMap[key].value = 0;
 
-function getRandomData() {
-  return Array(STATE_DATA.length + PARAMS_DATA.length).fill(0);
+function sendData() {
+  emitter.emit('data', dataMap);
 }
 
 emitter.sendCommand = (id, cmd) => {

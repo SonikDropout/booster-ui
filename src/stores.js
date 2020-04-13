@@ -33,12 +33,19 @@ function getValue(store) {
 }
 
 let elapsed = 0;
+let isOn = false;
 const timerElement = document.getElementById('timer');
 serialData.subscribe(displayElapsedTime);
 
 function displayElapsedTime($dat) {
-  if ($dat.start.value) elapsed++;
-  else elapsed = 0;
+  if ($dat.start.value) {
+    if (!isOn) {
+      elapsed = 0;
+      isOn = true;
+    }
+    elapsed++;
+  }
+  else isOn = false;
   timerElement.innerText = formatSeconds(elapsed);
 }
 

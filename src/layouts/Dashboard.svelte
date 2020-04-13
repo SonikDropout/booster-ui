@@ -6,6 +6,7 @@
   import Value from '../atoms/Value';
   import RangeInput from '../molecules/RangeInput';
   import Warning from '../atoms/Warning';
+  import Button from '../atoms/Button';
   import { ipcRenderer } from 'electron';
 
   const initialData = getValue(serialData);
@@ -55,6 +56,10 @@
     selectedLoadMode = loadModeOptions[mode];
     ipcRenderer.send('serialCommand', ...COMMANDS.loadMode(+mode));
   }
+
+  function startCalibration() {
+    ipcRenderer.send('serialCommand', ...COMMANDS.startCalibration());
+  }
 </script>
 
 <main>
@@ -71,7 +76,7 @@
         {#if selectedLoadMode.value}
           <RangeInput
             name="load"
-            defaultValue={initialData.load.value}
+            suggestedValue={$serialData.load.value}
             step={STEPS['load' + selectedLoadMode.name]}
             label={selectedLoadMode.rangeLabel}
             onChange={sendCommand} />
@@ -98,7 +103,7 @@
               disabeld={$serialData.start.value && disabledOnStart.includes(name)}
               step={STEPS[name]}
               range={CONSTRAINTS[name]}
-              defaultValue={initialData[name].value}
+              suggestedValue={$serialData[name].value}
               label={initialData[name].label}
               {name}
               onChange={sendCommand} />
@@ -115,11 +120,7 @@
         {/if}
       {/each}
       {#if idx === 0}
-        {#each warnings as { name, message }}
-          {#if $serialData[name].value}
-            <Warning {message} />
-          {/if}
-        {/each}
+        <Button className="calibrate" on:click={startCalibration}>Калибровка</Button>
       {/if}
     </div>
   {/each}
@@ -142,6 +143,10 @@
   }
   .col-1 {
     grid-column: 2 / 3;
+  }
+
+  .col-0 :global(.calibrate) {
+    width: 100%;
   }
   .col-2 {
     grid-column: 3 / 4;

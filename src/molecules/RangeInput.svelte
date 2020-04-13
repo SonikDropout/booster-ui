@@ -4,18 +4,28 @@
   export let disabled;
   export let onChange;
   export let name;
-  export let defaultValue = range[0];
+  export let suggestedValue = range[0];
   export let style;
   export let step = 1;
   export let label;
   export let errorMessage;
 
-  $: min = Math.min.apply(null, range);
-  $: max = Math.max.apply(null, range);
-  $: value = Math.min(Math.max(defaultValue, range[0]), range[1]);
+  let min = Math.min.apply(null, range);
+  let max = Math.max.apply(null, range);
+  let value = Math.min(Math.max(suggestedValue, min), max);
+
+  $: if (Math.abs(suggestedValue - value) > 0.01) {
+    clearTimeout(updateTimeout);
+    updateTimeout = setTimeout(updateValue, 3000);
+  }
+
+  function updateValue() {
+    value = suggestedValue;
+  }
 
   let timeout,
     interval,
+    updateTimeout,
     precision = 0,
     startX,
     showControls = false;

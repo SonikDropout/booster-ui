@@ -6,6 +6,7 @@ module.exports = [
       values: [
         { name: 'FCVoltage', minCompare: 'minVoltage' },
         { name: 'FCCurrent' },
+        { name: 'FCPower' },
         { name: 'hydrogenPressure', minCompare: 'minPressure' },
         { name: 'hydrogenConsumption' },
       ],
@@ -41,6 +42,8 @@ module.exports = [
         'startCurrent',
         'currentStep',
         'endCurrent',
+        'shortCircuitDuration',
+        'shortCircuitDelay',
       ],
     },
   ],
