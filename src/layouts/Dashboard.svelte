@@ -88,7 +88,7 @@
         {/if}
       {/if}
       {#each column as block}
-        <h3>{block.title}</h3>
+        <h3>{block.title || ''}</h3>
         {#if block.selects}
           {#each block.selects as { label, name, options }}
             <Select
@@ -109,7 +109,13 @@
               suggestedValue={$serialData[name].value}
               label={initialData[name].label}
               {name}
-              onChange={sendCommand} />
+              onChange={sendCommand}>
+              {#if name == 'IVCStep'}
+                <span class="hint">
+                  до конца текущего {$serialData.stepRemain.value} с
+                </span>
+              {/if}
+            </RangeInput>
           {/each}
         {/if}
         {#if block.values}
@@ -123,7 +129,7 @@
         {/if}
       {/each}
       {#if idx === 0}
-        <Button className="calibrate" on:click={startCalibration}>
+        <Button size="sm" style="margin: 3rem auto 0;display:block" on:click={startCalibration}>
           Калибровка
         </Button>
       {/if}
@@ -138,6 +144,11 @@
     grid-column-gap: 24px;
     padding: 0 24px;
     height: 100%;
+  }
+
+  .hint {
+    display: block;
+    font-size: 1rem;
   }
   h3 {
     margin-top: 2.4rem;

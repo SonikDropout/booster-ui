@@ -11,7 +11,7 @@ SEPARATORS.writeUInt16BE(3333, 2);
 const STATE_DATA = [
   { label: 'Задерка продувки', units: 'с', name: 'blowDelay' },
   { label: 'Режим', name: 'loadMode' },
-  { label: 'Режим', name: 'boostMode' },
+  { label: 'Режим разгона', name: 'boostMode' },
   { label: 'Длительность КЗ', units: 'мс', name: 'shortCircuitDuration' },
   { label: 'Задержка КЗ', units: 'с', name: 'shortCircuitDelay' },
   { label: 'Продука до КЗ за', units: 'с', name: 'blowBeforeShortCircuit' },
@@ -35,7 +35,7 @@ const PARAMS_DATA = [
   },
   { label: 'Тепература 1', units: '\u00b0C', name: 'temp1', divider: 10 },
   { label: 'Тепература 2', units: '\u00b0C', name: 'temp2', divider: 10 },
-  { label: 'Номер топливника', name: 'experimentNumber' },
+  { label: 'Номер эксперимента', name: 'experimentNumber' },
   {
     label: 'Напряжение вентилятора',
     units: 'В',
@@ -82,7 +82,7 @@ const PARAMS_DATA = [
     name: 'fanMaxVoltage',
     divider: 1000,
   },
-  { label: 'Шаг ВАХ', units: 'А', name: 'IVCStep' },
+  { label: 'Шаг ВАХ, с', units: 'А', name: 'IVCStep' },
   {
     label: 'Отсечка по температуре',
     units: '\u00b0C',

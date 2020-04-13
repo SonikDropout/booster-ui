@@ -13,7 +13,7 @@
   let min = Math.min.apply(null, range);
   let max = Math.max.apply(null, range);
   let value = Math.min(Math.max(suggestedValue, min), max);
-  
+
   $: if (
     Math.abs(suggestedValue - value) > 0.01 &&
     min <= suggestedValue &&
@@ -112,7 +112,10 @@
 
 <label {style}>
   {#if label}
-    <span class="label">{label}</span>
+    <span class="label">
+      {label}
+      <slot />
+    </span>
   {/if}
   <span class="input-wrapper" class:disabled>
     <button

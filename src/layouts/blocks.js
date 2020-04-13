@@ -22,7 +22,6 @@ module.exports = [
   ],
   [
     {
-      title: 'Разгон',
       selects: [
         {
           name: 'boostMode',
@@ -35,10 +34,10 @@ module.exports = [
         },
       ],
       inputs: [
-        'IVCStep',
         'maxTemp',
         'minPressure',
         'minVoltage',
+        'IVCStep',
         'startCurrent',
         'currentStep',
         'endCurrent',
