@@ -30,8 +30,11 @@ let commandQueue = [];
 let portBusy = false;
 
 function sendCommand(id, cmd) {
-  const buf = Buffer.from([40, id, 0, 0, id + cmd + 40]);
+  const buf = Buffer.alloc(5);
+  buf[0] = 40;
+  buf[1] = id;
   buf.writeInt16BE(cmd, 2);
+  buf[4] = id + cmd + 40;
   commandQueue.push(buf);
   if (!portBusy) {
     portBusy = true;
