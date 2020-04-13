@@ -9,7 +9,7 @@ SEPARATORS.writeUInt16BE(7589);
 SEPARATORS.writeUInt16BE(3333, 2);
 
 const STATE_DATA = [
-  { label: 'Задерка продувки', units: 'с', name: 'blowDelay', editable: true },
+  { label: 'Задерка продувки', units: 'с', name: 'blowDelay' },
   { label: 'Режим', name: 'loadMode' },
   { label: 'Режим', name: 'boostMode' },
   { label: 'Длительность КЗ', units: 'мс', name: 'shortCircuitDuration' },
@@ -32,7 +32,6 @@ const PARAMS_DATA = [
     label: 'Длительность продувки',
     units: 'мс',
     name: 'blowDuration',
-    editable: true,
   },
   { label: 'Тепература 1', units: '\u00b0C', name: 'temp1', divider: 10 },
   { label: 'Тепература 2', units: '\u00b0C', name: 'temp2', divider: 10 },
@@ -47,7 +46,6 @@ const PARAMS_DATA = [
     label: 'Загрузка вентилятора',
     units: '%',
     name: 'fanLoad',
-    editable: true,
     divider: 10,
   },
   {
@@ -70,28 +68,26 @@ const PARAMS_DATA = [
     name: 'hydrogenPressure',
     divider: 1000,
   },
-  { label: 'Нагрузка', name: 'load', divider: 1000, editable: true },
+  { label: 'Нагрузка', name: 'load', divider: 10 },
   {
     label: 'Температура\nрадиатора',
     units: '\u00b0C',
     name: 'radiatorTemp',
     divider: 10,
   },
-  { label: 'Min обороты', units: 'об/мин', name: 'fanMinRPM', editable: true },
+  { label: 'Min обороты', units: 'об/мин', name: 'fanMinRPM' },
   {
     label: 'Max напряжение',
     units: '',
     name: 'fanMaxVoltage',
     divider: 1000,
-    editable: true,
   },
-  { label: 'Шаг ВАХ', units: 'А', name: 'IVCStep', editable: true },
+  { label: 'Шаг ВАХ', units: 'А', name: 'IVCStep' },
   {
     label: 'Отсечка по температуре',
     units: '\u00b0C',
     name: 'maxTemp',
     divider: 10,
-    editable: true,
   },
   {
     label: 'Отсечка по давлению',
@@ -99,14 +95,12 @@ const PARAMS_DATA = [
     name: 'minPressure',
     divider: 1000,
     signed: true,
-    editable: true,
   },
   {
     label: 'Отсечка по напряжению',
     units: 'В',
     name: 'minVoltage',
     sined: true,
-    editable: true,
     divider: 10,
   },
   {
@@ -120,23 +114,20 @@ const PARAMS_DATA = [
     units: 'А',
     name: 'startCurrent',
     divider: 1000,
-    editable: true,
   },
   {
     label: 'Шаг тока',
     units: 'А',
     name: 'currentStep',
     divider: 1000,
-    editable: true,
   },
   {
     label: 'Конечный ток',
     units: 'А',
     name: 'endCurrent',
     divider: 1000,
-    editable: true,
   },
-  { label: 'Временной шаг', units: 'с', name: 'timeStep', editable: true },
+  { label: 'Временной шаг', units: 'с', name: 'timeStep' },
   { label: 'До конца шага', units: 'с', name: 'stepRemain' },
 ];
 
@@ -151,7 +142,7 @@ const COMMANDS = {
   experimentNumber: (v) => [20, v],
   fanLoad: (v) => [24, (v * 10) | 0],
   stabilizationTemp: (v) => [28, v],
-  load: (v) => [32, (v * 1000) | 0],
+  load: (v) => [32, (v * 10) | 0],
   fanMinRPM: (v) => [36, (v * 10) | 0],
   fanMaxVoltage: (v) => [40, (v * 1000) | 0],
   IVCStep: (v) => [44, (v * 1000) | 0],
