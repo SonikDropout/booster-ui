@@ -175,7 +175,7 @@ const CONSTRAINTS = {
   loadVoltage: [2, 50],
   loadPower: [1, 150],
   fanMinRPM: [0, 100],
-  fanMaxVoltage: [3, 12],
+  fanMaxVoltage: [3, 13],
   IVCStep: [0.1, 14],
   maxTemp: [-10, 100],
   minPressure: [-1, 4],
