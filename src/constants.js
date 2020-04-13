@@ -58,7 +58,7 @@ const PARAMS_DATA = [
     label: 'Напряжение',
     units: 'В',
     name: 'FCVoltage',
-    divider: 10,
+    divider: 1000,
     signed: true,
   },
   { label: 'Ток', units: 'А', name: 'FCCurrent', divider: 1000, signed: true },
@@ -101,7 +101,7 @@ const PARAMS_DATA = [
     units: 'В',
     name: 'minVoltage',
     sined: true,
-    divider: 1000,
+    divider: 10,
   },
   {
     label: 'Раход H<sub>2</sub>',
