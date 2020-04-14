@@ -1,5 +1,5 @@
 const fs = require('fs');
-const homeDir = require('os').homedir;
+const homeDir = require('os').homedir();
 const path = require('path');
 const { getFormatedDate } = require('./others');
 const { LOGGED_VALUES, SERIAL_DATA } = require('../constants');
