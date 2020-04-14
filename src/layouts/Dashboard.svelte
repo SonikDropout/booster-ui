@@ -90,7 +90,7 @@
       {#each column as block}
         <h3>{block.title || ''}</h3>
         {#if block.selects}
-          {#each block.selects as { label, name, options }}
+          {#each block.selects as { name, options }}
             <Select
               {options}
               {name}

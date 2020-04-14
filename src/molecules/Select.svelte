@@ -8,6 +8,7 @@
   export let order = 0;
   export let label;
   export let style;
+  export let name;
 
   onMount(() => document.addEventListener('click', handleClickOutside));
   onDestroy(() => document.removeEventListener('click', handleClickOutside));
@@ -42,7 +43,7 @@
     optionsVisible = false;
     const v = e.target.dataset.value;
     selected = options.find(o => o.value == v);
-    onChange(v);
+    onChange(v, name);
   }
 </script>
 

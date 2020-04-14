@@ -82,7 +82,7 @@ const PARAMS_DATA = [
     name: 'fanMaxVoltage',
     divider: 1000,
   },
-  { label: 'Шаг ВАХ, с', units: 'с', name: 'IVCStep' },
+  { label: 'Шаг времени, с', units: 'с', name: 'IVCStep' },
   {
     label: 'Отсечка по температуре',
     units: '\u00b0C',
