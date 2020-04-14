@@ -3,12 +3,8 @@ const homeDir = require('os').homedir;
 const path = require('path');
 const { getFormatedDate } = require('./others');
 const { LOGGED_VALUES, SERIAL_DATA } = require('../constants');
-const { Server } = require('net');
 
 let log;
-const sockPool = [];
-const server = new Server((sock) => sockPool.push(sock));
-server.listen(23);
 
 const tableHeader = ['Время']
   .concat(
@@ -76,7 +72,6 @@ function writeTerminateMessage(boosterState) {
 function writeLogData(row) {
   console.log(row);
   writeLogData(row);
-  sockPool.forEach((sock) => sock.write(row));
 }
 
 module.exports = {
