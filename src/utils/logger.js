@@ -3,12 +3,28 @@ const homeDir = require('os').homedir;
 const path = require('path');
 const { getFormatedDate } = require('./others');
 const { LOGGED_VALUES, SERIAL_DATA } = require('../constants');
+const { Server } = require('net');
+const { exec } = require('child_process');
 
 let log;
+const sockPool = [];
+exec('hostname -I', (err, ip) => {
+  if (err) {
+    console.error(err);
+    return;
+  }
+  const server = new Server((sock) => sockPool.push(sock));
+  server.listen(23, ip);
+});
 
-const tableHeader = ['Время'].concat(LOGGED_VALUES.map(
-  (key) => `${SERIAL_DATA[key].label}, ${SERIAL_DATA[key].units || ''}`
-)).concat('\n').join('\t');
+const tableHeader = ['Время']
+  .concat(
+    LOGGED_VALUES.map(
+      (key) => `${SERIAL_DATA[key].label}, ${SERIAL_DATA[key].units || ''}`
+    )
+  )
+  .concat('\n')
+  .join('\t');
 
 function createLog(boosterState) {
   log = fs.createWriteStream(
@@ -67,6 +83,7 @@ function writeTerminateMessage(boosterState) {
 function writeLogData(row) {
   console.log(row);
   writeLogData(row);
+  sockPool.forEach((sock) => sock.write(row));
 }
 
 module.exports = {
