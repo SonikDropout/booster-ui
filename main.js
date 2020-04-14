@@ -35,13 +35,8 @@ function initPeripherals(win) {
       serial.on('data', writeDataToLog);
     }
   });
-  function containsTerminateSignal(data) {
-    for (const key of TERMINATE_SIGNALS) {
-      if (data[key].value) return true;
-    }
-  }
   function writeDataToLog(data) {
-    if (containsTerminateSignal(data)) {
+    if (!data.start.value) {
       serial.removeListener('data', writeDataToLog);
       logger.saveLog(data);
       logCreated = false;
