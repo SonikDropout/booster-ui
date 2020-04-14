@@ -59,7 +59,6 @@ ${boosterState.boostMode}
 function saveLog(boosterState) {
   writeTerminateMessage(boosterState);
   log.end();
-  log = void 0;
 }
 
 function writeTerminateMessage(boosterState) {
@@ -71,7 +70,7 @@ function writeTerminateMessage(boosterState) {
 
 function writeLogData(row) {
   console.log(row);
-  writeLogData(row);
+  log.write(row);
 }
 
 module.exports = {

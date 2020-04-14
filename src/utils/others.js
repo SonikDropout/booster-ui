@@ -21,7 +21,7 @@ const capitalize = s => s[0].toUpperCase() + s.slice(1);
 const getFormatedDate = formatStr => {
   const date = new Date();
   return formatStr
-    .replace('YYYYY', date.getFullYear())
+    .replace('YYYY', date.getFullYear())
     .replace('MM', date.getMonth() + 1)
     .replace('DD', date.getDay())
     .replace('HH', date.getHours())
