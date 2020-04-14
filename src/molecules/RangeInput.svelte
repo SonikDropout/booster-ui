@@ -12,16 +12,18 @@
 
   let min = Math.min.apply(null, range);
   let max = Math.max.apply(null, range);
-  let value = Math.min(Math.max(suggestedValue, min), max);
+  $: value = suggestedValue;
 
-  $: if (
-    Math.abs(suggestedValue - value) > 0.01 &&
-    min <= suggestedValue &&
-    max >= suggestedValue
-  ) {
-    clearTimeout(updateTimeout);
-    updateTimeout = setTimeout(updateValue, 3000);
-  }
+  // $: if (
+  //   Math.abs(suggestedValue - value) > 0.01 &&
+  //   min <= suggestedValue &&
+  //   max >= suggestedValue
+  // ) {
+  //   clearTimeout(updateTimeout);
+  //   updateTimeout = setTimeout(updateValue, 3000);
+  // } else {
+  //   clearTimeout(updateTimeout);
+  // }
 
   function updateValue() {
     value = suggestedValue;
@@ -127,10 +129,6 @@
       <span>-</span>
     </button>
     <input
-      on:pointerdown={startMoveIncrement}
-      on:pointerup={releaseMoveIncrement}
-      on:pointercancel={releaseMoveIncrement}
-      on:pointermove={incrementOnMove}
       on:focus={e => e.target.select()}
       type="number"
       {min}
