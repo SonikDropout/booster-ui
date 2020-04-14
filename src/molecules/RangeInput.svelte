@@ -14,17 +14,6 @@
   let max = Math.max.apply(null, range);
   $: value = suggestedValue;
 
-  // $: if (
-  //   Math.abs(suggestedValue - value) > 0.01 &&
-  //   min <= suggestedValue &&
-  //   max >= suggestedValue
-  // ) {
-  //   clearTimeout(updateTimeout);
-  //   updateTimeout = setTimeout(updateValue, 3000);
-  // } else {
-  //   clearTimeout(updateTimeout);
-  // }
-
   function updateValue() {
     value = suggestedValue;
   }

@@ -29,7 +29,7 @@ function initPeripherals(win) {
   let logCreated;
   serial.on('data', (data) => {
     win.webContents.send('serialData', data);
-    if (data.start.value && logCreated) {
+    if (data.start.value && !logCreated) {
       logger.createLog(data);
       logCreated = true;
       serial.on('data', writeDataToLog);

@@ -6,10 +6,9 @@ const { LOGGED_VALUES, SERIAL_DATA } = require('../constants');
 
 let log;
 
-const tableHeader = LOGGED_VALUES.map(
-  key => `${SERIAL_DATA[key].label}, ${SERIAL_DATA[key].units || ''}`
-);
-tableHeader.unshift('Время');
+const tableHeader = ['Время'].concat(LOGGED_VALUES.map(
+  (key) => `${SERIAL_DATA[key].label}, ${SERIAL_DATA[key].units || ''}`
+)).concat('\n').join('\t');
 
 function createLog(boosterState) {
   log = fs.createWriteStream(
@@ -19,16 +18,12 @@ function createLog(boosterState) {
       `log_${getFormatedDate('YYYY-MM-DD_HH-mm-ss')}.tsv`
     )
   );
-  logWrite(generateLogHeader(boosterState));
-  log.write(tableHeader.concat('\n').join('\t'));
+  writeLogData(generateLogHeader(boosterState));
+  writeLogData(tableHeader);
 }
 
 function writeRow(boosterState) {
-  log.write(
-    getLogRow(boosterState)
-      .concat('\n')
-      .join('\t')
-  );
+  writeLogData(getLogRow(boosterState));
 }
 
 function getLogRow(boosterState) {
@@ -36,12 +31,12 @@ function getLogRow(boosterState) {
   row.push.apply(
     row,
     LOGGED_VALUES.map(
-      key => `${boosterState[key].value}${boosterState[key].units}`
+      (key) => `${boosterState[key].value}${boosterState[key].units}`
     )
   );
   row.push(boosterState.isBlow ? 'П' : '-');
   row.push(boosterState.isShortCircuit ? 'КЗ' : '-');
-  return row;
+  return row.concat('\n').join('\t');
 }
 
 function generateLogHeader(boosterState) {
@@ -64,9 +59,14 @@ function saveLog(boosterState) {
 
 function writeTerminateMessage(boosterState) {
   for (const key of Object.keys(SIGNALS)) {
-    if (boosterState[key].value) log.write(SIGNALS[key]);
+    if (boosterState[key].value) writeLogData(SIGNALS[key]);
   }
-  log.write(STOP_BITS[boosterState.stopBit]);
+  writeLogData(STOP_BITS[boosterState.stopBit]);
+}
+
+function writeLogData(row) {
+  console.log(row);
+  writeLogData(row);
 }
 
 module.exports = {
