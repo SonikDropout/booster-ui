@@ -2,14 +2,17 @@ const fs = require('fs');
 const homeDir = require('os').homedir();
 const path = require('path');
 const { getFormatedDate } = require('./others');
-const { LOGGED_VALUES, SERIAL_DATA } = require('../constants');
+const { LOGGED_VALUES, SERIAL_DATA, SIGNALS, STOP_BITS } = require('../constants');
 
 let log;
 
 const tableHeader = ['Время']
   .concat(
     LOGGED_VALUES.map(
-      (key) => `${SERIAL_DATA[key].label}, ${SERIAL_DATA[key].units || ''}`
+      (key) =>
+        `${SERIAL_DATA[key].label}${
+          SERIAL_DATA[key].units ? ', ' + SERIAL_DATA[key].units : ''
+        }`
     )
   )
   .concat('\n')
@@ -36,23 +39,26 @@ function getLogRow(boosterState) {
   row.push.apply(
     row,
     LOGGED_VALUES.map(
-      (key) => `${boosterState[key].value}${boosterState[key].units}`
+      (key) => `${boosterState[key].value}${boosterState[key].units || ''}`
     )
   );
-  row.push(boosterState.isBlow ? 'П' : '-');
-  row.push(boosterState.isShortCircuit ? 'КЗ' : '-');
+  row.pop();
+  row.pop();
+  row.push(boosterState.isBlow.value ? 'П' : '-');
+  row.push(boosterState.isShortCircuit.value ? 'КЗ' : '-');
   return row.concat('\n').join('\t');
 }
 
 function generateLogHeader(boosterState) {
+  const blockNumber = require('../../settings.json').id;
   return `
 Старт
-${boosterState.boostMode}
+${boosterState.boostMode.value}
 Номер блока ${blockNumber}
-Номер эксперимента ${boosterState.experimentNumber}
-Авторазгон от ${boosterState.startCurrent} до ${boosterState.endCurrent} с шагом ${boosterState.currentStep}, время вверх ${boosterState.timeStep}сб время вниз 20с
-Отсечка: ${boosterState.minPressure}бар, ${boosterState.minVoltage}В, ${boosterState.maxTemp}\u00b0С
-КЗ: ${boosterState.shortCircuitDuration}мс ${boosterState.shortCircuitDelay}с
+Номер эксперимента ${boosterState.experimentNumber.value}
+Авторазгон от ${boosterState.startCurrent.value} до ${boosterState.endCurrent.value} с шагом ${boosterState.currentStep.value}, время вверх ${boosterState.timeStep.value}с время вниз 20с
+Отсечка: ${boosterState.minPressure.value}бар, ${boosterState.minVoltage.value}В, ${boosterState.maxTemp.value}\u00b0С
+КЗ: ${boosterState.shortCircuitDuration.value}мс ${boosterState.shortCircuitDelay.value}с
   `;
 }
 
@@ -65,7 +71,7 @@ function writeTerminateMessage(boosterState) {
   for (const key of Object.keys(SIGNALS)) {
     if (boosterState[key].value) writeLogData(SIGNALS[key]);
   }
-  writeLogData(STOP_BITS[boosterState.stopBit]);
+  writeLogData(STOP_BITS[boosterState.stopBit.value]);
 }
 
 function writeLogData(row) {

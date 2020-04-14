@@ -63,7 +63,7 @@ const PARAMS_DATA = [
   },
   { label: 'Ток', units: 'А', name: 'FCCurrent', divider: 1000, signed: true },
   {
-    label: 'Давление H<sub>2</sub>',
+    label: 'Давление H2',
     units: 'бар',
     name: 'hydrogenPressure',
     divider: 1000,
@@ -104,7 +104,7 @@ const PARAMS_DATA = [
     divider: 10,
   },
   {
-    label: 'Раход H<sub>2</sub>',
+    label: 'Раход H2',
     units: 'мл/мин',
     name: 'hydrogenConsumption',
     sined: true,
