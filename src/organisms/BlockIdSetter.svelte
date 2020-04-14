@@ -3,7 +3,6 @@
   import RangeInput from '../molecules/RangeInput';
   import Button from '../atoms/Button';
   import { zeroPad } from '../utils/others';
-  import fs from 'fs';
 
   let showDialog = false;
   const idNode = document.getElementById('id');
