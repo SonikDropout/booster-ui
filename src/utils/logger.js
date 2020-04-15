@@ -14,15 +14,18 @@ const { exec } = require('child_process');
 
 let log;
 const sockPool = [];
-const server = new Server((sock) => sockPool.push(sock));
-server.listen();
+const server = new Server((sock) => {
+  sockPool.push(sock);
+  sock.write('Hello from Pi');
+});
+server.listen(6009);
 exec('hostname -I', (err, ip) => {
   if (err) {
     console.error(err);
     return;
   }
   const title = 'Сервер слушает';
-  const body = `${ip}:${server.address().port}`;
+  const body = `${ip}:6009`;
   console.info(title, body);
   new Notification('Сервер слушает', {
     body,
