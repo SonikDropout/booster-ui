@@ -21,8 +21,11 @@ exec('hostname -I', (err, ip) => {
     console.error(err);
     return;
   }
+  const title = 'Сервер слушает';
+  const body = `${ip}:${server.address().port}`;
+  console.info(title, body);
   new Notification('Сервер слушает', {
-    body: `${ip}:${server.address().port}`,
+    body,
   });
 });
 
