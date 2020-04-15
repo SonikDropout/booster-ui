@@ -95,6 +95,7 @@
               {options}
               {name}
               onChange={sendCommand}
+              disabled={!!$serialData.start.value}
               defaultValue={initialData[name].value}
               label={initialData[name].label} />
           {/each}
