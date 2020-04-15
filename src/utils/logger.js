@@ -2,9 +2,29 @@ const fs = require('fs');
 const homeDir = require('os').homedir();
 const path = require('path');
 const { getFormatedDate } = require('./others');
-const { LOGGED_VALUES, SERIAL_DATA, SIGNALS, STOP_BITS } = require('../constants');
+const {
+  LOGGED_VALUES,
+  SERIAL_DATA,
+  SIGNALS,
+  STOP_BITS,
+} = require('../constants');
+const { Server } = require('net');
+const { Notification } = require('electron');
+const { exec } = require('child_process');
 
 let log;
+const sockPool = [];
+const server = new Server((sock) => sockPool.push(sock));
+server.listen();
+exec('hostname -I', (err, ip) => {
+  if (err) {
+    console.error(err);
+    return;
+  }
+  new Notification('Сервер слушает', {
+    body: `${ip}:${server.address().port}`,
+  });
+});
 
 const tableHeader = ['Время']
   .concat(
@@ -77,6 +97,7 @@ function writeTerminateMessage(boosterState) {
 function writeLogData(row) {
   console.log(row);
   log.write(row);
+  sockPool.forEach((sock) => sock.write(row));
 }
 
 module.exports = {
