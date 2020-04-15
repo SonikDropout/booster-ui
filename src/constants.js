@@ -9,11 +9,16 @@ SEPARATORS.writeUInt16BE(7589);
 SEPARATORS.writeUInt16BE(3333, 2);
 
 const STATE_DATA = [
-  { label: 'Задерка продувки', units: 'с', name: 'blowDelay' },
+  { label: 'Задерка продувки', units: 'с', name: 'blowDelay', prefix: 'П' },
   { label: 'Режим', name: 'loadMode' },
   { label: 'Режим разгона', name: 'boostMode' },
-  { label: 'Длительность КЗ', units: 'мс', name: 'shortCircuitDuration' },
-  { label: 'Задержка КЗ', units: 'с', name: 'shortCircuitDelay' },
+  {
+    label: 'Длительность КЗ',
+    units: 'мс',
+    name: 'shortCircuitDuration',
+    prefix: 'КЗ',
+  },
+  { label: 'Задержка КЗ', units: 'с', name: 'shortCircuitDelay', prefix: 'КЗ' },
   { label: 'Продука до КЗ за', units: 'с', name: 'blowBeforeShortCircuit' },
   { name: 'start' },
   { label: 'Был ли продув', name: 'isBlow' },
@@ -32,6 +37,7 @@ const PARAMS_DATA = [
     label: 'Длительность продувки',
     units: 'мс',
     name: 'blowDuration',
+    prefix: 'П',
   },
   { label: 'Тепература 1', units: '\u00b0C', name: 'temp1', divider: 10 },
   { label: 'Тепература 2', units: '\u00b0C', name: 'temp2', divider: 10 },
@@ -252,6 +258,8 @@ const STOP_BITS = [
   'Снятие ВАХ завершено, холостой ход\n',
   'Окончание авторазгона\n\n\n\n',
 ];
+
+const BOOST_MODES = ['Ручной вент', 'Авто вент', 'Ручной темп', 'Авто темп'];
 
 module.exports = {
   IS_RPI,

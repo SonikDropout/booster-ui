@@ -1,3 +1,4 @@
+const { BOOST_MODES } = require('../constants');
 module.exports = [
   [
     {
@@ -25,12 +26,7 @@ module.exports = [
       selects: [
         {
           name: 'boostMode',
-          options: [
-            { value: 0, label: 'Ручной вент' },
-            { value: 1, label: 'Авто вент' },
-            { value: 2, label: 'Ручной темп' },
-            { value: 3, label: 'Авто темп' },
-          ],
+          options: BOOST_MODES.map((label, value) => ({ value, label })),
         },
       ],
       inputs: [

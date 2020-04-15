@@ -6,6 +6,7 @@ const {
   LOGGED_VALUES,
   SERIAL_DATA,
   SIGNALS,
+  BOOST_MODES,
   STOP_BITS,
 } = require('../constants');
 const { Server } = require('net');
@@ -58,6 +59,7 @@ function createLog(boosterState) {
 
 function writeRow(boosterState) {
   writeLogData(getLogRow(boosterState));
+  writeInterruptMessage(boosterState);
 }
 
 function getLogRow(boosterState) {
@@ -65,7 +67,10 @@ function getLogRow(boosterState) {
   row.push.apply(
     row,
     LOGGED_VALUES.map(
-      (key) => `${boosterState[key].value}${boosterState[key].units || ''}`
+      (key) =>
+        `${boosterState[key].prefix || ''}${boosterState[key].value}${
+          boosterState[key].units || ''
+        }`
     )
   );
   row.pop();
@@ -79,21 +84,26 @@ function generateLogHeader(boosterState) {
   const blockNumber = require('../../settings.json').id;
   return `
 Старт
-${boosterState.boostMode.value}
+${BOOST_MODES[boosterState.boostMode.value]}
 Номер блока ${blockNumber}
 Номер эксперимента ${boosterState.experimentNumber.value}
-Авторазгон от ${boosterState.startCurrent.value} до ${boosterState.endCurrent.value} с шагом ${boosterState.currentStep.value}, время вверх ${boosterState.timeStep.value}с время вниз 20с
-Отсечка: ${boosterState.minPressure.value}бар, ${boosterState.minVoltage.value}В, ${boosterState.maxTemp.value}\u00b0С
-КЗ: ${boosterState.shortCircuitDuration.value}мс ${boosterState.shortCircuitDelay.value}с
+Авторазгон от ${boosterState.startCurrent.value} до ${
+    boosterState.endCurrent.value
+  } с шагом ${boosterState.currentStep.value}, время вверх ${
+    boosterState.timeStep.value
+  }с время вниз 20с
+Отсечка: ${boosterState.minPressure.value}бар, ${
+    boosterState.minVoltage.value
+  }В, ${boosterState.maxTemp.value}\u00b0С
   `;
 }
 
 function saveLog(boosterState) {
-  writeTerminateMessage(boosterState);
+  writeInterruptMessage(boosterState);
   log.end();
 }
 
-function writeTerminateMessage(boosterState) {
+function writeInterruptMessage(boosterState) {
   for (const key of Object.keys(SIGNALS)) {
     if (boosterState[key].value) writeLogData(SIGNALS[key]);
   }
