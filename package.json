@@ -4,7 +4,7 @@
   "description": "Boilerplate for GUI creation",
   "main": "main.js",
   "scripts": {
-    "wp-watch": "webpack --watch",
+    "wp-watch": "cross-env NODE_ENV=development webpack --watch",
     "wp-build": "cross-env NODE_ENV=production webpack",
     "postinstall": "electron-builder install-app-deps",
     "el-watch": "electron .",
@@ -33,12 +33,18 @@
     "webpack-cli": "^3.3.10"
   },
   "dependencies": {
-    "serialport": "^8.0.7",
-    "usb-detection": "^4.7.0"
+    "serialport": "^8.0.7"
   },
   "prettier": {
     "svelteSortOrder": "scripts-markup-styles",
     "singleQuote": true,
     "trailingComma": "es5"
+  },
+  "build": {
+    "directories": {},
+    "linux": {
+      "executableName": "booster-ui",
+      "category": "education"
+    }
   }
 }
