@@ -240,10 +240,10 @@ function addParamToMap(param) {
 }
 
 const SIGNALS = {
-  tempError: 'Высокая температура, остановка',
-  pressureError: 'Низкое давление, остановка',
-  voltageError: 'Низкое напряжение, остановка',
-  stopPressed: 'Сброс всех параметров',
+  tempError: 'Высокая температура, остановка\n',
+  pressureError: 'Низкое давление, остановка\n',
+  voltageError: 'Низкое напряжение, остановка\n',
+  stopPressed: 'Сброс всех параметров\n',
 };
 
 const STOP_BITS = [
