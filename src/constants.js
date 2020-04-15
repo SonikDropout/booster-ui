@@ -276,4 +276,5 @@ module.exports = {
   TERMINATE_SIGNALS,
   SIGNALS,
   STOP_BITS,
+  BOOST_MODES,
 };
