@@ -26,11 +26,14 @@ function reloadOnChange(win) {
 function initPeripherals(win) {
   const serial = require(`./src/utils/serial${isPi ? '' : '.mock'}`);
   const logger = require('./src/utils/logger');
+  let logCreated, logHost, logPort;
   logger
     .init()
-    .then((host, port) => win.webContents.send('serverListening', host, port))
+    .then((host, port) => {
+      logHost = host;
+      logPort = port;
+    })
     .catch(console.error);
-  let logCreated;
   serial.on('data', (data) => {
     win.webContents.send('serialData', data);
     if (data.start.value && !logCreated) {
@@ -49,6 +52,7 @@ function initPeripherals(win) {
     logger.writeRow(data);
   }
   ipcMain.on('serialCommand', (_, ...args) => serial.sendCommand(...args));
+  ipcMain.on('serverAddressRequest', (e) => (e.returnValue = { host, port }));
   ipcMain.on('setBlockId', (_, id) => {
     const settings = require('./settings.json');
     settings.id = id;
