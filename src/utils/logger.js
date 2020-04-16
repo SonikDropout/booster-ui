@@ -10,28 +10,25 @@ const {
   STOP_BITS,
 } = require('../constants');
 const { Server } = require('net');
-const { Notification } = require('electron');
 const { exec } = require('child_process');
+const { id } = require('../../settings.json');
 
 let log;
 const sockPool = [];
 const server = new Server((sock) => {
   sockPool.push(sock);
-  sock.write('Hello from Pi');
+  sock.write(`Подключено к разгонному блоку номер ${id}`);
 });
 server.listen(6009);
-exec('hostname -I', (err, ip) => {
-  if (err) {
-    console.error(err);
-    return;
-  }
-  const title = 'Сервер слушает';
-  const body = `${ip}:6009`;
-  console.info(title, body);
-  new Notification('Сервер слушает', {
-    body,
+
+function init() {
+  return new Promise((resolve, reject) => {
+    exec('hostname -I', (err, ip) => {
+      if (err) reject(err);
+      else resolve(ip, 6009);
+    });
   });
-});
+}
 
 const tableHeader = ['Время']
   .concat(
@@ -111,12 +108,12 @@ function writeInterruptMessage(boosterState) {
 }
 
 function writeLogData(row) {
-  console.log(row);
   log.write(row);
   sockPool.forEach((sock) => sock.write(row));
 }
 
 module.exports = {
+  init,
   createLog,
   writeRow,
   saveLog,

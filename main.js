@@ -26,6 +26,10 @@ function reloadOnChange(win) {
 function initPeripherals(win) {
   const serial = require(`./src/utils/serial${isPi ? '' : '.mock'}`);
   const logger = require('./src/utils/logger');
+  logger
+    .init()
+    .then((host, port) => win.webContents.send('serverListening', host, port))
+    .catch(console.error);
   let logCreated;
   serial.on('data', (data) => {
     win.webContents.send('serialData', data);
