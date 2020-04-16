@@ -134,7 +134,7 @@
       {#if idx === 0}
         <Button
           size="sm"
-          style="margin: 3rem auto 0;display:block"
+          style="margin: 1rem auto 0;display:block"
           on:click={startCalibration}>
           Калибровка
         </Button>
