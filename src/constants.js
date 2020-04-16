@@ -1,3 +1,4 @@
+const path = require('path');
 const IS_RPI = process.platform === 'linux' && process.arch == 'arm';
 const PORT = {
   name: IS_RPI ? '/dev/ttyS0' : 'COM5',
@@ -20,7 +21,12 @@ const STATE_DATA = [
     name: 'shortCircuitDuration',
     prefix: 'КЗ ',
   },
-  { label: 'Задержка КЗ', units: 'с', name: 'shortCircuitDelay', prefix: 'КЗ ' },
+  {
+    label: 'Задержка КЗ',
+    units: 'с',
+    name: 'shortCircuitDelay',
+    prefix: 'КЗ ',
+  },
   { label: 'Продука до КЗ за', units: 'с', name: 'blowBeforeShortCircuit' },
   { name: 'start' },
   { label: 'Был ли продув', name: 'isBlow' },
@@ -263,6 +269,10 @@ const STOP_BITS = [
 
 const BOOST_MODES = ['Ручной вент', 'Авто вент', 'Ручной темп', 'Авто темп'];
 
+const CONFIG_PATH = IS_RPI
+  ? '/home/pi/booster-ui/settings.json'
+  : path.join(__dirname, '..', 'settings.json');
+
 module.exports = {
   IS_RPI,
   PORT,
@@ -271,6 +281,7 @@ module.exports = {
   PARAMS_DATA,
   STATE_DATA,
   DATA_BYTE_LENGTH,
+  CONFIG_PATH,
   CONSTRAINTS,
   STEPS,
   LOGGED_VALUES,

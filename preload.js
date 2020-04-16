@@ -1,12 +1,6 @@
-const fs = require('fs');
 const { zeroPad } = require('./src/utils/others');
+const { CONFIG_PATH } = require('./src/constants');
 
 window.onload = () => {
-  document.getElementById('version').innerText = JSON.parse(
-    fs.readFileSync('./package.json')
-  ).version;
-  document.getElementById('id').innerText = zeroPad(
-    JSON.parse(fs.readFileSync('./settings.json')).id,
-    3
-  );
+  document.getElementById('id').innerText = zeroPad(require(CONFIG_PATH).id, 3);
 };

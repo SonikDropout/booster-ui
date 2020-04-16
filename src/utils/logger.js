@@ -8,16 +8,16 @@ const {
   SIGNALS,
   BOOST_MODES,
   STOP_BITS,
+  CONFIG_PATH,
 } = require('../constants');
 const { Server } = require('net');
 const { exec } = require('child_process');
-const { id } = require('../../settings.json');
 
 let log;
 const sockPool = [];
 const server = new Server((sock) => {
   sockPool.push(sock);
-  sock.write(`Подключено к разгонному блоку номер ${id}`);
+  sock.write(`Подключено к разгонному блоку номер ${require(CONFIG_PATH).id}`);
 });
 server.listen(6009);
 
@@ -25,7 +25,7 @@ function init() {
   return new Promise((resolve, reject) => {
     exec('hostname -I', (err, ip) => {
       if (err) reject(err);
-      else resolve({host: ip, port: 6009});
+      else resolve({ host: ip, port: 6009 });
     });
   });
 }
@@ -78,7 +78,7 @@ function getLogRow(boosterState) {
 }
 
 function generateLogHeader(boosterState) {
-  const blockNumber = require('../../settings.json').id;
+  const blockNumber = require(CONFIG_PATH).id;
   return `
 Старт
 ${BOOST_MODES[boosterState.boostMode.value]}

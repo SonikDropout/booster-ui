@@ -2,7 +2,7 @@ const path = require('path');
 const url = require('url');
 const fs = require('fs');
 const electron = require('electron');
-const { IS_RPI: isPi, TERMINATE_SIGNALS } = require('./src/constants');
+const { IS_RPI: isPi, CONFIG_PATH } = require('./src/constants');
 const { app, BrowserWindow, ipcMain } = electron;
 
 let win;
@@ -54,9 +54,9 @@ function initPeripherals(win) {
   ipcMain.on('serialCommand', (_, ...args) => serial.sendCommand(...args));
   ipcMain.on('serverAddressRequest', (e) => (e.returnValue = { host, port }));
   ipcMain.on('setBlockId', (_, id) => {
-    const settings = require('./settings.json');
+    const settings = require(CONFIG_PATH);
     settings.id = id;
-    fs.writeFile('./settings.json', JSON.stringify(settings), () => {});
+    fs.writeFile(CONFIG_PATH, JSON.stringify(settings), () => {});
   });
   return {
     removeAllListeners() {

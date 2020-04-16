@@ -48,6 +48,7 @@ module.exports = {
       callback();
     },
   ],
+  target: "electron-renderer",
   plugins: [
 		new MiniCssExtractPlugin({
 			filename: 'svelte.css'
