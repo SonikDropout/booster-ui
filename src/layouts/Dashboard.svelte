@@ -10,6 +10,8 @@
   import BlockIdSetter from '../organisms/BlockIdSetter';
   import { ipcRenderer } from 'electron';
 
+  $: console.log($experimentError);
+
   const initialData = getValue(serialData);
 
   const disabledOnStart = [
@@ -130,7 +132,10 @@
         {/if}
       {/each}
       {#if idx === 0}
-        <Button size="sm" style="margin: 3rem auto 0;display:block" on:click={startCalibration}>
+        <Button
+          size="sm"
+          style="margin: 3rem auto 0;display:block"
+          on:click={startCalibration}>
           Калибровка
         </Button>
       {/if}

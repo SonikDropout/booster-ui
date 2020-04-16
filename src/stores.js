@@ -10,17 +10,17 @@ const appInitialized = writable(false);
 
 let lastExperiment;
 
-const unsub = serialData.subscribe($data => {
-  if ($data.stopPressed.value) {
-    lastExperiment = $data.experimentNumber;
-    unsub();
-  }
-});
+function updateLastExperimentNumber() {
+  serialData.subscribe(($data) => {
+    lastExperiment = $data.experimentNumber.value;
+  })();
+}
 
-const experiementError = derived(
-  serialData,
-  $data => $data.start.value && lastExperiment === $data.experimentNumber
-);
+const experimentError = derived(serialData, ($data) => {
+  if (!$data.start.value && lastExperiment === $data.experimentNumber.value)
+    return true;
+  if ($data.start.value) updateLastExperimentNumber();
+});
 
 ipcRenderer
   .once('serialData', () => appInitialized.set(true))
@@ -28,7 +28,7 @@ ipcRenderer
 
 function getValue(store) {
   let $val;
-  store.subscribe($ => ($val = $))();
+  store.subscribe(($) => ($val = $))();
   return $val;
 }
 
@@ -44,14 +44,13 @@ function displayElapsedTime($dat) {
       isOn = true;
     }
     elapsed++;
-  }
-  else isOn = false;
+  } else isOn = false;
   timerElement.innerText = formatSeconds(elapsed);
 }
 
 module.exports = {
   serialData,
   appInitialized,
-  experiementError,
+  experimentError,
   getValue,
 };

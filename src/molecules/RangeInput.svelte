@@ -8,7 +8,8 @@
   export let style;
   export let step = 1;
   export let label;
-  export let errorMessage;
+  export let errorMessage = '';
+  import Exclamation from '../atoms/Exclamation';
 
   let min = Math.min.apply(null, range);
   let max = Math.max.apply(null, range);
@@ -105,6 +106,9 @@
   {#if label}
     <span class="label">
       {label}
+      {#if errorMessage}
+        <span class="error">{errorMessage}</span>
+      {/if}
       <slot />
     </span>
   {/if}
@@ -135,9 +139,7 @@
       <span>+</span>
     </button>
   </span>
-  {#if errorMessage}
-    <span class="error">{errorMessage}</span>
-  {/if}
+
 </label>
 
 <style>
@@ -146,6 +148,7 @@
     margin-bottom: 1.2rem;
     justify-content: space-between;
     align-items: center;
+    line-height: 1;
   }
   .label {
     margin-bottom: 0.8rem;
@@ -191,6 +194,9 @@
     opacity: 0.5;
   }
   .error {
-    color: var(--error-color);
+    color: var(--danger-color);
+    font-size: 0.8rem;
+    display: block;
+    animation: blink .7s ease infinite alternate;
   }
 </style>
