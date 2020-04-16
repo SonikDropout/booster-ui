@@ -26,12 +26,12 @@ function reloadOnChange(win) {
 function initPeripherals(win) {
   const serial = require(`./src/utils/serial${isPi ? '' : '.mock'}`);
   const logger = require('./src/utils/logger');
-  let logCreated, logHost, logPort;
+  let logCreated, host, port;
   logger
     .init()
-    .then((host, port) => {
-      logHost = host;
-      logPort = port;
+    .then((logHost, logPort) => {
+      host = logHost;
+      port = logPort;
     })
     .catch(console.error);
   serial.on('data', (data) => {
