@@ -4,6 +4,8 @@ const PORT = {
   baudRate: 230400,
 };
 
+const isSmallBlock = process.env.BOOSTER_BLOCK_SIZE === 'small';
+
 const SEPARATORS = Buffer.alloc(4);
 SEPARATORS.writeUInt16BE(7589);
 SEPARATORS.writeUInt16BE(3333, 2);
@@ -171,18 +173,18 @@ const CONSTRAINTS = {
   experimentNumber: [0, 99999],
   fanLoad: [0, 100],
   stabilizationTemp: [20, 60],
-  loadCurrent: [0, 14],
-  loadVoltage: [2, 50],
-  loadPower: [1, 150],
+  loadCurrent: isSmallBlock ? [0, 5] : [0, 14],
+  loadVoltage: isSmallBlock ? [2, 20] : [2, 50],
+  loadPower: isSmallBlock ? [0.1, 15] : [1, 150],
   fanMinRPM: [0, 100],
   fanMaxVoltage: [3, 13],
   IVCStep: [10, 990],
   maxTemp: [-10, 100],
   minPressure: [-1, 4],
-  minVoltage: [-10, 40],
-  startCurrent: [0.1, 14],
-  currentStep: [0.1, 14],
-  endCurrent: [0.1, 14],
+  minVoltage: isSmallBlock ? [-10, 20] : [-10, 40],
+  startCurrent: isSmallBlock ? [0.1, 5] : [0.1, 14],
+  currentStep: isSmallBlock ? [0.1, 5] : [0.1, 14],
+  endCurrent: isSmallBlock ? [0.1, 5] : [0.1, 14],
   timeStep: [10, 990],
   shortCircuitDuration: [0, 200],
   shortCircuitDelay: [0, 100],
