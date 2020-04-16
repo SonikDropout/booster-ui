@@ -25,7 +25,7 @@ function init() {
   return new Promise((resolve, reject) => {
     exec('hostname -I', (err, ip) => {
       if (err) reject(err);
-      else resolve(ip, 6009);
+      else resolve({host: ip, port: 6009});
     });
   });
 }

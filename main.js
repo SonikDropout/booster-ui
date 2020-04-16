@@ -29,9 +29,9 @@ function initPeripherals(win) {
   let logCreated, host, port;
   logger
     .init()
-    .then((logHost, logPort) => {
-      host = logHost;
-      port = logPort;
+    .then((address) => {
+      host = address.host;
+      port = address.port;
     })
     .catch(console.error);
   serial.on('data', (data) => {
