@@ -4,7 +4,8 @@
   import { ipcRenderer } from 'electron';
 
   ipcRenderer.on('serverListening', (e, host, port) => {
-    alert(`Логи доступну по адресу ${host}:${port}`);
+    window.alert(`Логи доступну по адресу ${host}:${port}`);
+    console.log(`Логи доступну по адресу ${host}:${port}`)
   });
 
   appInitialized.subscribe(flag => {

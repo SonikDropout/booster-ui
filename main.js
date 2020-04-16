@@ -66,7 +66,6 @@ function launch() {
   win = new BrowserWindow({
     width: isPi ? screenArea.width : 1024,
     height: isPi ? screenArea.height : 600,
-    fullscreen: isPi,
     frame: false,
     webPreferences: {
       nodeIntegration: true,
