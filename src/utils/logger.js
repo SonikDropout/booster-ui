@@ -9,6 +9,7 @@ const {
   BOOST_MODES,
   STOP_BITS,
   CONFIG_PATH,
+  IS_RPI,
 } = require('../constants');
 const { Server } = require('net');
 const { exec } = require('child_process');
@@ -35,7 +36,7 @@ const tableHeader = ['Время']
     LOGGED_VALUES.map(
       (key) =>
         `${SERIAL_DATA[key].label}${
-          SERIAL_DATA[key].units ? ', ' + SERIAL_DATA[key].units : ''
+        SERIAL_DATA[key].units ? ', ' + SERIAL_DATA[key].units : ''
         }`
     )
   )
@@ -44,7 +45,7 @@ const tableHeader = ['Время']
 
 function createLog(boosterState) {
   const logPath = path.join(
-    homeDir,
+    IS_RPI ? '/home/pi' : homeDir,
     'Documents',
     `log_${getFormatedDate('YYYY-MM-DD_HH-mm-ss')}.tsv`
   );
@@ -66,7 +67,7 @@ function getLogRow(boosterState) {
     LOGGED_VALUES.map(
       (key) =>
         `${boosterState[key].prefix || ''}${boosterState[key].value}${
-          boosterState[key].units || ''
+        boosterState[key].units || ''
         }`
     )
   );
@@ -86,12 +87,12 @@ ${BOOST_MODES[boosterState.boostMode.value]}
 Номер эксперимента ${boosterState.experimentNumber.value}
 Авторазгон от ${boosterState.startCurrent.value} до ${
     boosterState.endCurrent.value
-  } с шагом ${boosterState.currentStep.value}, время вверх ${
+    } с шагом ${boosterState.currentStep.value}, время вверх ${
     boosterState.timeStep.value
-  }с время вниз 20с
+    }с время вниз 20с
 Отсечка: ${boosterState.minPressure.value}бар, ${
     boosterState.minVoltage.value
-  }В, ${boosterState.maxTemp.value}\u00b0С
+    }В, ${boosterState.maxTemp.value}\u00b0С
   `;
 }
 
