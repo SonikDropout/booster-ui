@@ -9,16 +9,16 @@ const {
   BOOST_MODES,
   STOP_BITS,
   CONFIG_PATH,
-  IS_RPI,
 } = require('../constants');
 const { Server } = require('net');
 const { exec } = require('child_process');
+const blockId = require(CONFIG_PATH).id;
 
 let log;
 const sockPool = [];
 const server = new Server((sock) => {
   sockPool.push(sock);
-  sock.write(`Подключено к разгонному блоку номер ${require(CONFIG_PATH).id}`);
+  sock.write(`Подключено к разгонному блоку номер ${blockId}`);
 });
 server.listen(6009);
 
@@ -45,9 +45,9 @@ const tableHeader = ['Время']
 
 function createLog(boosterState) {
   const logPath = path.join(
-    IS_RPI ? '/home/pi' : homeDir,
+    homeDir,
     'Documents',
-    `log_${getFormatedDate('YYYY-MM-DD_HH-mm-ss')}.tsv`
+    `Блок_${blockId}_${getFormatedDate('YYYY-MM-DD_HH-mm-ss')}.tsv`
   );
   console.log('Start logging to file', logPath);
   log = fs.createWriteStream(logPath);
@@ -79,11 +79,10 @@ function getLogRow(boosterState) {
 }
 
 function generateLogHeader(boosterState) {
-  const blockNumber = require(CONFIG_PATH).id;
   return `
 Старт
 ${BOOST_MODES[boosterState.boostMode.value]}
-Номер блока ${blockNumber}
+Номер блока ${blockId}
 Номер эксперимента ${boosterState.experimentNumber.value}
 Авторазгон от ${boosterState.startCurrent.value} до ${
     boosterState.endCurrent.value
