@@ -18,15 +18,17 @@ const mergeKeysValues = (keys, values) =>
 
 const capitalize = s => s[0].toUpperCase() + s.slice(1);
 
+const zeroPad = (num, places) => String(num).padStart(places, '0');
+
 const getFormatedDate = formatStr => {
   const date = new Date();
   return formatStr
     .replace('YYYY', date.getFullYear())
-    .replace('MM', date.getMonth() + 1)
-    .replace('DD', date.getDay())
-    .replace('HH', date.getHours())
-    .replace('mm', date.getMinutes())
-    .replace('ss', date.getSeconds());
+    .replace('MM', zeroPad(date.getMonth() + 1, 2))
+    .replace('DD', zeroPad(date.getDate(), 2))
+    .replace('HH', zeroPad(date.getHours(), 2))
+    .replace('mm', zeroPad(date.getMinutes(), 2))
+    .replace('ss', zeroPad(date.getSeconds()), 2);
 };
 
 const countKeys = obj => {
@@ -47,8 +49,6 @@ const constraint = (val, [min, max]) => Math.max(min, Math.min(max, val));
 
 const getPercentage = (val, [min, max]) =>
   constraint(Math.round(((val - min) / (max - min)) * 100), [0, 100]);
-
-const zeroPad = (num, places) => String(num).padStart(places, '0');
 
 const formatSeconds = seconds => {
   const h = (seconds / 3600) | 0;
