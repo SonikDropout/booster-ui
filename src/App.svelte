@@ -6,11 +6,7 @@
 
   document.getElementById('version').innerText = version;
 
-  const { host, port } = ipcRenderer.sendSync('serverAddressRequest');
-  if (host) {
-    alert(`Логи доступну по адресу ${host}:${port}`);
-    console.log(`Логи доступну по адресу ${host}:${port}`);
-  }
+  const { host = 'n/a', port = 6009 } = ipcRenderer.sendSync('serverAddressRequest');
 
   appInitialized.subscribe(flag => {
     if (flag) {
@@ -19,6 +15,17 @@
   });
 </script>
 
+<div>Логи доступны по адресу {host}:{port}</div>
 {#if $appInitialized}
   <Dashboard />
 {/if}
+
+<style>
+  div {
+    position: fixed;
+    top: 4px;
+    left: 24px;
+    font-size: 1.2rem;
+    color: var(--corporate-grey-darken);
+  }
+</style>
