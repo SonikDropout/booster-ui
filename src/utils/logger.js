@@ -12,12 +12,13 @@ const {
 } = require('../constants');
 const { Server } = require('net');
 const { exec } = require('child_process');
+const blockId = require(CONFIG_PATH).id;
 
 let log;
 const sockPool = [];
 const server = new Server((sock) => {
   sockPool.push(sock);
-  sock.write(`Подключено к разгонному блоку номер ${require(CONFIG_PATH).id}`);
+  sock.write(`Подключено к разгонному блоку номер ${blockId}`);
 });
 server.listen(6009);
 
@@ -42,7 +43,7 @@ const tableHeader = ['Время']
     LOGGED_VALUES.map(
       (key) =>
         `${SERIAL_DATA[key].label}${
-          SERIAL_DATA[key].units ? ', ' + SERIAL_DATA[key].units : ''
+        SERIAL_DATA[key].units ? ', ' + SERIAL_DATA[key].units : ''
         }`
     )
   )
@@ -66,7 +67,7 @@ function getLogRow(boosterState) {
     LOGGED_VALUES.map(
       (key) =>
         `${boosterState[key].prefix || ''}${boosterState[key].value}${
-          boosterState[key].units || ''
+        boosterState[key].units || ''
         }`
     )
   );
@@ -78,20 +79,19 @@ function getLogRow(boosterState) {
 }
 
 function generateLogHeader(boosterState) {
-  const blockNumber = require(CONFIG_PATH).id;
   return `
 Старт
 ${BOOST_MODES[boosterState.boostMode.value]}
-Номер блока ${blockNumber}
+Номер блока ${blockId}
 Номер эксперимента ${boosterState.experimentNumber.value}
 Авторазгон от ${boosterState.startCurrent.value} до ${
     boosterState.endCurrent.value
-  } с шагом ${boosterState.currentStep.value}, время вверх ${
+    } с шагом ${boosterState.currentStep.value}, время вверх ${
     boosterState.timeStep.value
-  }с время вниз 20с
+    }с время вниз 20с
 Отсечка: ${boosterState.minPressure.value}бар, ${
     boosterState.minVoltage.value
-  }В, ${boosterState.maxTemp.value}\u00b0С
+    }В, ${boosterState.maxTemp.value}\u00b0С
   `;
 }
 
