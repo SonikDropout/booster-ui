@@ -26,7 +26,7 @@ function reloadOnChange(win) {
 function initPeripherals(win) {
   const serial = require(`./src/utils/serial${isPi ? '' : '.mock'}`);
   const logger = require('./src/utils/logger');
-  let logCreated, host, port;
+  let logStarted, host, port;
   logger
     .init()
     .then((address) => {
@@ -36,17 +36,17 @@ function initPeripherals(win) {
     .catch(console.error);
   serial.on('data', (data) => {
     win.webContents.send('serialData', data);
-    if (data.start.value && !logCreated) {
-      logger.createLog(data);
-      logCreated = true;
+    if (data.start.value && !logStarted) {
+      logger.start(data);
+      logStarted = true;
       serial.on('data', writeDataToLog);
     }
   });
   function writeDataToLog(data) {
     if (!data.start.value) {
       serial.removeListener('data', writeDataToLog);
-      logger.saveLog(data);
-      logCreated = false;
+      logger.stop(data);
+      logStarted = false;
       return;
     }
     logger.writeRow(data);
@@ -61,6 +61,7 @@ function initPeripherals(win) {
   return {
     removeAllListeners() {
       serial.close();
+      logger.end();
     },
   };
 }

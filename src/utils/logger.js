@@ -22,6 +22,13 @@ const server = new Server((sock) => {
 server.listen(6009);
 
 function init() {
+  const logPath = path.join(
+    homeDir,
+    'Documents',
+    `log_${getFormatedDate('YYYY-MM-DD_HH-mm-ss')}.tsv`
+  );
+  console.log('Start logging to file', logPath);
+  log = fs.createWriteStream(logPath);
   return new Promise((resolve, reject) => {
     exec('hostname -I', (err, ip) => {
       if (err) reject(err);
@@ -42,14 +49,7 @@ const tableHeader = ['Время']
   .concat('\n')
   .join('\t');
 
-function createLog(boosterState) {
-  const logPath = path.join(
-    homeDir,
-    'Documents',
-    `log_${getFormatedDate('YYYY-MM-DD_HH-mm-ss')}.tsv`
-  );
-  console.log('Start logging to file', logPath);
-  log = fs.createWriteStream(logPath);
+function start(boosterState) {
   writeLogData(generateLogHeader(boosterState));
   writeLogData(tableHeader);
 }
@@ -95,9 +95,8 @@ ${BOOST_MODES[boosterState.boostMode.value]}
   `;
 }
 
-function saveLog(boosterState) {
+function stop(boosterState) {
   writeInterruptMessage(boosterState);
-  log.end();
 }
 
 function writeInterruptMessage(boosterState) {
@@ -114,7 +113,8 @@ function writeLogData(row) {
 
 module.exports = {
   init,
-  createLog,
+  start,
   writeRow,
-  saveLog,
+  stop,
+  end: () => log.end(),
 };
