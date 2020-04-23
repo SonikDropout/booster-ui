@@ -23,13 +23,6 @@ const server = new Server((sock) => {
 server.listen(6009);
 
 function init() {
-  const logPath = path.join(
-    homeDir,
-    'Documents',
-    `log_${getFormatedDate('YYYY-MM-DD_HH-mm-ss')}.tsv`
-  );
-  console.log('Start logging to file', logPath);
-  log = fs.createWriteStream(logPath);
   return new Promise((resolve, reject) => {
     exec('hostname -I', (err, ip) => {
       if (err) reject(err);
@@ -51,6 +44,13 @@ const tableHeader = ['Время']
   .join('\t');
 
 function start(boosterState) {
+  const logPath = path.join(
+    homeDir,
+    'Documents',
+    `log_${getFormatedDate('YYYY-MM-DD_HH-mm-ss')}.tsv`
+  );
+  console.log('Start logging to file', logPath);
+  log = fs.createWriteStream(logPath);
   writeLogData(generateLogHeader(boosterState));
   writeLogData(tableHeader);
 }
@@ -97,6 +97,7 @@ ${BOOST_MODES[boosterState.boostMode.value]}
 
 function stop(boosterState) {
   writeInterruptMessage(boosterState);
+  log.end();
 }
 
 function writeInterruptMessage(boosterState) {
@@ -116,5 +117,4 @@ module.exports = {
   start,
   writeRow,
   stop,
-  end: () => log.end(),
 };

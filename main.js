@@ -61,7 +61,6 @@ function initPeripherals(win) {
   return {
     removeAllListeners() {
       serial.close();
-      logger.end();
     },
   };
 }
