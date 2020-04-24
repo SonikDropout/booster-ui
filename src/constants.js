@@ -12,25 +12,25 @@ SEPARATORS.writeUInt16BE(7589);
 SEPARATORS.writeUInt16BE(3333, 2);
 
 const STATE_DATA = [
-  { label: 'Задерка продувки', units: 'с', name: 'blowDelay', prefix: 'П ' },
-  { label: 'Режим', name: 'loadMode' },
-  { label: 'Режим разгона', name: 'boostMode' },
+  { label: 'Zaderjka produvki', units: 's', name: 'blowDelay', prefix: 'P ' },
+  { label: 'Rejim', name: 'loadMode' },
+  { label: 'Rejim razgona', name: 'boostMode' },
   {
-    label: 'Длительность КЗ',
-    units: 'мс',
+    label: 'Dlitelnost KZ',
+    units: 'ms',
     name: 'shortCircuitDuration',
-    prefix: 'КЗ ',
+    prefix: 'KZ ',
   },
   {
-    label: 'Задержка КЗ',
-    units: 'с',
+    label: 'Zadejka KZ',
+    units: 's',
     name: 'shortCircuitDelay',
-    prefix: 'КЗ ',
+    prefix: 'KZ ',
   },
-  { label: 'Продука до КЗ за', units: 'с', name: 'blowBeforeShortCircuit' },
+  { label: 'Produvka do KZ za', units: 's', name: 'blowBeforeShortCircuit' },
   { name: 'start' },
-  { label: 'Был ли продув', name: 'isBlow' },
-  { label: 'Было ли КЗ', name: 'isShortCircuit' },
+  { label: 'Bul li produv', name: 'isBlow' },
+  { label: 'Bulo li KZ', name: 'isShortCircuit' },
   { name: 'tempError' },
   { name: 'pressureError' },
   { name: 'voltageError' },
@@ -42,107 +42,107 @@ const TERMINATE_SIGNALS = STATE_DATA.slice(-5).map((v) => v.name);
 
 const PARAMS_DATA = [
   {
-    label: 'Длительность продувки',
-    units: 'мс',
+    label: 'Dlitelnost produvki',
+    units: 'ms',
     name: 'blowDuration',
-    prefix: 'П ',
+    prefix: 'P ',
   },
-  { label: 'Тепература 1', units: '\u00b0C', name: 'temp1', divider: 10 },
-  { label: 'Тепература 2', units: '\u00b0C', name: 'temp2', divider: 10 },
-  { label: 'Номер эксперимента', name: 'experimentNumber' },
+  { label: 'Temperatura 1', units: 'C', name: 'temp1', divider: 10 },
+  { label: 'Temperatura 2', units: 'C', name: 'temp2', divider: 10 },
+  { label: 'Nomer experimenta', name: 'experimentNumber' },
   {
-    label: 'Напряжение вентилятора',
-    units: 'В',
+    label: 'Naprazhenie ventilatora',
+    units: 'V',
     name: 'fanVoltage',
     divider: 1000,
   },
   {
-    label: 'Загрузка вентилятора',
+    label: 'Zagruzka ventilatora',
     units: '%',
     name: 'fanLoad',
     divider: 10,
   },
   {
-    label: 'Температура стабилизации',
+    label: 'Temperatura stabilizatsii',
     units: '\u00b0C',
     name: 'stabilizationTemp',
     divider: 10,
   },
   {
-    label: 'Напряжение',
-    units: 'В',
+    label: 'Napryazenie',
+    units: 'V',
     name: 'FCVoltage',
     divider: 1000,
     signed: true,
   },
-  { label: 'Ток', units: 'А', name: 'FCCurrent', divider: 1000, signed: true },
+  { label: 'Tok', units: 'A', name: 'FCCurrent', divider: 1000, signed: true },
   {
-    label: 'Давление H2',
-    units: 'бар',
+    label: 'Davlenie H2',
+    units: 'bar',
     name: 'hydrogenPressure',
     divider: 1000,
   },
-  { label: 'Нагрузка', name: 'load', divider: 10 },
+  { label: 'Nagruzka', name: 'load', divider: 10 },
   {
-    label: 'Температура\nрадиатора',
-    units: '\u00b0C',
+    label: 'Teperatura\nradiatora',
+    units: 'C',
     name: 'radiatorTemp',
     divider: 10,
   },
-  { label: 'Min обороты', units: 'об/мин', name: 'fanMinRPM' },
+  { label: 'Min oboroty', units: 'ob/min', name: 'fanMinRPM' },
   {
-    label: 'Max напряжение',
+    label: 'Max napryazenie',
     units: '',
     name: 'fanMaxVoltage',
     divider: 1000,
   },
-  { label: 'Шаг времени, с', units: 'с', name: 'IVCStep' },
+  { label: 'Shag vremeni, s', units: 's', name: 'IVCStep' },
   {
-    label: 'Отсечка по температуре',
-    units: '\u00b0C',
+    label: 'Otsechka po temperature',
+    units: 'C',
     name: 'maxTemp',
     divider: 10,
   },
   {
-    label: 'Отсечка по давлению',
-    units: 'бар',
+    label: 'Otsechka po davleniy',
+    units: 'bar',
     name: 'minPressure',
     divider: 1000,
     signed: true,
   },
   {
-    label: 'Отсечка по напряжению',
-    units: 'В',
+    label: 'Otsechka po naprazeniy',
+    units: 'V',
     name: 'minVoltage',
     sined: true,
     divider: 10,
   },
   {
-    label: 'Раход H2',
-    units: 'мл/мин',
+    label: 'Rashod H2',
+    units: 'ml/min',
     name: 'hydrogenConsumption',
     sined: true,
   },
   {
-    label: 'Начальный ток',
-    units: 'А',
+    label: 'Nachalny tok',
+    units: 'A',
     name: 'startCurrent',
     divider: 1000,
   },
   {
-    label: 'Шаг тока',
-    units: 'А',
+    label: 'Shag toka',
+    units: 'A',
     name: 'currentStep',
     divider: 1000,
   },
   {
-    label: 'Конечный ток',
-    units: 'А',
+    label: 'Konechny tok',
+    units: 'A',
     name: 'endCurrent',
     divider: 1000,
   },
-  { label: 'Временной шаг', units: 'с', name: 'timeStep' },
-  { label: 'До конца шага', units: 'с', name: 'stepRemain' },
+  { label: 'Vremenoi shag', units: 's', name: 'timeStep' },
+  { label: 'Do kontsa shaga', units: 's', name: 'stepRemain' },
 ];
 
 const DATA_BYTE_LENGTH =
@@ -238,7 +238,7 @@ const LOGGED_VALUES = [
 ];
 
 const SERIAL_DATA = {
-  FCPower: { label: 'Мощность ТЭ', units: 'Вт' },
+  FCPower: { label: 'Moshnost TE', units: 'W' },
 };
 
 for (let i = 0; i < PARAMS_DATA.length; ++i)
@@ -254,20 +254,20 @@ function addParamToMap(param) {
 }
 
 const SIGNALS = {
-  tempError: 'Высокая температура, остановка\n',
-  pressureError: 'Низкое давление, остановка\n',
-  voltageError: 'Низкое напряжение, остановка\n',
-  stopPressed: 'Сброс всех параметров\n',
+  tempError: 'Vysokaya temperatura, ostanovka\n',
+  pressureError: 'Nizkoe davlenie, ostanovka\n',
+  voltageError: 'Nizkoe napryazenie, ostanovka\n',
+  stopPressed: 'Reset all prameters\n',
 };
 
 const STOP_BITS = [
   '',
-  'Разгон завершен, снятие ВАХ\n',
-  'Снятие ВАХ завершено, холостой ход\n',
-  'Окончание авторазгона\n\n\n\n',
+  'Razgon zavershen, snyatie VAH\n',
+  'Snyatie VAH zaversheno, holostoi hod\n',
+  'Okonchanie avtorazgona\n\n\n\n',
 ];
 
-const BOOST_MODES = ['Ручной вент', 'Авто вент', 'Ручной темп', 'Авто темп'];
+const BOOST_MODES = ['Manual fan', 'Auto fan', 'Manual temp', 'Auto temp'];
 
 const CONFIG_PATH = IS_RPI
   ? '/home/pi/booster-ui/settings.json'

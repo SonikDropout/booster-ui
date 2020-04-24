@@ -28,11 +28,11 @@
     <div class="modal-body">
       <RangeInput
         style="margin:auto 0"
-        label="Номер блока"
+        label="Nomer blocka"
         suggestedValue={currentId}
         range={[0, 255]}
         onChange={setBlockId} />
-        <Button size="sm" style="margin:0 auto;width:10rem" on:click={confirmSetting}>Ок</Button>
+        <Button size="sm" style="margin:0 auto;width:10rem" on:click={confirmSetting}>Ok</Button>
     </div>
   </div>
 {/if}

@@ -8,20 +8,6 @@ const serialData = writable(clone(SERIAL_DATA));
 
 const appInitialized = writable(false);
 
-let lastExperiment;
-
-function updateLastExperimentNumber() {
-  serialData.subscribe(($data) => {
-    lastExperiment = $data.experimentNumber.value;
-  })();
-}
-
-const experimentError = derived(serialData, ($data) => {
-  if (!$data.start.value && lastExperiment === $data.experimentNumber.value)
-    return true;
-  if ($data.start.value) updateLastExperimentNumber();
-});
-
 ipcRenderer
   .once('serialData', () => appInitialized.set(true))
   .on('serialData', (_, data) => serialData.set(data));
@@ -32,25 +18,23 @@ function getValue(store) {
   return $val;
 }
 
-let elapsed = 0;
-let isOn = false;
+let elapsed = 0,
+  timeStart;
 const timerElement = document.getElementById('timer');
 serialData.subscribe(displayElapsedTime);
 
 function displayElapsedTime($dat) {
   if ($dat.start.value) {
-    if (!isOn) {
-      elapsed = 0;
-      isOn = true;
+    if (!timeStart) {
+      timeStart = Date.now();
     }
-    elapsed++;
-  } else isOn = false;
+    elapsed = Math.round((Date.now() - timeStart) / 1000);
+  } else timeStart = void 0;
   timerElement.innerText = formatSeconds(elapsed);
 }
 
 module.exports = {
   serialData,
   appInitialized,
-  experimentError,
   getValue,
 };

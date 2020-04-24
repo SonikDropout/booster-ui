@@ -15,7 +15,7 @@
   });
 </script>
 
-<div>Логи доступны по адресу {host}:{port}</div>
+<div>Logi dostupny po adresy {host}:{port}</div>
 {#if $appInitialized}
   <Dashboard />
 {/if}

@@ -26,7 +26,7 @@ function reloadOnChange(win) {
 function initPeripherals(win) {
   const serial = require(`./src/utils/serial${isPi ? '' : '.mock'}`);
   const logger = require('./src/utils/logger');
-  let logStarted, host, port;
+  let logStarted, host, port, expNum = 0;
   logger
     .init()
     .then((address) => {
@@ -36,10 +36,15 @@ function initPeripherals(win) {
     .catch(console.error);
   serial.on('data', (data) => {
     win.webContents.send('serialData', data);
-    if (data.start.value && !logStarted) {
-      logger.start(data);
-      logStarted = true;
-      serial.on('data', writeDataToLog);
+    if (!logStarted && data.start.value && data.boostMode.value % 2) {
+      logger
+        .start(data, expNum)
+        .then((logPath) => {
+          console.log(logPath);
+          logStarted = true;
+          serial.on('data', writeDataToLog);
+        })
+        .catch(console.error);
     }
   });
   function writeDataToLog(data) {
@@ -53,6 +58,7 @@ function initPeripherals(win) {
   }
   ipcMain.on('serialCommand', (_, ...args) => serial.sendCommand(...args));
   ipcMain.on('serverAddressRequest', (e) => (e.returnValue = { host, port }));
+  ipcMain.on('newExperimentNumber', (e, num) => (expNum = num));
   ipcMain.on('setBlockId', (_, id) => {
     const settings = require(CONFIG_PATH);
     settings.id = id;

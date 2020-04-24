@@ -8,11 +8,14 @@ let interval = setInterval(sendData, 1000);
 
 const dataMap = clone(SERIAL_DATA);
 for (const key in dataMap) dataMap[key].value = 0;
-dataMap.start.value = 1;
+dataMap.boostMode.value = 1;
 
 setTimeout(() => {
-  dataMap.stopPressed.value = 1;
-  dataMap.start.value = 0;
+  dataMap.start.value = 1;
+  setTimeout(() => {
+    dataMap.stopPressed.value = 1;
+    dataMap.start.value = 0;
+  }, 5000);
 }, 5000);
 
 function sendData() {
