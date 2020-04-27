@@ -33,6 +33,8 @@
     "webpack-cli": "^3.3.10"
   },
   "dependencies": {
+    "chart.js": "^2.9.3",
+    "chartjs-plugin-zoom": "^0.7.5",
     "serialport": "^8.0.7"
   },
   "prettier": {

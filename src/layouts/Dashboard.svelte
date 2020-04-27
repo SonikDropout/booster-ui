@@ -160,9 +160,15 @@
       {#if idx === 0}
         <Button
           size="sm"
-          style="margin: 1rem auto 0;display:block"
+          style="margin: 1rem auto 0"
           on:click={startCalibration}>
           Kalibrovka
+        </Button>
+        <Button
+          size="sm"
+          style="margin: 1rem auto 0"
+          on:click={() => window.scrollTo(0, window.innerHeight)}>
+          Grafiki
         </Button>
       {/if}
     </div>

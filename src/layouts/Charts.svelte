@@ -1,91 +1,141 @@
 <script>
-  import Select from '../molecules/Select';
+  import RadioGroup from '../molecules/RadioGroup';
   import Button from '../atoms/Button';
   import { ipcRenderer } from 'electron';
   import Chart from 'chart.js';
   import zoom from 'chartjs-plugin-zoom';
   import configureChart from './chart.config';
-  import { onMount } from 'svelte';
+  import { onMount, onDestroy } from 'svelte';
+  import pointsStorage from '../utils/pointsStorage';
+  import { serialData } from '../stores';
 
   onMount(() => {
     chart = new Chart(
       document.getElementById('chart').getContext('2d'),
-      configureChart(points, { x: '', y: '' })
+      configureChart(pointsStorage.points, {
+        x: axesGroup.elements[selectedAxes].xLabel,
+        y: axesGroup.elements[selectedAxes].yLabel,
+      })
     );
     chart.options.onClick = chart.resetZoom;
   });
 
-  ipcRenderer.send('usbStorageRequest');
-  ipcRenderer.on('usbConnected', () => (saveDisabled = false));
-  ipcRenderer.on('usbDisconnected', () => (saveDisabled = true));
+  onDestroy(() => chart && chart.destory());
 
-  let 
-    points = [],
-    saveDisabled = true,
-    isDrawing,
+  const axesGroup = {
+    name: 'axes',
+    elements: [
+      {
+        value: 0,
+        label: 'U(t)',
+        xLabel: 'U, V',
+        xKey: 'FCVoltage',
+        yLabel: 't, c',
+        yKey: 'time',
+      },
+      {
+        value: 1,
+        label: 'I(t)',
+        xLabel: 'I, A',
+        xKey: 'FCCurrent',
+        yLabel: 't, c',
+        yKey: 'time',
+      },
+      {
+        value: 2,
+        label: 'P(t)',
+        xLabel: 'P, W',
+        xKey: 'FCPower',
+        yLabel: 't, c',
+        yKey: 'time',
+      },
+      {
+        value: 3,
+        label: 'U(I)',
+        xLabel: 'U, V',
+        xKey: 'FCVoltage',
+        yLabel: 'I, A',
+        yKey: 'FCCurrent',
+      },
+      {
+        value: 4,
+        label: 'P(I)',
+        xLabel: 'P, W',
+        xKey: 'FCPower',
+        yLabel: 'I, A',
+        yKey: 'FCCurrent',
+      },
+    ],
+  };
+
+  const dataEntries = ['FCVoltage', 'FCCurrent', 'FCPower'];
+
+  let saveDisabled = true,
     unsubscribeData,
+    selectedAxes = 0,
     chart,
     timeStart;
 
-  $: startDisabled = !selectedSubject;
+  $: if ($serialData.start.value && !pointsStorage.rows.length) startDrawing();
+  $: if (!$serialData.start.value && pointsStorage.rows.length) stopDrawing();
 
-  function toggleDrawing() {
-    if (isDrawing) {
-      unsubscribeData();
-      stopDrawing();
-    } else {
-      startLogging();
-      subscribeData();
-    }
-    isDrawing = !isDrawing;
-  }
+  function changeAxes(e) {
+    selectedAxes = +e.target.value;
 
-  function startLogging() {
-    const fileName = '';
-    const headers = [];
-    ipcRenderer.send('startFileWrite', fileName, headers);
-  }
+    const axes = axesGroup.elements[selectedAxes];
 
-  function stopDrawing() {
-    points = [];
-  }
+    chart.options.scales.xAxes[0].scaleLabel.labelString = axes.xLabel;
+    chart.options.scales.yAxes[0].scaleLabel.labelString = axes.yLabel;
 
-  function subscribeData() {
-    timeStart = Date.now();
-      unsubscribeData = commonData.subscirbe(d => {
-        const row = {x: 0, y: 0};
-        sendToLogger(Object.values(row));
-        updateChart(row);
-      });
-  }
+    pointsStorage.setX(dataEntries.indexOf(axes.xKey));
+    pointsStorage.setY(dataEntries.indexOf(axes.yKey));
 
-  function updateChart(p) {
-    points.push(p);
-    chart.data.datasets[0].data = points;
     chart.update();
   }
 
-  function sendToLogger(row) {
-    ipcRenderer.send('excelRow', row);
+  function stopDrawing() {
+    unsubscribeData();
+    pointsStorage.drain();
   }
 
-  function saveFile() {
-    ipcRenderer.send('saveFile');
+  function startDrawing() {
+    timeStart = Date.now();
+    unsubscribeData = commonData.subscribe(d => {
+      pointsStorage.addRow(
+        [Math.round((Date.now() - timeStart) / 1000)].concat(
+          dataEntries.map(key => d[key].value)
+        )
+      );
+      chart.update();
+    });
   }
 </script>
 
-<div class="layout">
-  <header>Построение графиков</header>
-  <main>
-    <div class="chart">
-      <canvas id="chart" height="400" width="520" />
-    </div>
-  </main>
-  <footer>
-    <div class="save">
-      <Button on:click={saveFile} disabled={saveDisabled}>
-        Сохранить данные на USB-устройство
-      </Button>
-    </div>
-  </footer>
-</div>
+<main>
+  <h2>Графики</h2>
+  <RadioGroup
+    style="grid-column: 1 / 3"
+    type="horizontal"
+    group={axesGroup}
+    on:change={changeAxes}
+    value={selectedAxes} />
+  <Button style="grid-column: 3 / 4" on:click={() => window.scrollTo(0, 0)}>
+    Назад
+  </Button>
+  <div class="chart">
+    <canvas id="chart" height="400" width="520" />
+  </div>
+</main>
+
+<style>
+  main {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+  h2 {
+    grid-column: 1 / 4;
+  }
+  .chart {
+    grid-column: 1 / 4;
+  }
+</style>
