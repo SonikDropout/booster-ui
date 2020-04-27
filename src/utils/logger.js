@@ -37,7 +37,7 @@ const tableHeader = ['Vremya']
     LOGGED_VALUES.map(
       (key) =>
         `${SERIAL_DATA[key].label}${
-        SERIAL_DATA[key].units ? ', ' + SERIAL_DATA[key].units : ''
+          SERIAL_DATA[key].units ? ', ' + SERIAL_DATA[key].units : ''
         }`
     )
   )
@@ -52,20 +52,23 @@ function start(boosterState, expNumber) {
     'logs',
     date.getFullYear() + '',
     zeroPad(date.getMonth() + 1, 2)
-  )
+  );
   return new Promise((resolve, reject) => {
-    fs.mkdir(logDir, {recursive: true}, (err) => {
+    fs.mkdir(logDir, { recursive: true }, (err) => {
       if (err) {
         reject(err);
       } else {
-        const logPath = path.join(logDir, getFormatedDate('YYYY-MM-DD--HH-mm-ss') + '.tsv');
-        log = fs.createWriteStream(logPath);
+        const logPath = path.join(
+          logDir,
+          getFormatedDate('YYYY-MM-DD--HH-mm-ss') + '.tsv'
+        );
+        log = fs.openSync(logPath, 'w');
         writeLogData(generateLogHeader(boosterState, expNumber));
         writeLogData(tableHeader);
         resolve(logPath);
       }
     });
-  })
+  });
 }
 
 function writeRow(boosterState) {
@@ -80,7 +83,7 @@ function getLogRow(boosterState) {
     LOGGED_VALUES.map(
       (key) =>
         `${boosterState[key].prefix || ''}${boosterState[key].value}${
-        boosterState[key].units || ''
+          boosterState[key].units || ''
         }`
     )
   );
@@ -99,18 +102,18 @@ Block nomer ${blockId}
 Experiment nomer ${expNumber}
 Avtorazgon ${boosterState.startCurrent.value} do ${
     boosterState.endCurrent.value
-    } shag ${boosterState.currentStep.value}, vremya vverh ${
+  } shag ${boosterState.currentStep.value}, vremya vverh ${
     boosterState.timeStep.value
-    }s vremya vniz 20s
+  }s vremya vniz 20s
 Otsechka: ${boosterState.minPressure.value}bar, ${
     boosterState.minVoltage.value
-    }V, ${boosterState.maxTemp.value}C
+  }V, ${boosterState.maxTemp.value}C
   `;
 }
 
 function stop(boosterState) {
   writeInterruptMessage(boosterState);
-  log.end();
+  fs.close(log, (err) => err && console.error(err));
 }
 
 function writeInterruptMessage(boosterState) {
@@ -122,8 +125,10 @@ function writeInterruptMessage(boosterState) {
 
 function writeLogData(row) {
   row = row.replace('\n', '\r\n');
+  fs.appendFile(log, row, 'ascii', (err) => {
+    if (err) console.error(err);
+  });
   try {
-    log.write(row, 'ascii');
     sockPool.forEach((sock) => sock.write(row));
   } catch (e) {
     console.error(e);
