@@ -36,7 +36,7 @@ function initPeripherals(win) {
     .catch(console.error);
   serial.on('data', (data) => {
     win.webContents.send('serialData', data);
-    if (!logStarted && data.start.value && data.boostMode.value % 2) {
+    if (!logStarted && data.start.value) {
       logger
         .start(data, expNum)
         .then((logPath) => {
