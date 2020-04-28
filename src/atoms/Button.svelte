@@ -16,7 +16,7 @@
     color: var(--bg-color);
     border: none;
     border-radius: 0.4rem;
-    padding: 1.2rem;
+    padding: 1.2rem 2.4rem;
     font-size: 2rem;
     box-shadow: 0 3px 0 var(--corporate-grey-darken);
   }

@@ -1,74 +1,73 @@
 module.exports = function config(points, axesLabels) {
   return {
-    type: "line",
+    type: 'scatter',
     data: {
       datasets: [
         {
           data: points,
-          backgroundColor: "rgba(26,162,221, .1)",
-          borderColor: "#1aa2dd"
-        }
-      ]
+          backgroundColor: 'rgba(26,162,221, .1)',
+          borderColor: '#1aa2dd',
+        },
+      ],
     },
     options: {
       elements: {
         point: {
-          radius: 1
-        },
-        line: {
-          tension: 0 // disables bezier curves
+          radius: 5,
+          borderWidth: 3,
+          pointStyle: 'cross',
         }
       },
       legend: {
-        display: false
+        display: false,
       },
       scales: {
         xAxes: [
           {
             display: true,
-            type: "linear",
+            type: 'linear',
             scaleLabel: {
               display: true,
-              labelString: axesLabels.x
+              labelString: axesLabels.x,
             },
             ticks: {
-              maxTickLimit: 8
-            }
-          }
+              maxTickLimit: 8,
+            },
+          },
         ],
         yAxes: [
           {
             display: true,
-            type: "linear",
+            type: 'linear',
             scaleLabel: {
               display: true,
-              labelString: axesLabels.y
+              labelString: axesLabels.y,
             },
             ticks: {
-              maxTickLimit: 8
-            }
-          }
-        ]
+              maxTickLimit: 8,
+            },
+          },
+        ],
       },
       animation: {
-        duration: 0 // general animation time
+        duration: 0, // general animation time
       },
       hover: {
-        animationDuration: 0 // duration of animations when hovering an item
+        animationDuration: 0, // duration of animations when hovering an item
       },
       responsiveAnimationDuration: 0, // animation duration after a resize
       plugins: {
         zoom: {
           pan: {
             enabled: true,
-            mode: "x"
+            mode: 'x',
           },
           zoom: {
             enabled: true,
-            mode: "x"
-          }
-        }
-      }
-    }
-  }
-}
+            mode: 'x',
+          },
+        },
+      },
+    },
+  };
+};

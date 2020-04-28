@@ -7,17 +7,11 @@
 
 <label>
   <slot />
-  <input type="checkbox" {value} {name} on:change bind:checked {disabled} />
+  <input class="hidden" type="checkbox" {value} {name} on:change bind:checked {disabled} />
   <span class:disabled class:checked>{checked ? 'on' : 'off'}</span>
 </label>
 
 <style>
-  input {
-    position: absolute;
-    top: -9999px;
-    left: -9999px;
-    visibility: hidden;
-  }
   span {
     display: inline-block;
     width: 5rem;

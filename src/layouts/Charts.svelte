@@ -28,42 +28,42 @@
       {
         value: 0,
         label: 'U(t)',
-        xLabel: 'U, V',
-        xKey: 'FCVoltage',
-        yLabel: 't, c',
-        yKey: 'time',
+        yLabel: 'U, V',
+        yKey: 'FCVoltage',
+        xLabel: 't, c',
+        xKey: 'time',
       },
       {
         value: 1,
         label: 'I(t)',
-        xLabel: 'I, A',
-        xKey: 'FCCurrent',
-        yLabel: 't, c',
-        yKey: 'time',
+        yLabel: 'I, A',
+        yKey: 'FCCurrent',
+        xLabel: 't, c',
+        xKey: 'time',
       },
       {
         value: 2,
         label: 'P(t)',
-        xLabel: 'P, W',
-        xKey: 'FCPower',
-        yLabel: 't, c',
-        yKey: 'time',
+        yLabel: 'P, W',
+        yKey: 'FCPower',
+        xLabel: 't, c',
+        xKey: 'time',
       },
       {
         value: 3,
         label: 'U(I)',
-        xLabel: 'U, V',
-        xKey: 'FCVoltage',
-        yLabel: 'I, A',
-        yKey: 'FCCurrent',
+        yLabel: 'U, V',
+        yKey: 'FCVoltage',
+        xLabel: 'I, A',
+        xKey: 'FCCurrent',
       },
       {
         value: 4,
         label: 'P(I)',
-        xLabel: 'P, W',
-        xKey: 'FCPower',
-        yLabel: 'I, A',
-        yKey: 'FCCurrent',
+        yLabel: 'P, W',
+        yKey: 'FCPower',
+        xLabel: 'I, A',
+        xKey: 'FCCurrent',
       },
     ],
   };
@@ -76,8 +76,10 @@
     chart,
     timeStart;
 
-  $: if ($serialData.start.value && !pointsStorage.rows.length) startDrawing();
-  $: if (!$serialData.start.value && pointsStorage.rows.length) stopDrawing();
+  $: if ($serialData.start.value && !pointsStorage.rows.length && chart)
+    startDrawing();
+  $: if (!$serialData.start.value && pointsStorage.rows.length && chart)
+    stopDrawing();
 
   function changeAxes(e) {
     selectedAxes = +e.target.value;
@@ -87,20 +89,22 @@
     chart.options.scales.xAxes[0].scaleLabel.labelString = axes.xLabel;
     chart.options.scales.yAxes[0].scaleLabel.labelString = axes.yLabel;
 
-    pointsStorage.setX(dataEntries.indexOf(axes.xKey));
-    pointsStorage.setY(dataEntries.indexOf(axes.yKey));
+    pointsStorage.setX(dataEntries.indexOf(axes.xKey) + 1);
+    pointsStorage.setY(dataEntries.indexOf(axes.yKey) + 1);
 
+    chart.data.datasets[0].data = pointsStorage.points;
     chart.update();
   }
 
   function stopDrawing() {
     unsubscribeData();
-    pointsStorage.drain();
   }
 
   function startDrawing() {
+    pointsStorage.drain();
     timeStart = Date.now();
-    unsubscribeData = commonData.subscribe(d => {
+    chart.data.datasets[0].data = pointsStorage.points;
+    unsubscribeData = serialData.subscribe(d => {
       pointsStorage.addRow(
         [Math.round((Date.now() - timeStart) / 1000)].concat(
           dataEntries.map(key => d[key].value)
@@ -112,30 +116,37 @@
 </script>
 
 <main>
-  <h2>Графики</h2>
+  <h2>Grafiki</h2>
   <RadioGroup
     style="grid-column: 1 / 3"
     type="horizontal"
     group={axesGroup}
     on:change={changeAxes}
     value={selectedAxes} />
-  <Button style="grid-column: 3 / 4" on:click={() => window.scrollTo(0, 0)}>
-    Назад
+  <Button
+    style="grid-column: 3 / 4; justify-self: end"
+    on:click={() => window.scrollTo(0, 0)}>
+    Back
   </Button>
   <div class="chart">
-    <canvas id="chart" height="400" width="520" />
+    <canvas id="chart" />
   </div>
 </main>
 
 <style>
   main {
     display: grid;
+    padding: 0 24px;
     grid-template-columns: repeat(3, 1fr);
+    grid-column-gap: 24px;
+    height: 100vh;
+    align-items: center;
   }
   h2 {
     grid-column: 1 / 4;
   }
   .chart {
     grid-column: 1 / 4;
+    justify-self: stretch;
   }
 </style>

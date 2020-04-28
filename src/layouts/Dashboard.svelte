@@ -180,8 +180,8 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-column-gap: 24px;
-    padding: 0 24px;
-    height: 100%;
+    padding: 0 24px 2rem;
+    height: 100vh;
   }
 
   .hint {

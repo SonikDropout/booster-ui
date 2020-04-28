@@ -2,9 +2,10 @@
   export let group;
   export let type;
   export let value;
+  export let style;
 </script>
 
-<div class="radio-group {type}">
+<div class="radio-group {type}" {style}>
   {#each group.elements as element}
     <label>
       <input
@@ -27,9 +28,7 @@
     display: flex;
   }
   input:checked + span {
-    transform: scaleX(1.05);
-    opacity: 1;
-    border-radius: 4px;
+    background-color: var(--corporate-blue-darken);
   }
   span {
     display: block;
@@ -37,7 +36,6 @@
     color: var(--bg-color);
     font-weight: 500;
     background-color: var(--corporate-blue);
-    opacity: 0.6;
   }
   .icon {
     height: 1.6rem;
@@ -45,9 +43,9 @@
     filter: invert(100%);
   }
   label:first-child span {
-    border-radius: 4px 4px 0 0;
+    border-radius: 4px 0 0 4px;
   }
   label:last-child span {
-    border-radius: 0 0 4px 4px;
+    border-radius: 0 4px 4px 0;
   }
 </style>

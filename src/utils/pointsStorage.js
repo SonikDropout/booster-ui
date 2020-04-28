@@ -3,7 +3,7 @@ module.exports = {
   points: [],
   xIdx: 0,
   yIdx: 1,
-  addRow() {
+  addRow(row) {
     this.rows.push(row);
     this.points.push({x: row[this.xIdx], y: row[this.yIdx]})
   },

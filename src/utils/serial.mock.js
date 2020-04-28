@@ -12,14 +12,20 @@ dataMap.boostMode.value = 1;
 
 setTimeout(() => {
   dataMap.start.value = 1;
-  setTimeout(() => {
-    dataMap.stopPressed.value = 1;
-    dataMap.start.value = 0;
-  }, 5000);
-}, 5000);
+  // setTimeout(() => {
+  //   dataMap.stopPressed.value = 1;
+  //   dataMap.start.value = 0;
+  // }, 50000);
+}, 1000);
 
 function sendData() {
-  emitter.emit('data', dataMap);
+  emitter.emit('data', generateData());
+}
+
+function generateData() {
+  for (const key of ['FCVoltage', 'FCCurrent', 'FCPower'])
+    dataMap[key].value = +(Math.random() * 100).toFixed(3);
+  return dataMap;
 }
 
 emitter.sendCommand = (id, cmd) => {
