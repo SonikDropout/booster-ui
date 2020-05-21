@@ -34,6 +34,7 @@
   },
   "dependencies": {
     "chart.js": "^2.9.3",
+    "chartjs-plugin-downsample": "^1.1.0",
     "chartjs-plugin-zoom": "^0.7.5",
     "serialport": "^8.0.7"
   },

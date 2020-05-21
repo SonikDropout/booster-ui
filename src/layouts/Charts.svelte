@@ -3,7 +3,8 @@
   import Button from '../atoms/Button';
   import { ipcRenderer } from 'electron';
   import Chart from 'chart.js';
-  import zoom from 'chartjs-plugin-zoom';
+  import 'chartjs-plugin-zoom';
+  import 'chartjs-plugin-downsample';
   import configureChart from './chart.config';
   import { onMount, onDestroy } from 'svelte';
   import pointsStorage from '../utils/pointsStorage';
@@ -93,6 +94,7 @@
     pointsStorage.setY(dataEntries.indexOf(axes.yKey) + 1);
 
     chart.data.datasets[0].data = pointsStorage.points;
+    chart.downsample();
     chart.update();
   }
 
@@ -110,6 +112,7 @@
           dataEntries.map(key => d[key].value)
         )
       );
+      chart.downsample();
       chart.update();
     });
   }

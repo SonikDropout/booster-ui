@@ -1,6 +1,6 @@
 module.exports = function config(points, axesLabels) {
   return {
-    type: 'scatter',
+    type: 'line',
     data: {
       datasets: [
         {
@@ -16,11 +16,12 @@ module.exports = function config(points, axesLabels) {
           radius: 5,
           borderWidth: 3,
           pointStyle: 'cross',
-        }
+        },
       },
       legend: {
         display: false,
       },
+      showLines: false,
       scales: {
         xAxes: [
           {
@@ -56,15 +57,25 @@ module.exports = function config(points, axesLabels) {
         animationDuration: 0, // duration of animations when hovering an item
       },
       responsiveAnimationDuration: 0, // animation duration after a resize
+      downsample: {
+        enabled: true,
+        threshold: 500, // change this
+
+        auto: false, // don't re-downsample the data every move
+        onInit: true,
+
+        preferOriginalData: true, // use our original data when downscaling so we can downscale less, if we need to.
+        restoreOriginalData: false, // if auto is false and this is true, original data will be restored on pan/zoom - that isn't what we want.
+      },
       plugins: {
         zoom: {
           pan: {
             enabled: true,
-            mode: 'x',
+            mode: 'xy',
           },
           zoom: {
             enabled: true,
-            mode: 'x',
+            mode: 'xy',
           },
         },
       },
