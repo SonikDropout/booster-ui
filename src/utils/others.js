@@ -1,4 +1,4 @@
-const clone = obj => JSON.parse(JSON.stringify(obj));
+const clone = (obj) => JSON.parse(JSON.stringify(obj));
 
 const mergeRename = (objects, names) => {
   const result = {};
@@ -16,11 +16,11 @@ const mergeKeysValues = (keys, values) =>
     return map;
   }, {});
 
-const capitalize = s => s[0].toUpperCase() + s.slice(1);
+const capitalize = (s) => s[0].toUpperCase() + s.slice(1);
 
 const zeroPad = (num, places) => String(num).padStart(places, '0');
 
-const getFormatedDate = formatStr => {
+const getFormatedDate = (formatStr) => {
   const date = new Date();
   return formatStr
     .replace('YYYY', date.getFullYear())
@@ -31,7 +31,7 @@ const getFormatedDate = formatStr => {
     .replace('ss', zeroPad(date.getSeconds()), 2);
 };
 
-const countKeys = obj => {
+const countKeys = (obj) => {
   let n = 0;
   for (let key in obj) n++;
   return n;
@@ -50,7 +50,7 @@ const constraint = (val, [min, max]) => Math.max(min, Math.min(max, val));
 const getPercentage = (val, [min, max]) =>
   constraint(Math.round(((val - min) / (max - min)) * 100), [0, 100]);
 
-const formatSeconds = seconds => {
+const formatSeconds = (seconds) => {
   const h = (seconds / 3600) | 0;
   const m = ((seconds % 3600) / 60) | 0;
   const s = seconds % 60;
@@ -58,6 +58,29 @@ const formatSeconds = seconds => {
 };
 
 const zip = (arr1, arr2) => arr1.map((v1, i) => v1 + arr2[i]);
+
+function arithmeticMean(arr) {
+  let sum = 0;
+  for (let i = 0; i < arr.length; ++i) {
+    sum += arr[i];
+  }
+  return sum / arr.length;
+}
+
+function stdev(arr) {
+  const mean = arithmeticMean(arr);
+  let sum = 0;
+  for (let i = 0; i < arr.length; ++i) {
+    sum += arr[i] - mean;
+  }
+  return Math.sqrt((1 / arr.length) * sum);
+}
+
+function filterInconsequential(arr) {
+  const sigma = stdev(arr);
+  const mean = arithmeticMean(arr);
+  return arr.filter(n => Math.abs(n - mean) < 3 * sigma)
+}
 
 module.exports = {
   clone,
@@ -72,4 +95,6 @@ module.exports = {
   zeroPad,
   formatSeconds,
   zip,
+  stdev,
+  filterInconsequential,
 };
