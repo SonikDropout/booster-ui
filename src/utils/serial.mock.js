@@ -10,13 +10,23 @@ const dataMap = clone(SERIAL_DATA);
 for (const key in dataMap) dataMap[key].value = 0;
 dataMap.boostMode.value = 1;
 
-setTimeout(() => {
-  dataMap.start.value = 1;
-  // setTimeout(() => {
-  //   dataMap.stopPressed.value = 1;
-  //   dataMap.start.value = 0;
-  // }, 50000);
-}, 1000);
+delayStart();
+
+function delayStop() {
+  setTimeout(() => {
+    dataMap.stopPressed.value = 1;
+    dataMap.start.value = 0;
+    delayStart();
+  }, 5000);
+}
+
+function delayStart() {
+  setTimeout(() => {
+    dataMap.stopPressed.value = 0;
+    dataMap.start.value = 1;
+    delayStop();
+  }, 3000)
+}
 
 function sendData() {
   emitter.emit('data', generateData());

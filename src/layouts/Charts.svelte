@@ -72,15 +72,12 @@
   const dataEntries = ['FCVoltage', 'FCCurrent', 'FCPower'];
 
   let saveDisabled = true,
-    unsubscribeData,
-    selectedAxes = 0,
     chart,
+    selectedAxes = 0,
+    unsubscribeStopMonitor,
+    isDrawing,
+    unsubscribeStartMonitor = serialData.subscribe(monitorStart),
     timeStart;
-
-  $: if ($serialData.start.value && !pointsStorage.rows.length && chart)
-    startDrawing();
-  $: if (!$serialData.start.value && pointsStorage.rows.length && chart)
-    stopDrawing();
 
   function changeAxes(e) {
     selectedAxes = +e.target.value;
@@ -99,22 +96,36 @@
   }
 
   function stopDrawing() {
-    unsubscribeData();
+    unsubscribeStopMonitor();
+    unsubscribeStartMonitor = serialData.subscribe(monitorStart);
   }
 
   function startDrawing() {
+    unsubscribeStartMonitor();
     pointsStorage.drain();
     timeStart = Date.now();
     chart.data.datasets[0].data = pointsStorage.points;
-    unsubscribeData = serialData.subscribe(d => {
-      pointsStorage.addRow(
-        [Math.round((Date.now() - timeStart) / 1000)].concat(
-          dataEntries.map(key => d[key].value)
-        )
-      );
-      chart.downsample();
-      chart.update();
-    });
+    unsubscribeStopMonitor = serialData.subscribe(handleData);
+  }
+
+  function monitorStart(data) {
+    if (data.start.value && chart) {
+      startDrawing();
+    }
+  }
+
+  function handleData(data) {
+    if (!data.start.value && chart) {
+      stopDrawing();
+      return;
+    }
+    pointsStorage.addRow(
+      [Math.round((Date.now() - timeStart) / 1000)].concat(
+        dataEntries.map(key => data[key].value)
+      )
+    );
+    chart.downsample();
+    chart.update();
   }
 </script>
 
