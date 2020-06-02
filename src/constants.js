@@ -180,7 +180,7 @@ const CONSTRAINTS = {
   fanLoad: [0, 100],
   stabilizationTemp: [20, 60],
   loadCurrent: isSmallBlock ? [0, 5] : [0, 14],
-  loadVoltage: isSmallBlock ? [2, 20] : [2, 50],
+  loadVoltage: isSmallBlock ? [0, 20] : [0, 50],
   loadPower: isSmallBlock ? [0.1, 15] : [1, 150],
   fanMinRPM: [0, 100],
   fanMaxVoltage: [3, 13],

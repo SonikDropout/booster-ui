@@ -59,12 +59,11 @@ module.exports = function config(points, axesLabels) {
       responsiveAnimationDuration: 0, // animation duration after a resize
       downsample: {
         enabled: true,
-        // threshold: 500, // change this
 
-        // auto: false, // don't re-downsample the data every move
-        // onInit: false,
+        auto: false, // don't re-downsample the data every move
+        onInit: false,
 
-        // preferOriginalData: true, // use our original data when downscaling so we can downscale less, if we need to.
+        preferOriginalData: true, // use our original data when downscaling so we can downscale less, if we need to.
         // restoreOriginalData: false, // if auto is false and this is true, original data will be restored on pan/zoom - that isn't what we want.
       },
       plugins: {
