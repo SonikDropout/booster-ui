@@ -4,11 +4,11 @@
   import { ipcRenderer } from 'electron';
   import Chart from 'chart.js';
   import 'chartjs-plugin-zoom';
-  import 'chartjs-plugin-downsample';
   import configureChart from './chart.config';
   import { onMount, onDestroy } from 'svelte';
   import pointsStorage from '../utils/pointsStorage';
   import { serialData } from '../stores';
+  import { dataGenerator } from '../utils/dataGenerator';
 
   onMount(() => {
     chart = new Chart(
@@ -103,6 +103,11 @@
   function startDrawing() {
     unsubscribeStartMonitor();
     pointsStorage.drain();
+    if (process.env.NODE_ENV == 'development') {
+      for (let row of dataGenerator()) {
+        pointsStorage.addRow(row);
+      }
+    }
     timeStart = Date.now();
     chart.data.datasets[0].data = pointsStorage.points;
     unsubscribeStopMonitor = serialData.subscribe(handleData);
@@ -124,6 +129,7 @@
         dataEntries.map(key => data[key].value)
       )
     );
+    chart.data.datasets[0].data = pointsStorage.points;
     chart.downsample();
     chart.update();
   }

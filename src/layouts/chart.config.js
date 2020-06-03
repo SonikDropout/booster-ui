@@ -57,15 +57,6 @@ module.exports = function config(points, axesLabels) {
         animationDuration: 0, // duration of animations when hovering an item
       },
       responsiveAnimationDuration: 0, // animation duration after a resize
-      downsample: {
-        enabled: true,
-
-        auto: false, // don't re-downsample the data every move
-        onInit: false,
-
-        preferOriginalData: true, // use our original data when downscaling so we can downscale less, if we need to.
-        // restoreOriginalData: false, // if auto is false and this is true, original data will be restored on pan/zoom - that isn't what we want.
-      },
       plugins: {
         zoom: {
           pan: {
