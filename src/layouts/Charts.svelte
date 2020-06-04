@@ -91,7 +91,7 @@
     pointsStorage.setY(dataEntries.indexOf(axes.yKey) + 1);
 
     chart.data.datasets[0].data = pointsStorage.points;
-    chart.downsample();
+
     chart.update();
   }
 
@@ -130,7 +130,6 @@
       )
     );
     chart.data.datasets[0].data = pointsStorage.points;
-    chart.downsample();
     chart.update();
   }
 </script>
