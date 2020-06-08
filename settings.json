@@ -1,1 +1,29 @@
-{"id":18}
+{
+  "id": 18,
+  "executionAlgorithm": [
+    {
+      "minVoltage": 1.9,
+      "maxVoltage": 5.6,
+      "step": 0.1,
+      "stepTime": 2,
+      "direction": "downup",
+      "loop": 10
+    },
+    {
+      "minVoltage": 1.5,
+      "maxVoltage": 4,
+      "step": 0.1,
+      "stepTime": 50,
+      "direction": "down",
+      "loop": 2
+    },
+    {
+      "minVoltage": 1.9,
+      "maxVoltage": 5.6,
+      "step": 0.1,
+      "stepTime": 2,
+      "direction": "downup",
+      "loop": 3
+    }
+  ]
+}

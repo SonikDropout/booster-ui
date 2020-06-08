@@ -50,7 +50,8 @@
   let selectedLoadMode = loadModeOptions[initialData.loadMode.value],
     experimentNumber = 0,
     experimentError,
-    lastExperimentNumber;
+    lastExperimentNumber,
+    isExecuting;
 
   $: if (
     !$serialData.start.value &&
@@ -80,6 +81,16 @@
 
   function startCalibration() {
     ipcRenderer.send('serialCommand', ...COMMANDS.startCalibration());
+  }
+
+  function execute() {
+    if (!isExecuting) {
+      isExecuting = true;
+      ipcRenderer.send('execute');
+    } else {
+      ipcRenderer.send('stopExecution');
+    }
+    ipcRenderer.once('executed', () => (isExecuting = false));
   }
 </script>
 
@@ -169,6 +180,9 @@
           style="margin: 1rem auto 0"
           on:click={() => window.scrollTo(0, window.innerHeight)}>
           Grafiki
+        </Button>
+        <Button size="sm" style="margin: 1rem auto 0" on:click={execute}>
+          {isExecuting ? 'STOP' : 'Pusk'}
         </Button>
       {/if}
     </div>

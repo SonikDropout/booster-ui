@@ -10,7 +10,7 @@ const dataMap = clone(SERIAL_DATA);
 for (const key in dataMap) dataMap[key].value = 0;
 dataMap.boostMode.value = 1;
 
-delayStart();
+// delayStart();
 
 function delayStop() {
   setTimeout(() => {

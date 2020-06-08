@@ -4,6 +4,7 @@ const fs = require('fs');
 const electron = require('electron');
 const { IS_RPI: isPi, CONFIG_PATH } = require('./src/constants');
 const { app, BrowserWindow, ipcMain } = electron;
+const execute = require('./src/utils/executor');
 
 let win;
 
@@ -26,7 +27,10 @@ function reloadOnChange(win) {
 function initPeripherals(win) {
   const serial = require(`./src/utils/serial${isPi ? '' : '.mock'}`);
   const logger = require('./src/utils/logger');
-  let logStarted, host, port, expNum = 0;
+  let logStarted,
+    host,
+    port,
+    expNum = 0;
   logger
     .init()
     .then((address) => {
@@ -64,6 +68,12 @@ function initPeripherals(win) {
     settings.id = id;
     fs.writeFile(CONFIG_PATH, JSON.stringify(settings), () => {});
   });
+  ipcMain.on('execute', () =>
+    execute(serial)
+      .then(() => win.webContents.send('executed'))
+      .catch(() => win.webContents.send('executed'))
+  );
+  ipcMain.on('stopExecution', () => serial.emit('executionRejected'));
   return {
     removeAllListeners() {
       serial.close();
