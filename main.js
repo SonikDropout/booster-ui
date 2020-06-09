@@ -74,6 +74,8 @@ function initPeripherals(win) {
       .catch(() => win.webContents.send('executed'))
   );
   ipcMain.on('stopExecution', () => serial.emit('executionRejected'));
+  ipcMain.on('pauseExecution', () => serial.emit('executionPaused'));
+  ipcMain.on('resumeExecution', () => serial.emit('executionResumed'));
   return {
     removeAllListeners() {
       serial.close();

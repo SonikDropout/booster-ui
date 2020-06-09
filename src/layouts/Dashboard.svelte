@@ -51,6 +51,7 @@
     experimentNumber = 0,
     experimentError,
     lastExperimentNumber,
+    isPaused,
     isExecuting;
 
   $: if (
@@ -83,14 +84,19 @@
     ipcRenderer.send('serialCommand', ...COMMANDS.startCalibration());
   }
 
-  function execute() {
+  function toggleExecution() {
     if (!isExecuting) {
       isExecuting = true;
       ipcRenderer.send('execute');
     } else {
-      ipcRenderer.send('stopExecution');
+      ipcRenderer.send(isPaused ? 'resumeExecution' : 'pauseExecution');
+      isPaused = !isPaused;
     }
     ipcRenderer.once('executed', () => (isExecuting = false));
+  }
+
+  function stopExecution() {
+    ipcRenderer.send('stopExecution');
   }
 </script>
 
@@ -181,9 +187,24 @@
           on:click={() => window.scrollTo(0, window.innerHeight)}>
           Grafiki
         </Button>
-        <Button size="sm" style="margin: 1rem auto 0" on:click={execute}>
-          {isExecuting ? 'STOP' : 'Pusk'}
+        <Button
+          size="sm"
+          style="margin: 1rem auto 0"
+          on:click={toggleExecution}>
+          {#if isExecuting && !isPaused}
+            <span class="pause" />
+          {:else}
+            <span class="play" />
+          {/if}
         </Button>
+        {#if isExecuting}
+          <Button
+            size="sm"
+            style="margin: 1rem auto 0"
+            on:click={stopExecution}>
+            <span class="stop" />
+          </Button>
+        {/if}
       {/if}
     </div>
   {/each}
@@ -222,5 +243,24 @@
   .input-placeholder {
     height: 3.2rem;
     margin-bottom: 1.2rem;
+  }
+  .stop,
+  .pause {
+    display: inline-block;
+    width: 1.4rem;
+    height: 1.4rem;
+  }
+  .pause {
+    border-left: .3rem solid white;
+    border-right: .3rem solid white;
+  }
+  .stop {
+    background-color: white;
+  }
+  .play {
+    display: inline-block;
+    border-left: 1.4rem solid white;
+    border-top: 0.7rem solid transparent;
+    border-bottom: 0.7rem solid transparent;
   }
 </style>
