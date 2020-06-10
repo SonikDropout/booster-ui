@@ -40,7 +40,7 @@ module.exports = async function (serial) {
   serial.sendCommand(...COMMANDS.loadMode(1));
   for (const step of algorithm) {
     for (let i = 0; i < step.loop; ++i) {
-      await changeVoltage('donw')(serial, step);
+      await changeVoltage('down')(serial, step);
       if (step.direction.endsWith('up'))
         await changeVoltage('up')(serial, step);
       else serial.sendCommand(...COMMANDS.load(step.maxVoltage));
