@@ -178,12 +178,6 @@
         <Button
           size="sm"
           style="margin: 1rem auto 0"
-          on:click={startCalibration}>
-          Kalibrovka
-        </Button>
-        <Button
-          size="sm"
-          style="margin: 1rem auto 0"
           on:click={() => window.scrollTo(0, window.innerHeight)}>
           Grafiki
         </Button>
@@ -205,6 +199,14 @@
             <span class="stop" />
           </Button>
         {/if}
+      {/if}
+      {#if idx === 1}
+        <Button
+          size="sm"
+          style="margin: 1rem auto 0"
+          on:click={startCalibration}>
+          Kalibrovka
+        </Button>
       {/if}
     </div>
   {/each}
@@ -251,8 +253,8 @@
     height: 1.4rem;
   }
   .pause {
-    border-left: .3rem solid white;
-    border-right: .3rem solid white;
+    border-left: 0.3rem solid white;
+    border-right: 0.3rem solid white;
   }
   .stop {
     background-color: white;
