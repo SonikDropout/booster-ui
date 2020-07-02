@@ -18,7 +18,7 @@
   }
 
   let selected = options.find(o => o.value === defaultValue) || {
-    label: '-- не выбрано --',
+    label: '-- ne vybrano --',
   };
 
   let optionsVisible = false,

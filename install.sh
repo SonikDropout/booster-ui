@@ -1,6 +1,6 @@
 # INSTALL REQUIRED PACKAGES
 curl -sL https://deb.nodesource.com/setup_12.x | sudo bash
-sudo apt-get install -y nodejs
+sudo apt-get install -y nodejs libudev-dev
 
 # MAIN APP INSTALLATION
 npm i

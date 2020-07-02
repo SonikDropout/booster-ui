@@ -2,8 +2,7 @@ const { BOOST_MODES } = require('../constants');
 module.exports = [
   [
     {
-      title: 'БТЭ',
-      inputs: ['experimentNumber'],
+      title: 'BTE',
       values: [
         { name: 'FCVoltage', minCompare: 'minVoltage' },
         { name: 'FCCurrent' },
@@ -13,7 +12,7 @@ module.exports = [
       ],
     },
     {
-      title: 'Температуры',
+      title: 'Temperatury',
       values: [
         { name: 'temp1', maxCompare: 'maxTemp' },
         { name: 'temp2', maxCompare: 'maxTemp' },
@@ -44,11 +43,11 @@ module.exports = [
   ],
   [
     {
-      title: 'Клапан',
+      title: 'Klapan',
       inputs: ['blowDelay', 'blowDuration'],
     },
     {
-      title: 'Вентилятор',
+      title: 'Ventilator',
       inputs: ['fanLoad', 'fanMinRPM', 'fanMaxVoltage'],
       values: [{ name: 'fanVoltage' }],
     },

@@ -1,7 +1,7 @@
 <script>
   import blocks from './blocks';
   import { COMMANDS, STEPS, CONSTRAINTS, SERIAL_DATA } from '../constants';
-  import { serialData, getValue, experimentError } from '../stores';
+  import { serialData, getValue } from '../stores';
   import Select from '../molecules/Select';
   import Value from '../atoms/Value';
   import RangeInput from '../molecules/RangeInput';
@@ -25,29 +25,51 @@
   ];
 
   const warnings = [
-    { message: 'Превышена температура!', name: 'tempError' },
-    { message: 'Низкое давление!', name: 'pressureError' },
-    { message: 'Низкое напряжение!', name: 'voltageError' },
+    { message: 'Prevushena temperatura!', name: 'tempError' },
+    { message: 'Nizkoe davlenie!', name: 'pressureError' },
+    { message: 'Nizkoe napryazhenie!', name: 'voltageError' },
   ];
 
   const loadModeOptions = [
-    { value: 0, name: '', label: 'Нагрузка отключена' },
+    { value: 0, name: '', label: 'Nagruzka otklychena' },
     {
-      rangeLabel: 'Напряжение',
+      rangeLabel: 'Napryazhenie',
       value: 1,
       name: 'Voltage',
-      label: 'Постоянное напряжение',
+      label: 'Postoyannoe napryazhenie',
     },
-    { rangeLabel: 'Ток', value: 2, name: 'Current', label: 'Постоянный ток' },
+    { rangeLabel: 'Tok', value: 2, name: 'Current', label: 'Postoyanny tok' },
     {
-      rangeLabel: 'Мощность',
+      rangeLabel: 'Moshnost',
       value: 3,
       name: 'Power',
-      label: 'Постоянная мощность',
+      label: 'Postoyannaya moshnost',
     },
   ];
 
-  let selectedLoadMode = loadModeOptions[initialData.loadMode.value];
+  let selectedLoadMode = loadModeOptions[initialData.loadMode.value],
+    experimentNumber = 0,
+    experimentError,
+    lastExperimentNumber,
+    isPaused,
+    isExecuting;
+
+  $: if (
+    !$serialData.start.value &&
+    $serialData.boostMode.value % 2 &&
+    experimentNumber === lastExperimentNumber
+  ) {
+    experimentError = 'Obnovite nomer experimenta';
+  }
+
+  $: if ($serialData.start.value) lastExperimentNumber = experimentNumber;
+
+  function changeExperimentNumber(num) {
+    // lastExperimentNumber = experimentNumber;
+    experimentNumber = num;
+    if (experimentNumber !== lastExperimentNumber) experimentError = '';
+    ipcRenderer.send('newExperimentNumber', experimentNumber);
+  }
 
   function sendCommand(value, name) {
     ipcRenderer.send('serialCommand', ...COMMANDS[name](+value));
@@ -61,6 +83,21 @@
   function startCalibration() {
     ipcRenderer.send('serialCommand', ...COMMANDS.startCalibration());
   }
+
+  function toggleExecution() {
+    if (!isExecuting) {
+      isExecuting = true;
+      ipcRenderer.send('execute');
+    } else {
+      ipcRenderer.send(isPaused ? 'resumeExecution' : 'pauseExecution');
+      isPaused = !isPaused;
+    }
+    ipcRenderer.once('executed', () => (isExecuting = false));
+  }
+
+  function stopExecution() {
+    ipcRenderer.send('stopExecution');
+  }
 </script>
 
 <BlockIdSetter />
@@ -68,7 +105,7 @@
   {#each blocks as column, idx}
     <div class="col-{idx}">
       {#if idx === 2}
-        <h3>Нагрузка</h3>
+        <h3>Nagruzka</h3>
         <Select
           onChange={selectLoadMode}
           name="loadMode"
@@ -89,6 +126,15 @@
       {/if}
       {#each column as block}
         <h3>{block.title || ''}</h3>
+        {#if block.title == 'BTE'}
+          <RangeInput
+            errorMessage={experimentError}
+            disabled={$serialData.start.value}
+            range={CONSTRAINTS.experimentNumber}
+            suggestedValue={experimentNumber}
+            label="Nomer experimenta"
+            onChange={changeExperimentNumber} />
+        {/if}
         {#if block.selects}
           {#each block.selects as { name, options }}
             <Select
@@ -103,7 +149,6 @@
         {#if block.inputs}
           {#each block.inputs as name}
             <RangeInput
-              errorMessage={name === 'experimentNumber' && $experimentError ? 'Обновите номер эксперимента' : ''}
               disabeld={$serialData.start.value && disabledOnStart.includes(name)}
               step={STEPS[name]}
               range={CONSTRAINTS[name]}
@@ -113,7 +158,7 @@
               onChange={sendCommand}>
               {#if name == 'IVCStep'}
                 <span class="hint">
-                  до конца текущего {$serialData.stepRemain.value} с
+                  do kontsa tekushego {$serialData.stepRemain.value} s
                 </span>
               {/if}
             </RangeInput>
@@ -132,9 +177,35 @@
       {#if idx === 0}
         <Button
           size="sm"
-          style="margin: 1rem auto 0;display:block"
+          style="margin: 1rem auto 0"
+          on:click={() => window.scrollTo(0, window.innerHeight)}>
+          Grafiki
+        </Button>
+        <Button
+          size="sm"
+          style="margin: 1rem auto 0"
+          on:click={toggleExecution}>
+          {#if isExecuting && !isPaused}
+            <span class="pause" />
+          {:else}
+            <span class="play" />
+          {/if}
+        </Button>
+        {#if isExecuting}
+          <Button
+            size="sm"
+            style="margin: 1rem auto 0"
+            on:click={stopExecution}>
+            <span class="stop" />
+          </Button>
+        {/if}
+      {/if}
+      {#if idx === 1}
+        <Button
+          size="sm"
+          style="margin: 1rem auto 0"
           on:click={startCalibration}>
-          Калибровка
+          Kalibrovka
         </Button>
       {/if}
     </div>
@@ -146,8 +217,8 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-column-gap: 24px;
-    padding: 0 24px;
-    height: 100%;
+    padding: 0 24px 2rem;
+    height: 100vh;
   }
 
   .hint {
@@ -174,5 +245,24 @@
   .input-placeholder {
     height: 3.2rem;
     margin-bottom: 1.2rem;
+  }
+  .stop,
+  .pause {
+    display: inline-block;
+    width: 1.4rem;
+    height: 1.4rem;
+  }
+  .pause {
+    border-left: 0.3rem solid white;
+    border-right: 0.3rem solid white;
+  }
+  .stop {
+    background-color: white;
+  }
+  .play {
+    display: inline-block;
+    border-left: 1.4rem solid white;
+    border-top: 0.7rem solid transparent;
+    border-bottom: 0.7rem solid transparent;
   }
 </style>

@@ -1,13 +1,13 @@
 {
   "name": "stand-ui-boilerplate",
-  "version": "0.1.0",
+  "version": "0.1.4",
   "description": "Boilerplate for GUI creation",
   "main": "main.js",
   "scripts": {
     "wp-watch": "cross-env NODE_ENV=development webpack --watch",
     "wp-build": "cross-env NODE_ENV=production webpack",
     "postinstall": "electron-builder install-app-deps",
-    "el-watch": "electron .",
+    "el-watch": "cross-env NODE_ENV=development electron .",
     "el-build": "electron-builder --dir --linux --armv7l",
     "dev": "run-p wp-watch el-watch",
     "inspect": "electron --inspect .",
@@ -33,6 +33,8 @@
     "webpack-cli": "^3.3.10"
   },
   "dependencies": {
+    "chart.js": "^2.9.3",
+    "chartjs-plugin-zoom": "^0.7.5",
     "serialport": "^8.0.7"
   },
   "prettier": {

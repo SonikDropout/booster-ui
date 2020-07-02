@@ -1,5 +1,6 @@
 <script>
   import Dashboard from './layouts/Dashboard';
+  import Charts from './layouts/Charts';
   import { appInitialized } from './stores';
   import { version } from '../package.json';
   const { ipcRenderer } = require('electron');
@@ -15,9 +16,10 @@
   });
 </script>
 
-<div>Логи доступны по адресу {host}:{port}</div>
+<div>Logi dostupny po adresy {host}:{port}</div>
 {#if $appInitialized}
   <Dashboard />
+  <Charts />
 {/if}
 
 <style>

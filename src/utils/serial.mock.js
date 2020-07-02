@@ -8,15 +8,34 @@ let interval = setInterval(sendData, 1000);
 
 const dataMap = clone(SERIAL_DATA);
 for (const key in dataMap) dataMap[key].value = 0;
-dataMap.start.value = 1;
+dataMap.boostMode.value = 1;
 
-setTimeout(() => {
-  dataMap.stopPressed.value = 1;
-  dataMap.start.value = 0;
-}, 5000);
+// delayStart();
+
+function delayStop() {
+  setTimeout(() => {
+    dataMap.stopPressed.value = 1;
+    dataMap.start.value = 0;
+    delayStart();
+  }, 5000);
+}
+
+function delayStart() {
+  setTimeout(() => {
+    dataMap.stopPressed.value = 0;
+    dataMap.start.value = 1;
+    delayStop();
+  }, 3000)
+}
 
 function sendData() {
-  emitter.emit('data', dataMap);
+  emitter.emit('data', generateData());
+}
+
+function generateData() {
+  for (const key of ['FCVoltage', 'FCCurrent', 'FCPower'])
+    dataMap[key].value = +(Math.random() * 100).toFixed(3);
+  return dataMap;
 }
 
 emitter.sendCommand = (id, cmd) => {

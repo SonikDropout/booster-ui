@@ -11,9 +11,11 @@
   export let errorMessage = '';
   import Exclamation from '../atoms/Exclamation';
 
-  let min = Math.min.apply(null, range);
-  let max = Math.max.apply(null, range);
-  $: value = suggestedValue;
+  $: min = Math.min.apply(null, range);
+  $: max = Math.max.apply(null, range);
+  $: value = min;
+  $: if (Math.abs(value - suggestedValue) > step && !updateBlocked)
+    value = suggestedValue;
 
   function updateValue() {
     value = suggestedValue;
@@ -22,12 +24,12 @@
   let timeout,
     interval,
     updateTimeout,
-    precision = 0,
+    updateBlocked,
+    input,
     startX,
     showControls = false;
 
-  $: if (step < 1) precision = 1;
-  $: if (step < 0.1) precision = 2;
+  $: precision = Math.max(0, -step.toExponential().split('e')[1]);
 
   function increment() {
     if (value + step <= max) {
@@ -47,20 +49,19 @@
 
   function stickyCall(fn) {
     fn();
+    clearTimers();
     timeout = setTimeout(() => {
       fn();
       interval = setInterval(fn, 50);
     }, 500);
   }
 
-  function pressIncrement(e) {
-    stickyCall(increment);
-    e.target.setPointerCapture(e.pointerId);
-  }
-
-  function pressDecrement(e) {
-    stickyCall(decrement);
-    e.target.setPointerCapture(e.pointerId);
+  function press(cb) {
+    return function(e) {
+      updateBlocked = true;
+      stickyCall(cb);
+      e.target.setPointerCapture(e.pointerId);
+    };
   }
 
   function clearTimers() {
@@ -69,6 +70,7 @@
   }
 
   function release(e) {
+    updateBlocked = false;
     clearTimers();
     e.target.releasePointerCapture(e.pointerId);
     onChange(value, name);
@@ -97,8 +99,21 @@
   }
 
   function handleInputChange(e) {
-    value = +e.target.value;
+    value = Math.max(min, Math.min(max, +e.target.value));
     onChange(value, name);
+  }
+
+  function handleFocus(e) {
+    updateBlocked = true;
+    e.target.select();
+  }
+
+  function handleKeyPress(e) {
+    if (e.code == 'Enter' || e.code == 'Tab') {
+      e.target.blur();
+      setTimeout(() => (e.target.value = value));
+      updateBlocked = false;
+    }
   }
 </script>
 
@@ -115,25 +130,30 @@
   <span class="input-wrapper" class:disabled>
     <button
       disabled={value <= min || disabled}
+      tabindex="-1"
       class="decrementer"
-      on:pointerdown={pressDecrement}
+      on:pointerdown={press(decrement)}
       on:pointercancel={release}
       on:pointerup={release}>
       <span>-</span>
     </button>
     <input
-      on:focus={e => e.target.select()}
+      on:focus={handleFocus}
+      on:blur={() => (updateBlocked = false)}
+      on:keypress={handleKeyPress}
       type="number"
       {min}
       {max}
       {step}
       {name}
+      bind:this={input}
       value={value.toFixed(precision)}
       on:change={handleInputChange} />
     <button
       disabled={value >= max || disabled}
+      tabindex="-1"
       class="incrementer"
-      on:pointerdown={pressIncrement}
+      on:pointerdown={press(increment)}
       on:pointercancel={release}
       on:pointerup={release}>
       <span>+</span>
@@ -197,6 +217,6 @@
     color: var(--danger-color);
     font-size: 0.8rem;
     display: block;
-    animation: blink .7s ease infinite alternate;
+    animation: blink 0.7s ease infinite alternate;
   }
 </style>

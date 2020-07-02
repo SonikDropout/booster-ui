@@ -1,7 +1,7 @@
 const fs = require('fs');
 const homeDir = require('os').homedir();
 const path = require('path');
-const { getFormatedDate } = require('./others');
+const { getFormatedDate, zeroPad } = require('./others');
 const {
   LOGGED_VALUES,
   SERIAL_DATA,
@@ -9,6 +9,7 @@ const {
   BOOST_MODES,
   STOP_BITS,
   CONFIG_PATH,
+  IS_RPI: isPi,
 } = require('../constants');
 const { Server } = require('net');
 const { exec } = require('child_process');
@@ -18,27 +19,20 @@ let log;
 const sockPool = [];
 const server = new Server((sock) => {
   sockPool.push(sock);
-  sock.write(`Подключено к разгонному блоку номер ${blockId}`);
+  sock.write(`Established connection with block ${blockId}`);
 });
 server.listen(6009);
 
 function init() {
-  const logPath = path.join(
-    homeDir,
-    'Documents',
-    `log_${getFormatedDate('YYYY-MM-DD_HH-mm-ss')}.tsv`
-  );
-  console.log('Start logging to file', logPath);
-  log = fs.createWriteStream(logPath);
   return new Promise((resolve, reject) => {
-    exec('hostname -I', (err, ip) => {
+    exec(!isPi ? 'ipconfig' : 'hostname -I', (err, ip) => {
       if (err) reject(err);
-      else resolve({ host: ip, port: 6009 });
+      else resolve({ host: isPi ? ip : '', port: 6009 });
     });
   });
 }
 
-const tableHeader = ['Время']
+const tableHeader = ['Vremya']
   .concat(
     LOGGED_VALUES.map(
       (key) =>
@@ -50,9 +44,28 @@ const tableHeader = ['Время']
   .concat('\n')
   .join('\t');
 
-function start(boosterState) {
-  writeLogData(generateLogHeader(boosterState));
-  writeLogData(tableHeader);
+function start(boosterState, expNumber) {
+  const date = new Date();
+  const logDir = path.join(
+    homeDir,
+    'Documents',
+    'logs',
+    date.getFullYear() + '',
+    zeroPad(date.getMonth() + 1, 2)
+  )
+  return new Promise((resolve, reject) => {
+    fs.mkdir(logDir, {recursive: true}, (err) => {
+      if (err) {
+        reject(err);
+      } else {
+        const logPath = path.join(logDir, getFormatedDate('YYYY-MM-DD--HH-mm-ss') + '.tsv');
+        log = fs.createWriteStream(logPath);
+        writeLogData(generateLogHeader(boosterState, expNumber));
+        writeLogData(tableHeader);
+        resolve(logPath);
+      }
+    });
+  })
 }
 
 function writeRow(boosterState) {
@@ -73,30 +86,31 @@ function getLogRow(boosterState) {
   );
   row.pop();
   row.pop();
-  row.push(boosterState.isBlow.value ? 'П' : '-');
-  row.push(boosterState.isShortCircuit.value ? 'КЗ' : '-');
+  row.push(boosterState.isBlow.value ? 'P' : '-');
+  row.push(boosterState.isShortCircuit.value ? 'KZ' : '-');
   return row.concat('\n').join('\t');
 }
 
-function generateLogHeader(boosterState) {
+function generateLogHeader(boosterState, expNumber) {
   return `
-Старт
+Start
 ${BOOST_MODES[boosterState.boostMode.value]}
-Номер блока ${blockId}
-Номер эксперимента ${boosterState.experimentNumber.value}
-Авторазгон от ${boosterState.startCurrent.value} до ${
+Block nomer ${blockId}
+Experiment nomer ${expNumber}
+Avtorazgon ${boosterState.startCurrent.value} do ${
     boosterState.endCurrent.value
-    } с шагом ${boosterState.currentStep.value}, время вверх ${
+    } shag ${boosterState.currentStep.value}, vremya vverh ${
     boosterState.timeStep.value
-    }с время вниз 20с
-Отсечка: ${boosterState.minPressure.value}бар, ${
+    }s vremya vniz 20s
+Otsechka: ${boosterState.minPressure.value}bar, ${
     boosterState.minVoltage.value
-    }В, ${boosterState.maxTemp.value}\u00b0С
+    }V, ${boosterState.maxTemp.value}C
   `;
 }
 
 function stop(boosterState) {
   writeInterruptMessage(boosterState);
+  log.end();
 }
 
 function writeInterruptMessage(boosterState) {
@@ -107,8 +121,13 @@ function writeInterruptMessage(boosterState) {
 }
 
 function writeLogData(row) {
-  log.write(row);
-  sockPool.forEach((sock) => sock.write(row));
+  row = row.replace('\n', '\r\n');
+  try {
+    log.write(row, 'ascii');
+    sockPool.forEach((sock) => sock.write(row));
+  } catch (e) {
+    console.error(e);
+  }
 }
 
 module.exports = {
@@ -116,5 +135,4 @@ module.exports = {
   start,
   writeRow,
   stop,
-  end: () => log.end(),
 };
