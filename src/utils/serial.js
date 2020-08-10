@@ -48,6 +48,7 @@ function writeCommandFromQueue() {
     return;
   }
   const cmd = commandQueue.shift();
+  let startTx = Date.now();
   console.log('Sending command to serial:', cmd);
   serial.write(cmd);
   serial.once('data', (buf) => {
@@ -55,7 +56,11 @@ function writeCommandFromQueue() {
     if (!buf.toString('ascii').includes('ok')) {
       commandQueue.unshift(cmd);
     }
-    writeCommandFromQueue();
+    if (Date.now() - startTx < 200) {
+      setTimeout(writeCommandFromQueue, 200);
+    } else {
+      writeCommandFromQueue();
+    }
   });
 }
 
