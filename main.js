@@ -2,9 +2,11 @@ const path = require('path');
 const url = require('url');
 const fs = require('fs');
 const electron = require('electron');
-const { IS_RPI: isPi, CONFIG_PATH } = require('./src/constants');
+const { IS_RPI: isPi, CONFIG_PATH, COMMANDS } = require('./src/constants');
 const { app, BrowserWindow, ipcMain } = electron;
-const execute = require('./src/utils/executor');
+const Executor = require('./src/utils/Executor');
+const algorithm = require('./algorithm.json');
+const { executionAsyncResource } = require('async_hooks');
 
 let win;
 
@@ -27,7 +29,25 @@ function reloadOnChange(win) {
 function initPeripherals(win) {
   const serial = require(`./src/utils/serial${isPi ? '' : '.mock'}`);
   const logger = require('./src/utils/logger');
+  let currentMode;
+  const executor = new Executor(algorithm, ({ voltage, current }) => {
+    if (voltage) {
+      if (currentMode !== 1) {
+        currentMode = 1;
+        serial.sendCommand(COMMANDS.loadMode(currentMode));
+      }
+      serial.sendCommand(COMMANDS.load(voltage));
+    }
+    if (current) {
+      if (currentMode !== 2) {
+        currentMode = 2;
+        serial.sendCommand(COMMANDS.loadMode(currentMode));
+      }
+      serial.sendCommand(COMMANDS.load(current));
+    }
+  });
   let logStarted,
+    stopTriggered,
     host,
     port,
     expNum = 0;
@@ -40,6 +60,14 @@ function initPeripherals(win) {
     .catch(console.error);
   serial.on('data', (data) => {
     win.webContents.send('serialData', data);
+    if (!data.start.value && executor.running) {
+      if (!stopTriggered) stopTriggered = true;
+      else {
+        executor.abort();
+        win.webContents.send('executionRejected');
+        stopTriggered = false;
+      }
+    }
     if (!logStarted && data.start.value) {
       logger
         .start(data, expNum)
@@ -53,9 +81,14 @@ function initPeripherals(win) {
   });
   function writeDataToLog(data) {
     if (!data.start.value) {
+      if (!stopTriggered) {
+        stopTriggered = true;
+        return;
+      }
       serial.removeListener('data', writeDataToLog);
       logger.stop(data);
       logStarted = false;
+      stopTriggered = false;
       return;
     }
     logger.writeRow(data);
@@ -69,13 +102,14 @@ function initPeripherals(win) {
     fs.writeFile(CONFIG_PATH, JSON.stringify(settings), () => {});
   });
   ipcMain.on('execute', () =>
-    execute(serial)
+    executor
+      .start()
       .then(() => win.webContents.send('executed'))
-      .catch(() => win.webContents.send('executed'))
+      .catch(() => win.webContents.send('executionAborted'))
   );
-  ipcMain.on('stopExecution', () => serial.emit('executionRejected'));
-  ipcMain.on('pauseExecution', () => serial.emit('executionPaused'));
-  ipcMain.on('resumeExecution', () => serial.emit('executionResumed'));
+  ipcMain.on('stopExecution', executor.abort);
+  ipcMain.on('pauseExecution', executor.pause);
+  ipcMain.on('resumeExecution', executor.resume);
   return {
     removeAllListeners() {
       serial.close();

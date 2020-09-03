@@ -6,6 +6,7 @@
   import Value from '../atoms/Value';
   import RangeInput from '../molecules/RangeInput';
   import Warning from '../atoms/Warning';
+  import Exclamation from '../atoms/Exclamation';
   import Button from '../atoms/Button';
   import BlockIdSetter from '../organisms/BlockIdSetter';
   import { ipcRenderer } from 'electron';
@@ -52,7 +53,13 @@
     experimentError,
     lastExperimentNumber,
     isPaused,
-    isExecuting;
+    isExecuting,
+    isRejected;
+
+  ipcRenderer.on('executionRejected', () => {
+    isPaused = true;
+    isRejected = true;
+  });
 
   $: if (
     !$serialData.start.value &&
@@ -87,6 +94,7 @@
   function toggleExecution() {
     if (!isExecuting) {
       isExecuting = true;
+      isRejected = false;
       ipcRenderer.send('execute');
     } else {
       ipcRenderer.send(isPaused ? 'resumeExecution' : 'pauseExecution');
@@ -97,6 +105,8 @@
 
   function stopExecution() {
     ipcRenderer.send('stopExecution');
+    isExecuting = false;
+    isRejected = false;
   }
 </script>
 
@@ -198,6 +208,9 @@
             on:click={stopExecution}>
             <span class="stop" />
           </Button>
+        {/if}
+        {#if isRejected}
+          <Exclamation size="lg"/>
         {/if}
       {/if}
       {#if idx === 1}

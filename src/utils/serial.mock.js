@@ -9,14 +9,14 @@ let interval = setInterval(sendData, 1000);
 const dataMap = clone(SERIAL_DATA);
 for (const key in dataMap) dataMap[key].value = 0;
 dataMap.boostMode.value = 1;
+dataMap.start.value = 1;
 
-// delayStart();
+delayStop();
 
 function delayStop() {
   setTimeout(() => {
     dataMap.stopPressed.value = 1;
     dataMap.start.value = 0;
-    delayStart();
   }, 5000);
 }
 
@@ -25,7 +25,7 @@ function delayStart() {
     dataMap.stopPressed.value = 0;
     dataMap.start.value = 1;
     delayStop();
-  }, 3000)
+  }, 3000);
 }
 
 function sendData() {
@@ -41,7 +41,7 @@ function generateData() {
 emitter.sendCommand = (id, cmd) => {
   const buf = Buffer.from([40, id, 0, 0, id + cmd + 40]);
   buf.writeInt16BE(cmd, 2);
-  console.info('Sending command to serial:', buf);
+  console.info('Sending command to serial:', [id, cmd]);
 };
 
 emitter.close = () => {
