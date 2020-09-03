@@ -1,16 +1,17 @@
 module.exports = class IntervalTimer {
-  constructor(cb, interval, loops, done) {
+  constructor(cb, interval, loops, done, rejected) {
     this.state = 'running';
     this.loops = loops;
     this.ms = interval;
     this.cb = cb;
     this.done = done;
+    this.rejected = rejected;
     this._bindAll();
     this._start();
   }
   pause() {
     if (this.state != 'running') return;
-    this.clear();
+    clearInterval(this.interval);
     this.state = 'paused';
   }
   resume() {
@@ -20,6 +21,7 @@ module.exports = class IntervalTimer {
   }
   clear() {
     clearInterval(this.interval);
+    this.rejected();
   }
   _start() {
     this.interval = setInterval(this._callback, this.ms);
