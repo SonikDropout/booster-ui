@@ -179,8 +179,13 @@ const CONSTRAINTS = {
   experimentNumber: [0, 99999],
   fanLoad: [0, 100],
   stabilizationTemp: [20, 60],
+<<<<<<< HEAD
+  loadCurrent: isSmallBlock ? [0, 5] : [0, 20],
+  loadVoltage: isSmallBlock ? [2, 20] : [2, 50],
+=======
   loadCurrent: isSmallBlock ? [0, 5] : [0, 14],
   loadVoltage: isSmallBlock ? [0, 20] : [0, 50],
+>>>>>>> dd3b2685be1929925d9adde431cd53fd963444ec
   loadPower: isSmallBlock ? [0.1, 15] : [1, 150],
   fanMinRPM: [0, 100],
   fanMaxVoltage: [3, 13],
@@ -188,9 +193,9 @@ const CONSTRAINTS = {
   maxTemp: [-10, 100],
   minPressure: [-1, 4],
   minVoltage: isSmallBlock ? [-10, 20] : [-10, 40],
-  startCurrent: isSmallBlock ? [0.1, 5] : [0.1, 14],
-  currentStep: isSmallBlock ? [0.1, 5] : [0.1, 14],
-  endCurrent: isSmallBlock ? [0.1, 5] : [0.1, 14],
+  startCurrent: isSmallBlock ? [0.1, 5] : [0.1, 20],
+  currentStep: isSmallBlock ? [0.1, 5] : [0.1, 20],
+  endCurrent: isSmallBlock ? [0.1, 5] : [0.1, 20],
   timeStep: [10, 990],
   shortCircuitDuration: [0, 200],
   shortCircuitDelay: [0, 100],
