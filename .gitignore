@@ -2,3 +2,5 @@ node_modules
 dist
 app/renderer.js
 app/svelte.css
+algorithm.json
+settings.json
