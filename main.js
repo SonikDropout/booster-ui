@@ -4,7 +4,7 @@ const fs = require('fs');
 const electron = require('electron');
 const { IS_RPI: isPi, CONFIG_PATH, COMMANDS } = require('./src/constants');
 const { app, BrowserWindow, ipcMain } = electron;
-const Executor = require('./src/utils/Executor');
+const Executor = require('./src/utils/executor');
 const algorithm = require('./algorithm.json');
 const { executionAsyncResource } = require('async_hooks');
 
