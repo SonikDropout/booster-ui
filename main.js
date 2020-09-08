@@ -47,7 +47,7 @@ function initPeripherals(win) {
     }
   });
   let logStarted,
-    stopTriggered,
+    stopTriggerCounter = 0,
     host,
     port,
     expNum = 0;
@@ -60,14 +60,6 @@ function initPeripherals(win) {
     .catch(console.error);
   serial.on('data', (data) => {
     win.webContents.send('serialData', data);
-    if (!data.start.value && executor.running) {
-      if (!stopTriggered) stopTriggered = true;
-      else {
-        executor.abort();
-        win.webContents.send('executionRejected');
-        stopTriggered = false;
-      }
-    }
     if (!logStarted && data.start.value) {
       logger
         .start(data, expNum)
@@ -81,14 +73,18 @@ function initPeripherals(win) {
   });
   function writeDataToLog(data) {
     if (!data.start.value) {
-      if (!stopTriggered) {
-        stopTriggered = true;
+      if (stopTriggerCounter < 4) {
+        stopTriggerCounter++;
         return;
       }
       serial.removeListener('data', writeDataToLog);
       logger.stop(data);
       logStarted = false;
-      stopTriggered = false;
+      stopTriggerCounter = 0;
+      if (executor.running) {
+        executor.abort();
+        win.webContents.send('executionRejected');
+      }
       return;
     }
     logger.writeRow(data);
