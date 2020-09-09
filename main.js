@@ -34,16 +34,16 @@ function initPeripherals(win) {
     if (voltage) {
       if (currentMode !== 1) {
         currentMode = 1;
-        serial.sendCommand(COMMANDS.loadMode(currentMode));
+        serial.sendCommand(...COMMANDS.loadMode(currentMode));
       }
-      serial.sendCommand(COMMANDS.load(voltage));
+      serial.sendCommand(...COMMANDS.load(voltage));
     }
     if (current) {
       if (currentMode !== 2) {
         currentMode = 2;
-        serial.sendCommand(COMMANDS.loadMode(currentMode));
+        serial.sendCommand(...COMMANDS.loadMode(currentMode));
       }
-      serial.sendCommand(COMMANDS.load(current));
+      serial.sendCommand(...COMMANDS.load(current));
     }
   });
   let logStarted,

@@ -179,13 +179,8 @@ const CONSTRAINTS = {
   experimentNumber: [0, 99999],
   fanLoad: [0, 100],
   stabilizationTemp: [20, 60],
-<<<<<<< HEAD
   loadCurrent: isSmallBlock ? [0, 5] : [0, 20],
   loadVoltage: isSmallBlock ? [2, 20] : [2, 50],
-=======
-  loadCurrent: isSmallBlock ? [0, 5] : [0, 14],
-  loadVoltage: isSmallBlock ? [0, 20] : [0, 50],
->>>>>>> dd3b2685be1929925d9adde431cd53fd963444ec
   loadPower: isSmallBlock ? [0.1, 15] : [1, 150],
   fanMinRPM: [0, 100],
   fanMaxVoltage: [3, 13],
