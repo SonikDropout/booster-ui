@@ -71,8 +71,10 @@ class Executor {
     await this.decrementVoltage(step);
   }
   async holdLoad({ voltage, current, time }) {
-    await this._executeInerval(() =>
-      this.callback({ voltage, current }, time * 1000, 1)
+    await this._executeInerval(
+      () => this.callback({ voltage, current }),
+      time * 1000,
+      1
     );
   }
   _executeInerval(cb, ms, loops) {

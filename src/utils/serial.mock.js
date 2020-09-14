@@ -11,7 +11,7 @@ for (const key in dataMap) dataMap[key].value = 0;
 dataMap.boostMode.value = 1;
 dataMap.start.value = 1;
 
-delayStop();
+// delayStop();
 
 function delayStop() {
   setTimeout(() => {

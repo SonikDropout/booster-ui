@@ -5,7 +5,7 @@ const electron = require('electron');
 const { IS_RPI: isPi, CONFIG_PATH, COMMANDS } = require('./src/constants');
 const { app, BrowserWindow, ipcMain } = electron;
 const Executor = require('./src/utils/executor');
-const algorithm = require('/home/pi/booster-ui/algorithm.json');
+const algorithm = require(isPi ? '/home/pi/booster-ui/algorithm.json' : './algorithm.json');
 const { executionAsyncResource } = require('async_hooks');
 
 let win;
