@@ -35,7 +35,7 @@ class Executor {
       case 'hold':
         await this.holdLoad(step);
         break;
-      case 'donwup':
+      case 'downup':
         await this.incDecVoltage(step);
         break;
       default:
