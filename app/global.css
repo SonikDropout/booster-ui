@@ -122,3 +122,9 @@ input.hidden {
   left: -9999px;
   visibility: hidden;
 }
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

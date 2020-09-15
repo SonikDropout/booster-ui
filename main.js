@@ -5,10 +5,9 @@ const electron = require('electron');
 const { IS_RPI: isPi, CONFIG_PATH, COMMANDS } = require('./src/constants');
 const { app, BrowserWindow, ipcMain } = electron;
 const Executor = require('./src/utils/executor');
-const algorithm = require(isPi ? '/home/pi/booster-ui/algorithm.json' : './algorithm.json');
-const { executionAsyncResource } = require('async_hooks');
+const checkUpdate = require('./src/utils/updater');
 
-let win;
+let win, updateAvailable;
 
 const mode = process.env.NODE_ENV;
 
@@ -30,6 +29,14 @@ function initPeripherals(win) {
   const serial = require(`./src/utils/serial${isPi ? '' : '.mock'}`);
   const logger = require('./src/utils/logger');
   let currentMode;
+  checkUpdate().then((isUpdatable) => {
+    if (isUpdatable) win.webContents.send('updateAvailable');
+    updateAvailable = isUpdatable;
+  });
+  ipcMain.on('checkUpdate', (e) => (e.returnValue = updateAvailable));
+  const algorithm = require(isPi
+    ? '/home/pi/booster-ui/algorithm.json'
+    : './algorithm.json');
   const executor = new Executor(algorithm, ({ voltage, current }) => {
     if (voltage) {
       if (currentMode !== 1) {
