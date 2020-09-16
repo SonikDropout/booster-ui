@@ -6,6 +6,7 @@ const { IS_RPI: isPi, CONFIG_PATH, COMMANDS } = require('./src/constants');
 const { app, BrowserWindow, ipcMain } = electron;
 const Executor = require('./src/utils/executor');
 const checkUpdate = require('./src/utils/updater');
+const { exec } = require('child_process');
 
 let win, updateAvailable;
 
@@ -34,6 +35,11 @@ function initPeripherals(win) {
     updateAvailable = isUpdatable;
   });
   ipcMain.on('checkUpdate', (e) => (e.returnValue = updateAvailable));
+  ipcMain.on('updateProgramm', () =>
+    exec('~/booster-ui/scripts/update.sh', (err) => {
+      if (err) console.error(err.message);
+    })
+  );
   const algorithm = require(isPi
     ? '/home/pi/booster-ui/algorithm.json'
     : './algorithm.json');
