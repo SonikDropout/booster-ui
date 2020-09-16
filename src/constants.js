@@ -5,7 +5,12 @@ const PORT = {
   baudRate: 230400,
 };
 
-const isSmallBlock = process.env.BOOSTER_BLOCK_SIZE === 'small';
+
+const CONFIG_PATH = IS_RPI
+  ? '/home/pi/booster-ui/config'
+  : path.join(__dirname, '..', 'config');
+
+const isSmallBlock = require(CONFIG_PATH + '/settings.json').size === 'small';
 
 const SEPARATORS = Buffer.alloc(4);
 SEPARATORS.writeUInt16BE(7589);
@@ -268,10 +273,6 @@ const STOP_BITS = [
 ];
 
 const BOOST_MODES = ['Manual fan', 'Auto fan', 'Manual temp', 'Auto temp'];
-
-const CONFIG_PATH = IS_RPI
-  ? '/home/pi/booster-ui/settings.json'
-  : path.join(__dirname, '..', 'settings.json');
 
 module.exports = {
   IS_RPI,

@@ -13,7 +13,7 @@ const {
 } = require('../constants');
 const { Server } = require('net');
 const { exec } = require('child_process');
-const blockId = require(CONFIG_PATH).id;
+const blockId = require(CONFIG_PATH + '/settings.json').id;
 
 let log;
 const sockPool = [];

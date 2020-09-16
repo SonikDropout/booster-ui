@@ -1,7 +1,15 @@
 const https = require('https');
-const { version, repository, name: packageName } = require('../../package.json');
+const { IS_RPI: isPi } = require('../constants');
+const {
+  version,
+  repository,
+  name: packageName,
+} = require('../../package.json');
 const { exec } = require('child_process');
 const { ipcMain } = require('electron');
+
+const winGetBranch = 'git branch --show-current';
+const linuxGetBranch = 'cd ~/booster-ui && git rev-parse --abbrev-ref HEAD';
 
 function httpsGet(options) {
   return new Promise((resolve, reject) => {
@@ -29,7 +37,7 @@ function httpsGet(options) {
 
 function getBranchName() {
   return new Promise((resolve, reject) => {
-    exec(`cd ~/${packageName} && git rev-parse --abbrev-ref HEAD`, (err, stdout) => {
+    exec(isPi ? linuxGetBranch : winGetBranch, (err, stdout) => {
       if (err) reject(err);
       resolve(stdout.trim());
     });

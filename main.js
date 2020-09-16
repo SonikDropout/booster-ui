@@ -8,7 +8,7 @@ const Executor = require('./src/utils/executor');
 const checkUpdate = require('./src/utils/updater');
 const { exec } = require('child_process');
 
-let win, updateAvailable;
+let win, updateAvailable, serial, logger, executor;
 
 const mode = process.env.NODE_ENV;
 
@@ -26,10 +26,20 @@ function reloadOnChange(win) {
   return watcher;
 }
 
-function initPeripherals(win) {
-  const serial = require(`./src/utils/serial${isPi ? '' : '.mock'}`);
-  const logger = require('./src/utils/logger');
-  let currentMode;
+function initPeripherals() {
+  initSerial();
+  initExecutor();
+  initLogger();
+  initUpdater();
+  listenRenderer();
+  return {
+    removeAllListeners() {
+      serial.close();
+    },
+  };
+}
+
+function initUpdater() {
   checkUpdate().then((isUpdatable) => {
     if (isUpdatable) win.webContents.send('updateAvailable');
     updateAvailable = isUpdatable;
@@ -40,10 +50,12 @@ function initPeripherals(win) {
       if (err) console.error(err.message);
     })
   );
-  const algorithm = require(isPi
-    ? '/home/pi/booster-ui/algorithm.json'
-    : './algorithm.json');
-  const executor = new Executor(algorithm, ({ voltage, current }) => {
+}
+
+function initExecutor() {
+  let currentMode;
+  const algorithm = require(`${CONFIG_PATH}/algorithm.json`);
+  executor = new Executor(algorithm, ({ voltage, current }) => {
     if (voltage) {
       if (currentMode !== 1) {
         currentMode = 1;
@@ -59,11 +71,31 @@ function initPeripherals(win) {
       serial.sendCommand(...COMMANDS.load(current));
     }
   });
-  let logStarted,
-    stopTriggerCounter = 0,
-    host,
-    port,
-    expNum = 0;
+  ipcMain.on('execute', () =>
+    executor
+      .start()
+      .then(() => win.webContents.send('executed'))
+      .catch(() => win.webContents.send('executionAborted'))
+  );
+  ipcMain.on('stopExecution', executor.abort);
+  ipcMain.on('pauseExecution', executor.pause);
+  ipcMain.on('resumeExecution', executor.resume);
+}
+
+function initSerial() {
+  serial = require(`./src/utils/serial${isPi ? '' : '.mock'}`);
+  serial.on('data', (data) => {
+    win.webContents.send('serialData', data);
+  });
+  ipcMain.on('serialCommand', (_, ...args) => serial.sendCommand(...args));
+  const initialValues = require(`${CONFIG_PATH}/initialize.json`);
+  for (const key in initialValues) {
+    serial.sendCommand(...COMMANDS[key](initialValues[key]));
+  }
+}
+
+function initLogger() {
+  logger = require('./src/utils/logger');
   logger
     .init()
     .then((address) => {
@@ -71,8 +103,12 @@ function initPeripherals(win) {
       port = address.port;
     })
     .catch(console.error);
+  let logStarted,
+    stopTriggerCounter = 0,
+    host,
+    port,
+    expNum = 0;
   serial.on('data', (data) => {
-    win.webContents.send('serialData', data);
     if (!logStarted && data.start.value) {
       logger
         .start(data, expNum)
@@ -102,28 +138,16 @@ function initPeripherals(win) {
     }
     logger.writeRow(data);
   }
-  ipcMain.on('serialCommand', (_, ...args) => serial.sendCommand(...args));
   ipcMain.on('serverAddressRequest', (e) => (e.returnValue = { host, port }));
   ipcMain.on('newExperimentNumber', (e, num) => (expNum = num));
+}
+
+function listenRenderer() {
   ipcMain.on('setBlockId', (_, id) => {
-    const settings = require(CONFIG_PATH);
+    const settings = require(`${CONFIG_PATH}/settings.json`);
     settings.id = id;
-    fs.writeFile(CONFIG_PATH, JSON.stringify(settings), () => {});
+    fs.writeFile(`${CONFIG_PATH}/settings.json`, JSON.stringify(settings), () => {});
   });
-  ipcMain.on('execute', () =>
-    executor
-      .start()
-      .then(() => win.webContents.send('executed'))
-      .catch(() => win.webContents.send('executionAborted'))
-  );
-  ipcMain.on('stopExecution', executor.abort);
-  ipcMain.on('pauseExecution', executor.pause);
-  ipcMain.on('resumeExecution', executor.resume);
-  return {
-    removeAllListeners() {
-      serial.close();
-    },
-  };
 }
 
 function launch() {
