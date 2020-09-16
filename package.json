@@ -1,6 +1,6 @@
 {
   "name": "booster-ui",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Simple GUI for fuel cell tester",
   "main": "main.js",
   "repository": {
