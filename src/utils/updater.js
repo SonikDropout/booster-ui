@@ -1,5 +1,5 @@
 const https = require('https');
-const { version, repository, name } = require('../../package.json');
+const { version, repository, name: packageName } = require('../../package.json');
 const { exec } = require('child_process');
 const { ipcMain } = require('electron');
 
@@ -29,7 +29,7 @@ function httpsGet(options) {
 
 function getBranchName() {
   return new Promise((resolve, reject) => {
-    exec('git branch --show-current', (err, stdout) => {
+    exec(`cd ~/${packageName} && git rev-parse --abbrev-ref HEAD`, (err, stdout) => {
       if (err) reject(err);
       resolve(stdout.trim());
     });
@@ -52,5 +52,5 @@ module.exports = async function checkVersions() {
 };
 
 ipcMain.on('updateProgramm', () => {
-  exec(`/home/pi/${name}/scripts/update`);
+  exec(`/home/pi/${packageName}/scripts/update`);
 });
