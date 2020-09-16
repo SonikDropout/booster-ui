@@ -36,7 +36,7 @@ class Executor {
         await this.holdLoad(step);
         break;
       case 'downup':
-        await this.incDecVoltage(step);
+        await this.decIncVoltage(step);
         break;
       default:
         throw new Error('Unknow algorithm step type');
@@ -66,9 +66,9 @@ class Executor {
       stepsCount
     );
   }
-  async incDecVoltage(step) {
-    await this.incrementVoltage(step);
+  async decIncVoltage(step) {
     await this.decrementVoltage(step);
+    await this.incrementVoltage(step);
   }
   async holdLoad({ voltage, current, time }) {
     await this._executeInerval(
