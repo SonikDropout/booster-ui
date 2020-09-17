@@ -1,4 +1,5 @@
 const path = require('path');
+const fs = require('fs');
 const IS_RPI = process.platform === 'linux' && process.arch == 'arm';
 const PORT = {
   name: IS_RPI ? '/dev/ttyS0' : 'COM5',
@@ -10,7 +11,7 @@ const CONFIG_PATH = IS_RPI
   ? '/home/pi/booster-ui/config'
   : path.join(__dirname, '..', 'config');
 
-const isSmallBlock = require(CONFIG_PATH + '/settings.json').size === 'small';
+const isSmallBlock = JSON.parse(fs.readFileSync(CONFIG_PATH + '/settings.json')).size === 'small';
 
 const SEPARATORS = Buffer.alloc(4);
 SEPARATORS.writeUInt16BE(7589);
