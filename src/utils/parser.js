@@ -10,20 +10,31 @@ const { clone } = require('./others');
 const dataMap = clone(SERIAL_DATA);
 
 function validate(buffer) {
-  if (buffer.indexOf(SEPARATORS) != 0 /*|| buffer.length != DATA_BYTE_LENGTH*/)
+  if (buffer.indexOf(SEPARATORS) != 0 || buffer.length != DATA_BYTE_LENGTH)
     throw new Error('Invalid buffer recieved');
 }
 
 module.exports = function parse(buf) {
   validate(buf);
-  let i = SEPARATORS.length;
+  let i = 0;
+  let checkSum = 0;
+  while (i < SEPARATORS.length) {
+    checkSum += buffer.readUInt16BE(i);
+    i+= 2;
+  }
   for (let j = 0; j < PARAMS_DATA.length; j++) {
     const { name, divider = 1 } = PARAMS_DATA[j];
-    dataMap[name].value = +(buf.readInt16BE(i) / divider).toPrecision(4);
+    let value = +(buf.readInt16BE(i) / divider).toPrecision(4);
+    dataMap[name].value = value;
+    checkSum += value;
     i += 2;
   }
   for (let j = 0; j < STATE_DATA.length; j++) {
+    checkSum += buf[i];
     dataMap[STATE_DATA[j].name].value = buf[i++];
+  }
+  if (checkSum != buffer.readUInt16BE(i)) {
+    throw new Error('Invalid buffer recieved');
   }
   dataMap.FCPower.value = +Math.abs(
     dataMap.FCCurrent.value * dataMap.FCVoltage.value

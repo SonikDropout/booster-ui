@@ -78,7 +78,7 @@ const PARAMS_DATA = [
     label: 'Napryazenie',
     units: 'V',
     name: 'FCVoltage',
-    divider: 1000,
+    divider: 100,
     signed: true,
   },
   { label: 'Tok', units: 'A', name: 'FCCurrent', divider: 1000, signed: true },
