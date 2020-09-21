@@ -34,7 +34,7 @@ module.exports = function parse(buf) {
     dataMap[STATE_DATA[j].name].value = buf[i++];
   }
   if (checkSum != buffer.readUInt16BE(i)) {
-    throw new Error('Invalid buffer recieved');
+    throw new Error('Check sums don\'t match');
   }
   dataMap.FCPower.value = +Math.abs(
     dataMap.FCCurrent.value * dataMap.FCVoltage.value

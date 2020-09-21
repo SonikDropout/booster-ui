@@ -152,7 +152,7 @@ const PARAMS_DATA = [
 ];
 
 const DATA_BYTE_LENGTH =
-  STATE_DATA.length + PARAMS_DATA.length * 2 + SEPARATORS.length;
+  STATE_DATA.length + PARAMS_DATA.length * 2 + SEPARATORS.length + 2;
 
 const COMMANDS = {
   loadMode: (v) => [4, v],
