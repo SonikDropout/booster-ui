@@ -104,12 +104,11 @@ function initLogger() {
     })
     .catch(console.error);
   let logStarted,
-    stopTriggerCounter = 0,
     host,
     port,
     expNum = 0;
   serial.on('data', (data) => {
-    if (!logStarted && data.start.value) {
+    if (!logStarted && data.start.value != 127) {
       logger
         .start(data, expNum)
         .then((logPath) => {
@@ -121,15 +120,10 @@ function initLogger() {
     }
   });
   function writeDataToLog(data) {
-    if (!data.start.value) {
-      if (stopTriggerCounter < 4) {
-        stopTriggerCounter++;
-        return;
-      }
+    if (data.start.value == 127) {
       serial.removeListener('data', writeDataToLog);
       logger.stop(data);
       logStarted = false;
-      stopTriggerCounter = 0;
       if (executor.running) {
         executor.abort();
         win.webContents.send('executionRejected');
