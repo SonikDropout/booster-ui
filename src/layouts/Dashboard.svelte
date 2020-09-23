@@ -62,14 +62,14 @@
   });
 
   $: if (
-    !$serialData.start.value &&
+    $serialData.start.value == 127 &&
     $serialData.boostMode.value % 2 &&
     experimentNumber === lastExperimentNumber
   ) {
     experimentError = 'Obnovite nomer experimenta';
   }
 
-  $: if ($serialData.start.value) lastExperimentNumber = experimentNumber;
+  $: if ($serialData.start.value != 127) lastExperimentNumber = experimentNumber;
 
   function changeExperimentNumber(num) {
     // lastExperimentNumber = experimentNumber;
@@ -139,7 +139,7 @@
         {#if block.title == 'BTE'}
           <RangeInput
             errorMessage={experimentError}
-            disabled={$serialData.start.value}
+            disabled={$serialData.start.value == 127}
             range={CONSTRAINTS.experimentNumber}
             suggestedValue={experimentNumber}
             label="Nomer experimenta"
@@ -151,7 +151,7 @@
               {options}
               {name}
               onChange={sendCommand}
-              disabled={!!$serialData.start.value}
+              disabled={$serialData.start.value == 127}
               defaultValue={initialData[name].value}
               label={initialData[name].label} />
           {/each}
@@ -159,7 +159,7 @@
         {#if block.inputs}
           {#each block.inputs as name}
             <RangeInput
-              disabeld={$serialData.start.value && disabledOnStart.includes(name)}
+              disabeld={$serialData.start.value != 127 && disabledOnStart.includes(name)}
               step={STEPS[name]}
               range={CONSTRAINTS[name]}
               suggestedValue={$serialData[name].value}

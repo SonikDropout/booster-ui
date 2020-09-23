@@ -114,13 +114,13 @@
   }
 
   function monitorStart(data) {
-    if (data.start.value && chart) {
+    if (data.start.value != 127 && chart) {
       startDrawing();
     }
   }
 
   function handleData(data) {
-    if (!data.start.value && chart) {
+    if (data.start.value == 127 && chart) {
       stopDrawing();
       return;
     }
