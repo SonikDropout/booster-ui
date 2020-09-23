@@ -20,7 +20,7 @@ module.exports = function parse(buf) {
   let checkSum = 0;
   while (i < SEPARATORS.length) {
     checkSum += buf.readUInt16BE(i);
-    i+= 2;
+    i += 2;
   }
   for (let j = 0; j < PARAMS_DATA.length; j++) {
     const { name, divider = 1 } = PARAMS_DATA[j];
@@ -33,8 +33,8 @@ module.exports = function parse(buf) {
     checkSum += buf[i];
     dataMap[STATE_DATA[j].name].value = buf[i++];
   }
-  if (checkSum != buf.readUInt16BE(i)) {
-    throw new Error('Check sums don\'t match');
+  if (checkSum % Math.pow(2, 16) != buf.readUInt16BE(i)) {
+    throw new Error("Check sums don't match");
   }
   dataMap.FCPower.value = +Math.abs(
     dataMap.FCCurrent.value * dataMap.FCVoltage.value
