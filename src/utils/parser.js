@@ -33,8 +33,9 @@ module.exports = function parse(buf) {
     checkSum += buf[i];
     dataMap[STATE_DATA[j].name].value = buf[i++];
   }
-  if (checkSum % Math.pow(2, 16) != buf.readUInt16BE(i)) {
-    throw new Error("Check sums don't match");
+  checkSum = checkSum % Math.pow(2, 16);
+  if (checkSum != buf.readUInt16BE(i)) {
+    throw new Error(`Check sums don't match calculated: ${checkSum}, recieved: ${buf.readUInt16BE(i)}`);
   }
   dataMap.FCPower.value = +Math.abs(
     dataMap.FCCurrent.value * dataMap.FCVoltage.value
