@@ -18,7 +18,7 @@ function handleData(buf) {
     try {
       emitter.emit('data', parse(buffer));
     } catch (e) {
-      // console.error('There is a hole in your logic:', e);
+      console.error(e.message);
     }
     buffer = buf.slice(idx);
   } else {
