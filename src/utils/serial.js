@@ -2,6 +2,7 @@ const Serial = require('serialport');
 const { PORT, SEPARATORS } = require('../constants');
 const parse = require('./parser');
 const EventEmitter = require('events');
+const { fail } = require('assert');
 
 const emitter = new EventEmitter();
 const serial = new Serial(PORT.name, { baudRate: PORT.baudRate });
@@ -28,6 +29,7 @@ function handleData(buf) {
 
 let commandQueue = [];
 let portBusy = false;
+let failedAttempts = 0;
 
 function sendCommand(id, cmd) {
   const buf = Buffer.alloc(5);
@@ -54,7 +56,12 @@ function writeCommandFromQueue() {
   serial.once('data', (buf) => {
     console.log('Recieved answer:', buf);
     if (!buf.toString('ascii').includes('ok')) {
-      commandQueue.unshift(cmd);
+      if (failedAttempts < 3) {
+        commandQueue.unshift(cmd);
+        failedAttempts++;
+      }
+    } else {
+      failedAttempts = 0;
     }
     if (Date.now() - startTx < 200) {
       setTimeout(writeCommandFromQueue, 200);
