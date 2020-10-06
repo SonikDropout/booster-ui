@@ -32,6 +32,7 @@ module.exports = function parse(buf) {
     checkSum += buf[i];
     dataMap[STATE_DATA[j].name].value = buf[i++];
   }
+  dataMap.start.value = dataMap.start.value !== 127
   checkSum = checkSum % Math.pow(2, 16);
   if (checkSum != buf.readUInt16BE(i)) {
     throw new Error(`Check sums don't match calculated: ${checkSum}, recieved: ${buf.readUInt16BE(i)}`);

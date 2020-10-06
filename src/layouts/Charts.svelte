@@ -112,15 +112,15 @@
     chart.data.datasets[0].data = pointsStorage.points;
     unsubscribeStopMonitor = serialData.subscribe(handleData);
   }
-
+  
   function monitorStart(data) {
-    if (data.start.value != 127 && chart) {
+    if (data.start.value && chart) {
       startDrawing();
     }
   }
 
   function handleData(data) {
-    if (data.start.value == 127 && chart) {
+    if (!data.start.value && chart) {
       stopDrawing();
       return;
     }

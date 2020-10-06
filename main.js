@@ -27,6 +27,7 @@ function reloadOnChange(win) {
 }
 
 function initPeripherals() {
+  // order of calls is important here
   initSerial();
   initExecutor();
   initLogger();
@@ -71,6 +72,12 @@ function initExecutor() {
       serial.sendCommand(...COMMANDS.load(current));
     }
   });
+  serial.on('data', (data) => {
+    if (!data.start.value && executor.running) {
+      executor.pause();
+      win.webContents.send('executionRejected');
+    }
+  });
   ipcMain.on('execute', () =>
     executor
       .start()
@@ -108,7 +115,7 @@ function initLogger() {
     port,
     expNum = 0;
   serial.on('data', (data) => {
-    if (!logStarted && data.start.value != 127) {
+    if (!logStarted && data.start.value) {
       logger
         .start(data, expNum)
         .then((logPath) => {
@@ -120,14 +127,10 @@ function initLogger() {
     }
   });
   function writeDataToLog(data) {
-    if (data.start.value == 127) {
+    if (!data.start.value) {
       serial.removeListener('data', writeDataToLog);
       logger.stop(data);
       logStarted = false;
-      if (executor.running) {
-        executor.abort();
-        win.webContents.send('executionRejected');
-      }
       return;
     }
     logger.writeRow(data);
@@ -140,7 +143,11 @@ function listenRenderer() {
   ipcMain.on('setBlockId', (_, id) => {
     const settings = require(`${CONFIG_PATH}/settings.json`);
     settings.id = id;
-    fs.writeFile(`${CONFIG_PATH}/settings.json`, JSON.stringify(settings), () => {});
+    fs.writeFile(
+      `${CONFIG_PATH}/settings.json`,
+      JSON.stringify(settings),
+      () => {}
+    );
   });
 }
 

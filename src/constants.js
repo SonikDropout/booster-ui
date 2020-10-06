@@ -6,12 +6,19 @@ const PORT = {
   baudRate: 230400,
 };
 
-
 const CONFIG_PATH = IS_RPI
   ? '/home/pi/booster-ui/config'
   : path.join(__dirname, '..', 'config');
 
-const isSmallBlock = JSON.parse(fs.readFileSync(CONFIG_PATH + '/settings.json')).size === 'small';
+let isSmallBlock;
+
+try {
+  isSmallBlock =
+    JSON.parse(fs.readFileSync(path.join(CONFIG_PATH, 'settings.json')))
+      .size === 'small';
+} catch (e) {
+  //pass
+}
 
 const SEPARATORS = Buffer.alloc(4);
 SEPARATORS.writeUInt16BE(7589);
