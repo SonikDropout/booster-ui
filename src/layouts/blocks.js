@@ -2,7 +2,7 @@ const { BOOST_MODES } = require('../constants');
 module.exports = [
   [
     {
-      title: 'BTE',
+      title: 'Fuel cell',
       values: [
         { name: 'FCVoltage', minCompare: 'minVoltage' },
         { name: 'FCCurrent' },
@@ -12,12 +12,12 @@ module.exports = [
       ],
     },
     {
-      title: 'Temperatury',
-      values: [
-        { name: 'temp1', maxCompare: 'maxTemp' },
-        { name: 'temp2', maxCompare: 'maxTemp' },
-        { name: 'radiatorTemp' },
-      ],
+      title: 'Valve',
+      inputs: ['blowDelay', 'blowDuration'],
+    },
+    {
+      title: 'Fan',
+      inputs: ['fanMinRPM'],
     },
   ],
   [
@@ -32,10 +32,6 @@ module.exports = [
         'maxTemp',
         'minPressure',
         'minVoltage',
-        'IVCStep',
-        'startCurrent',
-        'currentStep',
-        'endCurrent',
         'shortCircuitDuration',
         'shortCircuitDelay',
       ],
@@ -43,13 +39,16 @@ module.exports = [
   ],
   [
     {
-      title: 'Klapan',
-      inputs: ['blowDelay', 'blowDuration'],
-    },
-    {
-      title: 'Ventilator',
-      inputs: ['fanLoad', 'fanMinRPM', 'fanMaxVoltage'],
-      values: [{ name: 'fanVoltage' }],
+      title: 'Temperatures',
+      values: [
+        { name: 'temp1', maxCompare: 'maxTemp' },
+        { name: 'temp2', maxCompare: 'maxTemp' },
+        { name: 'temp3', maxCompare: 'maxTemp' },
+        { name: 'temp4', maxCompare: 'maxTemp' },
+        { name: 'temp5', maxCompare: 'maxTemp' },
+        { name: 'radiatorTemp1' },
+        { name: 'radiatorTemp2' },
+      ],
     },
   ],
 ];

@@ -96,12 +96,6 @@ function generateLogHeader(boosterState, expNumber) {
 Start
 ${BOOST_MODES[boosterState.boostMode.value]}
 Block nomer ${blockId}
-Experiment nomer ${expNumber}
-Avtorazgon ${boosterState.startCurrent.value} do ${
-    boosterState.endCurrent.value
-    } shag ${boosterState.currentStep.value}, vremya vverh ${
-    boosterState.timeStep.value
-    }s vremya vniz 20s
 Otsechka: ${boosterState.minPressure.value}bar, ${
     boosterState.minVoltage.value
     }V, ${boosterState.maxTemp.value}C

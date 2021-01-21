@@ -99,6 +99,7 @@
     } else {
       ipcRenderer.send(isPaused ? 'resumeExecution' : 'pauseExecution');
       isPaused = !isPaused;
+      isRejected = false;
     }
     ipcRenderer.once('executed', () => (isExecuting = false));
   }
