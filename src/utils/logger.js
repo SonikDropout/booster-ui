@@ -111,7 +111,6 @@ function writeInterruptMessage(boosterState) {
   for (const key of Object.keys(SIGNALS)) {
     if (boosterState[key].value) writeLogData(SIGNALS[key]);
   }
-  writeLogData(STOP_BITS[boosterState.stopBit.value]);
 }
 
 function writeLogData(row) {
