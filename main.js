@@ -2,7 +2,7 @@ const path = require('path');
 const url = require('url');
 const fs = require('fs');
 const electron = require('electron');
-const { IS_RPI: isPi, CONFIG_PATH, COMMANDS } = require('./src/constants');
+const { IS_RPI: isPi, CONFIG_PATH, COMMANDS, LOAD_MODES } = require('./src/constants');
 const { app, BrowserWindow, ipcMain } = electron;
 const Executor = require('./src/utils/executor');
 const checkUpdate = require('./src/utils/updater');
@@ -56,20 +56,17 @@ function initUpdater() {
 function initExecutor() {
   let currentMode;
   const algorithm = require(`${CONFIG_PATH}/algorithm.json`);
-  executor = new Executor(algorithm, ({ voltage, current }) => {
-    if (voltage) {
-      if (currentMode !== 1) {
-        currentMode = 1;
+  executor = new Executor(algorithm, (param, value) => {
+    if (LOAD_MODES.includes(param)) {
+      let newMode = LOAD_MODES.indexOf(param);
+      if (currentMode !== newMode) {
+        currentMode = newMode;
         serial.sendCommand(...COMMANDS.loadMode(currentMode));
       }
-      serial.sendCommand(...COMMANDS.load(voltage));
+      serial.sendCommand(...COMMANDS.load(value));
     }
-    if (current) {
-      if (currentMode !== 2) {
-        currentMode = 2;
-        serial.sendCommand(...COMMANDS.loadMode(currentMode));
-      }
-      serial.sendCommand(...COMMANDS.load(current));
+    else {
+      serial.sendCommand(...COMMANDS[param](value))
     }
   });
   serial.on('data', (data) => {

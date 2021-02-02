@@ -282,6 +282,8 @@ const STOP_BITS = [
 
 const BOOST_MODES = ['Manual fan', 'Auto fan', 'Manual temp', 'Auto temp'];
 
+const LOAD_MODES = ['disabled', 'voltage', 'current', 'power'];
+
 module.exports = {
   IS_RPI,
   PORT,
@@ -299,4 +301,5 @@ module.exports = {
   SIGNALS,
   STOP_BITS,
   BOOST_MODES,
+  LOAD_MODES,
 };

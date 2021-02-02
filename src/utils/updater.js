@@ -16,7 +16,7 @@ function httpsGet(options) {
     https
       .get(options, (res) => {
         if (res.statusCode !== 200)
-          reject(new Error('Request Failed.\n' + `Status Code: ${statusCode}`));
+          reject(new Error('Request Failed.\n' + `Status Code: ${res.statusCode}`));
 
         res.setEncoding('utf8');
         let rawData = '';
