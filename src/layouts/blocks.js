@@ -15,10 +15,6 @@ module.exports = [
       title: 'Valve',
       inputs: ['blowDelay', 'blowDuration'],
     },
-    {
-      title: 'Fan',
-      inputs: ['fanMinRPM'],
-    },
   ],
   [
     {
@@ -35,6 +31,10 @@ module.exports = [
         'shortCircuitDuration',
         'shortCircuitDelay',
       ],
+    },
+    {
+      title: 'Fan',
+      inputs: ['fanMinRPM', 'fanLoad'],
     },
   ],
   [
