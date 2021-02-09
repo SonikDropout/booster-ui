@@ -26,25 +26,25 @@
   ];
 
   const warnings = [
-    { message: 'Prevushena temperatura!', name: 'tempError' },
-    { message: 'Nizkoe davlenie!', name: 'pressureError' },
-    { message: 'Nizkoe napryazhenie!', name: 'voltageError' },
+    { message: 'Overheated!', name: 'tempError' },
+    { message: 'Low pressure!', name: 'pressureError' },
+    { message: 'Low voltage!', name: 'voltageError' },
   ];
 
   const loadModeOptions = [
-    { value: 0, name: '', label: 'Nagruzka otklychena' },
+    { value: 0, name: '', label: 'load disabled' },
     {
-      rangeLabel: 'Napryazhenie',
+      rangeLabel: 'Voltage',
       value: 1,
       name: 'Voltage',
-      label: 'Postoyannoe napryazhenie',
+      label: 'Constant voltage',
     },
-    { rangeLabel: 'Tok', value: 2, name: 'Current', label: 'Postoyanny tok' },
+    { rangeLabel: 'Current', value: 2, name: 'Current', label: 'Constant current' },
     {
-      rangeLabel: 'Moshnost',
+      rangeLabel: 'Power',
       value: 3,
       name: 'Power',
-      label: 'Postoyannaya moshnost',
+      label: 'Constant power',
     },
   ];
 

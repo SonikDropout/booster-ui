@@ -25,7 +25,7 @@ SEPARATORS.writeUInt16BE(7589);
 SEPARATORS.writeUInt16BE(3333, 2);
 
 const STATE_DATA = [
-  { label: 'Blowdown delay', units: 's', name: 'blowDelay', prefix: 'P ' },
+  { label: 'Purge delay', units: 's', name: 'blowDelay', prefix: 'P ' },
   { label: 'Load mode', name: 'loadMode' },
   { label: 'Temperature stabilization', name: 'boostMode' },
   {
@@ -40,9 +40,9 @@ const STATE_DATA = [
     name: 'shortCircuitDelay',
     prefix: 'KZ ',
   },
-  { label: 'Blowdown before short ciricuit', units: 's', name: 'blowBeforeShortCircuit' },
+  { label: 'Purge before short ciricuit', units: 's', name: 'blowBeforeShortCircuit' },
   { name: 'start' },
-  { label: 'Was blowdown', name: 'isBlow' },
+  { label: 'Was purged', name: 'isBlow' },
   { label: 'Was short-circuited', name: 'isShortCircuit' },
   { name: 'tempError' },
   { name: 'pressureError' },
@@ -54,7 +54,7 @@ const TERMINATE_SIGNALS = STATE_DATA.slice(-4).map((v) => v.name);
 
 const PARAMS_DATA = [
   {
-    label: 'Blowdown duration',
+    label: 'Purge duration',
     units: 'ms',
     name: 'blowDuration',
     prefix: 'P ',
@@ -214,7 +214,7 @@ const LOGGED_VALUES = [
 ];
 
 const SERIAL_DATA = {
-  FCPower: { label: 'Moshnost TE', units: 'W' },
+  FCPower: { label: 'FC power', units: 'W' },
 };
 
 for (let i = 0; i < PARAMS_DATA.length; ++i)
