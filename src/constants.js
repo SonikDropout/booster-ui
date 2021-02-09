@@ -92,13 +92,13 @@ const PARAMS_DATA = [
   },
   { label: 'Load', name: 'load', divider: 10 },
   {
-    label: 'Radiator temperature',
+    label: 'Radiator T1',
     units: 'C',
     name: 'radiatorTemp1',
     divider: 10,
   },
   {
-    label: 'Radiator temperature 2',
+    label: 'Radiator T2',
     units: 'C',
     name: 'radiatorTemp2',
     divider: 10,
