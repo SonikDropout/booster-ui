@@ -25,25 +25,25 @@ SEPARATORS.writeUInt16BE(7589);
 SEPARATORS.writeUInt16BE(3333, 2);
 
 const STATE_DATA = [
-  { label: 'Purge delay', units: 's', name: 'blowDelay', prefix: 'P ' },
-  { label: 'Load mode', name: 'loadMode' },
-  { label: 'Temperature stabilization', name: 'boostMode' },
+  { label: 'purge delay', units: 's', name: 'blowDelay', prefix: 'P ' },
+  { label: 'load mode', name: 'loadMode' },
+  { label: 'temperature stabilization', name: 'boostMode' },
   {
-    label: 'Short circuit duration',
+    label: 'short circuit duration',
     units: 'ms',
     name: 'shortCircuitDuration',
     prefix: 'KZ ',
   },
   {
-    label: 'Short circuit delay',
+    label: 'short circuit delay',
     units: 's',
     name: 'shortCircuitDelay',
     prefix: 'KZ ',
   },
-  { label: 'Purge before short ciricuit', units: 's', name: 'blowBeforeShortCircuit' },
+  { label: 'purge before short ciricuit', units: 's', name: 'blowBeforeShortCircuit' },
   { name: 'start' },
-  { label: 'Was purged', name: 'isBlow' },
-  { label: 'Was short-circuited', name: 'isShortCircuit' },
+  { label: 'was purged', name: 'isBlow' },
+  { label: 'was short-circuited', name: 'isShortCircuit' },
   { name: 'tempError' },
   { name: 'pressureError' },
   { name: 'voltageError' },
@@ -54,71 +54,71 @@ const TERMINATE_SIGNALS = STATE_DATA.slice(-4).map((v) => v.name);
 
 const PARAMS_DATA = [
   {
-    label: 'Purge duration',
+    label: 'purge duration',
     units: 'ms',
     name: 'blowDuration',
     prefix: 'P ',
   },
-  { label: 'Temperature 1', units: 'C', name: 'temp1', divider: 10 },
-  { label: 'Temperature 2', units: 'C', name: 'temp2', divider: 10 },
-  { label: 'Temperature 3', units: 'C', name: 'temp3', divider: 10 },
-  { label: 'Temperature 4', units: 'C', name: 'temp4', divider: 10 },
-  { label: 'Temperature 5', units: 'C', name: 'temp5', divider: 10 },
+  { label: 'temperature 1', units: 'C', name: 'temp1', divider: 10 },
+  { label: 'temperature 2', units: 'C', name: 'temp2', divider: 10 },
+  { label: 'temperature 3', units: 'C', name: 'temp3', divider: 10 },
+  { label: 'temperature 4', units: 'C', name: 'temp4', divider: 10 },
+  { label: 'temperature 5', units: 'C', name: 'temp5', divider: 10 },
   {
-    label: 'Fan load',
+    label: 'fan load',
     units: '%',
     name: 'fanLoad',
     divider: 10,
   },
   {
-    label: 'Stabilizaion temperature',
+    label: 'stabilizaion temperature',
     units: '\u00b0C',
     name: 'stabilizationTemp',
     divider: 10,
   },
   {
-    label: 'Voltage',
+    label: 'voltage',
     units: 'V',
     name: 'FCVoltage',
     divider: 100,
     signed: true,
   },
-  { label: 'Current', units: 'A', name: 'FCCurrent', divider: 100, signed: true },
+  { label: 'current', units: 'A', name: 'FCCurrent', divider: 100, signed: true },
   {
     label: 'H2 pressure',
     units: 'bar',
     name: 'hydrogenPressure',
     divider: 1000,
   },
-  { label: 'Load', name: 'load', divider: 10 },
+  { label: 'load', name: 'load', divider: 10 },
   {
-    label: 'Radiator T1',
+    label: 'radiator T1',
     units: 'C',
     name: 'radiatorTemp1',
     divider: 10,
   },
   {
-    label: 'Radiator T2',
+    label: 'radiator T2',
     units: 'C',
     name: 'radiatorTemp2',
     divider: 10,
   },
-  { label: 'Min fan RPM', units: 'ob/min', name: 'fanMinRPM' },
+  { label: 'min fan RPM', units: 'ob/min', name: 'fanMinRPM' },
   {
-    label: 'Max temperature',
+    label: 'max temperature',
     units: 'C',
     name: 'maxTemp',
     divider: 10,
   },
   {
-    label: 'Min pressure',
+    label: 'min pressure',
     units: 'bar',
     name: 'minPressure',
     divider: 1000,
     signed: true,
   },
   {
-    label: 'Min voltage',
+    label: 'min voltage',
     units: 'V',
     name: 'minVoltage',
     sined: true,
@@ -240,7 +240,7 @@ const STOP_BITS = [
   'Okonchanie avtorazgona\n\n\n\n',
 ];
 
-const BOOST_MODES = ['Manual fan', 'Auto fan', 'Manual temp', 'Auto temp'];
+const BOOST_MODES = ['manual fan', 'auto fan', 'manual temp', 'auto temp'];
 
 module.exports = {
   IS_RPI,

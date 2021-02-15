@@ -5,10 +5,8 @@
   import Select from '../molecules/Select';
   import Value from '../atoms/Value';
   import RangeInput from '../molecules/RangeInput';
-  import Warning from '../atoms/Warning';
   import Exclamation from '../atoms/Exclamation';
   import Button from '../atoms/Button';
-  import BlockIdSetter from '../organisms/BlockIdSetter';
   import { ipcRenderer } from 'electron';
   import { __ } from '../utils/translator';
 
@@ -25,31 +23,25 @@
     'timeStep',
   ];
 
-  const warnings = [
-    { message: 'Overheated!', name: 'tempError' },
-    { message: 'Low pressure!', name: 'pressureError' },
-    { message: 'Low voltage!', name: 'voltageError' },
-  ];
-
   const loadModeOptions = [
     { value: 0, name: '', label: 'load disabled' },
     {
       rangeLabel: 'Voltage',
       value: 1,
       name: 'Voltage',
-      label: 'Constant voltage',
+      label: 'voltage',
     },
     {
       rangeLabel: 'Current',
       value: 2,
       name: 'Current',
-      label: 'Constant current',
+      label: 'current',
     },
     {
       rangeLabel: 'Power',
       value: 3,
       name: 'Power',
-      label: 'Constant power',
+      label: 'power',
     },
   ];
 
@@ -62,7 +54,6 @@
     isPaused = true;
     isRejected = true;
   });
-
 
   function sendCommand(value, name) {
     ipcRenderer.send('serialCommand', ...COMMANDS[name](+value));
@@ -97,17 +88,16 @@
   }
 </script>
 
-<BlockIdSetter />
 <main>
   {#each blocks as column, idx}
     <div class="col-{idx}">
       {#if idx === 2}
-        <h3>{$__('load')}</h3>
+        <h3>{$__('load', true)}</h3>
         <Select
           onChange={selectLoadMode}
           name="loadMode"
           defaultValue={initialData.loadMode.value}
-          label={initialData.loadMode.label}
+          label={$__(initialData.loadMode.label, true)}
           options={loadModeOptions}
         />
         {#if selectedLoadMode.value}
@@ -115,7 +105,7 @@
             name="load"
             suggestedValue={$serialData.load.value}
             step={STEPS['load' + selectedLoadMode.name]}
-            label={selectedLoadMode.rangeLabel}
+            label={$__(selectedLoadMode.rangeLabel)}
             range={CONSTRAINTS['load' + selectedLoadMode.name]}
             onChange={sendCommand}
           />
@@ -124,7 +114,9 @@
         {/if}
       {/if}
       {#each column as block}
-        <h3>{block.title || ''}</h3>
+        <h3>
+          {#if block.title}{$__(block.title, true)}{/if}
+        </h3>
         {#if block.selects}
           {#each block.selects as { name, options }}
             <Select
@@ -132,7 +124,7 @@
               {name}
               onChange={sendCommand}
               defaultValue={initialData[name].value}
-              label={initialData[name].label}
+              label={$__(initialData[name].label, true)}
             />
           {/each}
         {/if}
@@ -144,7 +136,7 @@
               step={STEPS[name]}
               range={CONSTRAINTS[name]}
               suggestedValue={$serialData[name].value}
-              label={initialData[name].label}
+              label={$__(initialData[name].label, true)}
               {name}
               onChange={sendCommand}
             />
@@ -160,9 +152,9 @@
                 ? $serialData[val.minCompare].value >
                   $serialData[val.name].value
                 : false}
-              units={initialData[val.name].units}
+              units={$__(initialData[val.name].units)}
               value={$serialData[val.name].value}
-              label={$__(initialData[val.name].label)}
+              label={$__(initialData[val.name].label, true)}
             />
           {/each}
         {/if}

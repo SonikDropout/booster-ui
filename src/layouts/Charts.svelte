@@ -9,6 +9,7 @@
   import pointsStorage from '../utils/pointsStorage';
   import { serialData } from '../stores';
   import { dataGenerator } from '../utils/dataGenerator';
+  import { __ } from '../utils/translator';
 
   onMount(() => {
     chart = new Chart(
@@ -112,7 +113,7 @@
     chart.data.datasets[0].data = pointsStorage.points;
     unsubscribeStopMonitor = serialData.subscribe(handleData);
   }
-  
+
   function monitorStart(data) {
     if (data.start.value && chart) {
       startDrawing();
@@ -126,7 +127,7 @@
     }
     pointsStorage.addRow(
       [Math.round((Date.now() - timeStart) / 1000)].concat(
-        dataEntries.map(key => data[key].value)
+        dataEntries.map((key) => data[key].value)
       )
     );
     chart.data.datasets[0].data = pointsStorage.points;
@@ -135,17 +136,19 @@
 </script>
 
 <main>
-  <h2>Grafiki</h2>
+  <h2>{$__('charts', true)}</h2>
   <RadioGroup
     style="grid-column: 1 / 3"
     type="horizontal"
     group={axesGroup}
     on:change={changeAxes}
-    value={selectedAxes} />
+    value={selectedAxes}
+  />
   <Button
     style="grid-column: 3 / 4; justify-self: end"
-    on:click={() => window.scrollTo(0, 0)}>
-    Back
+    on:click={() => window.scrollTo(0, 0)}
+  >
+    {$__('back', true)}
   </Button>
   <div class="chart">
     <canvas id="chart" />

@@ -9,6 +9,7 @@
   export let label;
   export let style;
   export let name;
+  import { __ } from '../utils/translator';
 
   onMount(() => document.addEventListener('click', handleClickOutside));
   onDestroy(() => document.removeEventListener('click', handleClickOutside));
@@ -17,7 +18,7 @@
     if (optionsVisible && !select.contains(e.target)) optionsVisible = false;
   }
 
-  let selected = options.find(o => o.value === defaultValue) || {
+  let selected = options.find((o) => o.value === defaultValue) || {
     label: '-- ne vybrano --',
   };
 
@@ -35,14 +36,14 @@
   function drop(node, { duration }) {
     return {
       duration,
-      css: t => `max-height: ${t * h}%`,
+      css: (t) => `max-height: ${t * h}%`,
     };
   }
 
   function selectOption(e) {
     optionsVisible = false;
     const v = e.target.dataset.value;
-    selected = options.find(o => o.value == v);
+    selected = options.find((o) => o.value == v);
     onChange(v, name);
   }
 </script>
@@ -58,8 +59,9 @@
     bind:this={select}
     class:disabled
     class:active
-    class:expand={optionsVisible}>
-    <div class="curr-value" on:click={toggleOptions}>{selected.label}</div>
+    class:expand={optionsVisible}
+  >
+    <div class="curr-value" on:click={toggleOptions}>{$__(selected.label)}</div>
     {#if optionsVisible}
       <ul transition:drop>
         {#each options as { icon, label, value }}
@@ -67,7 +69,7 @@
             {#if icon}
               <i class="icon icon-{icon}" />
             {/if}
-            {label}
+            {$__(label)}
           </li>
         {/each}
       </ul>
