@@ -83,7 +83,7 @@ const PARAMS_DATA = [
     divider: 100,
     signed: true,
   },
-  { label: 'Current', units: 'A', name: 'FCCurrent', divider: 1000, signed: true },
+  { label: 'Current', units: 'A', name: 'FCCurrent', divider: 100, signed: true },
   {
     label: 'H2 pressure',
     units: 'bar',
@@ -154,11 +154,11 @@ const COMMANDS = {
 
 const CONSTRAINTS = {
   blowDelay: [1, 200],
-  blowDuration: [20, 400],
+  blowDuration: [20, 10000],
   fanLoad: [0, 100],
   stabilizationTemp: [20, 60],
   loadCurrent: [0, 100],
-  loadVoltage: [2, 100],
+  loadVoltage: [0, 100],
   loadPower: [10, 1500],
   fanMinRPM: [0, 100],
   fanMaxVoltage: [3, 13],
