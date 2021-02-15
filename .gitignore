@@ -1,6 +1,6 @@
 node_modules
 dist
-app/renderer.js
+app/*renderer.js
 app/svelte.css
 config
 *.log
