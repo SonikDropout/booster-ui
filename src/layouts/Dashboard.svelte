@@ -54,8 +54,6 @@
   ];
 
   let selectedLoadMode = loadModeOptions[initialData.loadMode.value],
-    experimentError,
-    lastExperimentNumber,
     isPaused,
     isExecuting,
     isRejected;
@@ -104,7 +102,7 @@
   {#each blocks as column, idx}
     <div class="col-{idx}">
       {#if idx === 2}
-        <h3>Nagruzka</h3>
+        <h3>{$__('load')}</h3>
         <Select
           onChange={selectLoadMode}
           name="loadMode"
@@ -164,7 +162,7 @@
                 : false}
               units={initialData[val.name].units}
               value={$serialData[val.name].value}
-              label={initialData[val.name].label}
+              label={$__(initialData[val.name].label)}
             />
           {/each}
         {/if}

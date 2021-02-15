@@ -2,7 +2,7 @@ const { BOOST_MODES } = require('../constants');
 module.exports = [
   [
     {
-      title: 'Fuel cell',
+      title: 'fuel cell',
       values: [
         { name: 'FCVoltage', minCompare: 'minVoltage' },
         { name: 'FCCurrent' },
@@ -12,7 +12,7 @@ module.exports = [
       ],
     },
     {
-      title: 'Valve',
+      title: 'valve',
       inputs: ['blowDelay', 'blowDuration'],
     },
   ],
@@ -33,13 +33,13 @@ module.exports = [
       ],
     },
     {
-      title: 'Fan',
+      title: 'fan',
       inputs: ['fanMinRPM', 'fanLoad'],
     },
   ],
   [
     {
-      title: 'Temperatures',
+      title: 'temperatures',
       values: [
         { name: 'temp1', maxCompare: 'maxTemp' },
         { name: 'temp2', maxCompare: 'maxTemp' },

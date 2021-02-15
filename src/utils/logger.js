@@ -32,7 +32,7 @@ function init() {
   });
 }
 
-const tableHeader = ['Vremya']
+const tableHeader = ['Time']
   .concat(
     LOGGED_VALUES.map(
       (key) =>
