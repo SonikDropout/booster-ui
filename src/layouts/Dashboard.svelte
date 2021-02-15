@@ -10,12 +10,12 @@
   import Button from '../atoms/Button';
   import BlockIdSetter from '../organisms/BlockIdSetter';
   import { ipcRenderer } from 'electron';
+  import { __ } from '../utils/translator';
 
   const initialData = getValue(serialData);
 
   const disabledOnStart = [
     'boostMode',
-    'experimentNumber',
     'maxTemp',
     'minPressure',
     'minVoltage',
@@ -39,7 +39,12 @@
       name: 'Voltage',
       label: 'Constant voltage',
     },
-    { rangeLabel: 'Current', value: 2, name: 'Current', label: 'Constant current' },
+    {
+      rangeLabel: 'Current',
+      value: 2,
+      name: 'Current',
+      label: 'Constant current',
+    },
     {
       rangeLabel: 'Power',
       value: 3,
@@ -49,7 +54,6 @@
   ];
 
   let selectedLoadMode = loadModeOptions[initialData.loadMode.value],
-    experimentNumber = 0,
     experimentError,
     lastExperimentNumber,
     isPaused,
@@ -61,22 +65,6 @@
     isRejected = true;
   });
 
-  $: if (
-    !$serialData.start.value &&
-    $serialData.boostMode.value % 2 &&
-    experimentNumber === lastExperimentNumber
-  ) {
-    experimentError = 'Obnovite nomer experimenta';
-  }
-
-  $: if ($serialData.start.value) lastExperimentNumber = experimentNumber;
-
-  function changeExperimentNumber(num) {
-    // lastExperimentNumber = experimentNumber;
-    experimentNumber = num;
-    if (experimentNumber !== lastExperimentNumber) experimentError = '';
-    ipcRenderer.send('newExperimentNumber', experimentNumber);
-  }
 
   function sendCommand(value, name) {
     ipcRenderer.send('serialCommand', ...COMMANDS[name](+value));
@@ -122,7 +110,8 @@
           name="loadMode"
           defaultValue={initialData.loadMode.value}
           label={initialData.loadMode.label}
-          options={loadModeOptions} />
+          options={loadModeOptions}
+        />
         {#if selectedLoadMode.value}
           <RangeInput
             name="load"
@@ -130,22 +119,14 @@
             step={STEPS['load' + selectedLoadMode.name]}
             label={selectedLoadMode.rangeLabel}
             range={CONSTRAINTS['load' + selectedLoadMode.name]}
-            onChange={sendCommand} />
+            onChange={sendCommand}
+          />
         {:else}
           <div class="input-placeholder" />
         {/if}
       {/if}
       {#each column as block}
         <h3>{block.title || ''}</h3>
-        {#if block.title == 'BTE'}
-          <RangeInput
-            errorMessage={experimentError}
-            disabled={$serialData.start.value}
-            range={CONSTRAINTS.experimentNumber}
-            suggestedValue={experimentNumber}
-            label="Nomer experimenta"
-            onChange={changeExperimentNumber} />
-        {/if}
         {#if block.selects}
           {#each block.selects as { name, options }}
             <Select
@@ -153,34 +134,38 @@
               {name}
               onChange={sendCommand}
               defaultValue={initialData[name].value}
-              label={initialData[name].label} />
+              label={initialData[name].label}
+            />
           {/each}
         {/if}
         {#if block.inputs}
           {#each block.inputs as name}
             <RangeInput
-              disabeld={$serialData.start.value && disabledOnStart.includes(name)}
+              disabeld={$serialData.start.value &&
+                disabledOnStart.includes(name)}
               step={STEPS[name]}
               range={CONSTRAINTS[name]}
               suggestedValue={$serialData[name].value}
               label={initialData[name].label}
               {name}
-              onChange={sendCommand}>
-              {#if name == 'IVCStep'}
-                <span class="hint">
-                  do kontsa tekushego {$serialData.stepRemain.value} s
-                </span>
-              {/if}
-            </RangeInput>
+              onChange={sendCommand}
+            />
           {/each}
         {/if}
         {#if block.values}
           {#each block.values as val}
             <Value
-              error={val.maxCompare ? $serialData[val.maxCompare].value < $serialData[val.name].value : val.minCompare ? $serialData[val.minCompare].value > $serialData[val.name].value : false}
+              error={val.maxCompare
+                ? $serialData[val.maxCompare].value <
+                  $serialData[val.name].value
+                : val.minCompare
+                ? $serialData[val.minCompare].value >
+                  $serialData[val.name].value
+                : false}
               units={initialData[val.name].units}
               value={$serialData[val.name].value}
-              label={initialData[val.name].label} />
+              label={initialData[val.name].label}
+            />
           {/each}
         {/if}
       {/each}
@@ -188,13 +173,15 @@
         <Button
           size="sm"
           style="margin: 1rem auto 0"
-          on:click={() => window.scrollTo(0, window.innerHeight)}>
-          Grafiki
+          on:click={() => window.scrollTo(0, window.innerHeight)}
+        >
+          {$__('charts')}
         </Button>
         <Button
           size="sm"
           style="margin: 1rem auto 0"
-          on:click={toggleExecution}>
+          on:click={toggleExecution}
+        >
           {#if isExecuting && !isPaused}
             <span class="pause" />
           {:else}
@@ -205,20 +192,22 @@
           <Button
             size="sm"
             style="margin: 1rem auto 0"
-            on:click={stopExecution}>
+            on:click={stopExecution}
+          >
             <span class="stop" />
           </Button>
         {/if}
         {#if isRejected}
-          <Exclamation size="lg"/>
+          <Exclamation size="lg" />
         {/if}
       {/if}
       {#if idx === 1}
         <Button
           size="sm"
           style="margin: 1rem auto 0"
-          on:click={startCalibration}>
-          Kalibrovka
+          on:click={startCalibration}
+        >
+          {$__('calibration')}
         </Button>
       {/if}
     </div>

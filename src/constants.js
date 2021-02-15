@@ -162,7 +162,6 @@ const CONSTRAINTS = {
   loadPower: [10, 1500],
   fanMinRPM: [0, 100],
   fanMaxVoltage: [3, 13],
-  IVCStep: [10, 990],
   maxTemp: [-10, 100],
   minPressure: [-1, 4],
   minVoltage: isSmallBlock ? [-10, 20] : [-10, 40],
@@ -173,7 +172,6 @@ const CONSTRAINTS = {
 const STEPS = {
   blowDelay: 1,
   blowDuration: 10,
-  experimentNumber: 1,
   fanLoad: 0.5,
   stabilizationTemp: 1,
   loadCurrent: 0.1,
@@ -181,7 +179,6 @@ const STEPS = {
   loadPower: 1,
   fanMinRPM: 0.5,
   fanMaxVoltage: 0.1,
-  IVCStep: 1,
   maxTemp: 1,
   minPressure: 0.05,
   minVoltage: 0.1,
