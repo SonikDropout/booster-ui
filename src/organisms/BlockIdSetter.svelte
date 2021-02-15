@@ -2,7 +2,7 @@
   import { ipcRenderer } from 'electron';
   import RangeInput from '../molecules/RangeInput';
   import Button from '../atoms/Button';
-  import { zeroPad } from '../utils/others';
+  import { zeroPad } from '../utils/helpers';
 
   let showDialog = false;
   const idNode = document.getElementById('id');

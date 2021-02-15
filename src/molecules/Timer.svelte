@@ -1,6 +1,6 @@
 <script>
   import { serialData } from '../stores';
-  import { formatSeconds } from '../utils/others';
+  import { formatSeconds } from '../utils/helpers';
 
   let elapsed = 0;
   serialData.subscribe($dat => {

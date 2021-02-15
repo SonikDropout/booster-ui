@@ -1,6 +1,6 @@
 const EventEmitter = require('events');
 const { SERIAL_DATA } = require('../constants');
-const { clone } = require('./others');
+const { clone } = require('./helpers');
 
 const emitter = new EventEmitter();
 

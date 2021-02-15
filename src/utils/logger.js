@@ -1,7 +1,7 @@
 const fs = require('fs');
 const homeDir = require('os').homedir();
 const path = require('path');
-const { getFormatedDate, zeroPad } = require('./others');
+const { getFormatedDate, zeroPad } = require('./helpers');
 const {
   LOGGED_VALUES,
   SERIAL_DATA,
@@ -37,7 +37,7 @@ const tableHeader = ['Vremya']
     LOGGED_VALUES.map(
       (key) =>
         `${SERIAL_DATA[key].label}${
-        SERIAL_DATA[key].units ? ', ' + SERIAL_DATA[key].units : ''
+          SERIAL_DATA[key].units ? ', ' + SERIAL_DATA[key].units : ''
         }`
     )
   )
@@ -52,20 +52,23 @@ function start(boosterState, expNumber) {
     'logs',
     date.getFullYear() + '',
     zeroPad(date.getMonth() + 1, 2)
-  )
+  );
   return new Promise((resolve, reject) => {
-    fs.mkdir(logDir, {recursive: true}, (err) => {
+    fs.mkdir(logDir, { recursive: true }, (err) => {
       if (err) {
         reject(err);
       } else {
-        const logPath = path.join(logDir, getFormatedDate('YYYY-MM-DD--HH-mm-ss') + '.tsv');
+        const logPath = path.join(
+          logDir,
+          getFormatedDate('YYYY-MM-DD--HH-mm-ss') + '.tsv'
+        );
         log = fs.createWriteStream(logPath);
         writeLogData(generateLogHeader(boosterState, expNumber));
         writeLogData(tableHeader);
         resolve(logPath);
       }
     });
-  })
+  });
 }
 
 function writeRow(boosterState) {
@@ -80,7 +83,7 @@ function getLogRow(boosterState) {
     LOGGED_VALUES.map(
       (key) =>
         `${boosterState[key].prefix || ''}${boosterState[key].value}${
-        boosterState[key].units || ''
+          boosterState[key].units || ''
         }`
     )
   );
@@ -98,7 +101,7 @@ ${BOOST_MODES[boosterState.boostMode.value]}
 Block nomer ${blockId}
 Otsechka: ${boosterState.minPressure.value}bar, ${
     boosterState.minVoltage.value
-    }V, ${boosterState.maxTemp.value}C
+  }V, ${boosterState.maxTemp.value}C
   `;
 }
 

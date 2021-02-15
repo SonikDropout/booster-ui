@@ -1,4 +1,4 @@
-const { zeroPad } = require('./src/utils/others');
+const { zeroPad } = require('./src/utils/helpers');
 const { CONFIG_PATH } = require('./src/constants');
 
 window.onload = () => {

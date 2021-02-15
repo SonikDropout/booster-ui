@@ -1,5 +1,5 @@
 <script>
-  import { constraint } from '../utils/others';
+  import { constraint } from '../utils/helpers';
   export let range = [0, 100];
   export let disabled;
   export let onChange;

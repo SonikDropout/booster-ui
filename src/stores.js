@@ -1,8 +1,8 @@
 const { writable, derived } = require('svelte/store');
 const { ipcRenderer } = require('electron');
-const { clone } = require('./utils/others');
+const { clone } = require('./utils/helpers');
 const { SERIAL_DATA } = require('./constants');
-const { formatSeconds } = require('./utils/others');
+const { formatSeconds } = require('./utils/helpers');
 
 const serialData = writable(clone(SERIAL_DATA));
 

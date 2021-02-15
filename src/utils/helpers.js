@@ -79,7 +79,7 @@ function stdev(arr) {
 function filterInconsequential(arr) {
   const sigma = stdev(arr);
   const mean = arithmeticMean(arr);
-  return arr.filter(n => Math.abs(n - mean) < 3 * sigma)
+  return arr.filter((n) => Math.abs(n - mean) < 3 * sigma);
 }
 
 module.exports = {
@@ -97,4 +97,12 @@ module.exports = {
   zip,
   stdev,
   filterInconsequential,
+  getNested: (obj, key) =>
+    key
+      .split('.')
+      .reduce(
+        (o, k, i, a) =>
+          Object.is(o[k], void 0) ? (i < a.length - 1 ? {} : o[k]) : o[k],
+        obj
+      ),
 };
