@@ -1,5 +1,5 @@
 const { derived, writable } = require('svelte/store');
-const { getNested } = require('./helpers');
+const { getNested, capitalize } = require('./helpers');
 
 class Translator {
   /**
@@ -56,9 +56,10 @@ class Translator {
     this.lng = lng;
     this.locale.set(lng);
   }
-  _translate(key) {
+  _translate(key, doCapitalize) {
     try {
-      return getNested(this.dictionary[this.lng], key) || key;
+      const translation = getNested(this.dictionary[this.lng], key) || key;
+      return doCapitalize ? capitalize(translation) : translation;
     } catch {
       throw new Error(
         `Can't find translation for ${this.lng} locale in ${this.dictionary}`
