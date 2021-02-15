@@ -3,14 +3,24 @@ const { ipcRenderer } = require('electron');
 const { clone } = require('./utils/helpers');
 const { SERIAL_DATA } = require('./constants');
 const { formatSeconds } = require('./utils/helpers');
+const { isLoading } = require('./utils/translator');
 
 const serialData = writable(clone(SERIAL_DATA));
 
 const appInitialized = writable(false);
 
-ipcRenderer
-  .once('serialData', () => appInitialized.set(true))
-  .on('serialData', (_, data) => serialData.set(data));
+const localeLoaded = new Promise(
+  (res) => void isLoading.subscribe((f) => (f ? void 0 : res()))
+);
+const serialRecieved = new Promise(
+  (res) => void ipcRenderer.once('serialData', res)
+);
+
+Promise.all([localeLoaded, serialRecieved]).then(() =>
+  appInitialized.set(true)
+);
+
+ipcRenderer.on('serialData', (_, data) => serialData.set(data));
 
 function getValue(store) {
   let $val;
