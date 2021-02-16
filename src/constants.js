@@ -103,7 +103,7 @@ const PARAMS_DATA = [
     name: 'radiatorTemp2',
     divider: 10,
   },
-  { label: 'min fan RPM', units: 'ob/min', name: 'fanMinRPM' },
+  { label: 'min fan RPM', units: '%', name: 'fanMinRPM', divider: 10 },
   {
     label: 'max temperature',
     units: 'C',
