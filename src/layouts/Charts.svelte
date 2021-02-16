@@ -4,7 +4,7 @@
   import { ipcRenderer } from 'electron';
   import Chart from 'chart.js';
   import 'chartjs-plugin-zoom';
-  import configureChart from './chart.config';
+  import { config, axesGroup } from './chart.config';
   import { onMount, onDestroy } from 'svelte';
   import pointsStorage from '../utils/pointsStorage';
   import { serialData } from '../stores';
@@ -14,69 +14,21 @@
   onMount(() => {
     chart = new Chart(
       document.getElementById('chart').getContext('2d'),
-      configureChart(pointsStorage.points, {
-        x: axesGroup.elements[selectedAxes].xLabel,
-        y: axesGroup.elements[selectedAxes].yLabel,
-      })
+      config
     );
+    chart.data.datasets[0].data = pointsStorage.points;
+    chart.options.scales.xAxes[0].scaleLabel.labelString = axesGroup.elements[selectedAxes].xLabel;
+    chart.options.scales.yAxes[0].scaleLabel.labelString = axesGroup.elements[selectedAxes].yLabel;
     chart.options.onClick = chart.resetZoom;
   });
 
   onDestroy(() => chart && chart.destory());
 
-  const axesGroup = {
-    name: 'axes',
-    elements: [
-      {
-        value: 0,
-        label: 'U(t)',
-        yLabel: 'U, V',
-        yKey: 'FCVoltage',
-        xLabel: 't, c',
-        xKey: 'time',
-      },
-      {
-        value: 1,
-        label: 'I(t)',
-        yLabel: 'I, A',
-        yKey: 'FCCurrent',
-        xLabel: 't, c',
-        xKey: 'time',
-      },
-      {
-        value: 2,
-        label: 'P(t)',
-        yLabel: 'P, W',
-        yKey: 'FCPower',
-        xLabel: 't, c',
-        xKey: 'time',
-      },
-      {
-        value: 3,
-        label: 'U(I)',
-        yLabel: 'U, V',
-        yKey: 'FCVoltage',
-        xLabel: 'I, A',
-        xKey: 'FCCurrent',
-      },
-      {
-        value: 4,
-        label: 'P(I)',
-        yLabel: 'P, W',
-        yKey: 'FCPower',
-        xLabel: 'I, A',
-        xKey: 'FCCurrent',
-      },
-    ],
-  };
-
   const dataEntries = ['FCVoltage', 'FCCurrent', 'FCPower'];
 
-  let saveDisabled = true,
-    chart,
+  let chart,
     selectedAxes = 0,
     unsubscribeStopMonitor,
-    isDrawing,
     unsubscribeStartMonitor = serialData.subscribe(monitorStart),
     timeStart;
 
