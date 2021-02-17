@@ -56,10 +56,10 @@ class Translator {
     this.lng = lng;
     this.locale.set(lng);
   }
-  _translate(key, doCapitalize) {
+  _translate(key, noCapitalize) {
     try {
       const translation = getNested(this.dictionary[this.lng], key) || key;
-      return doCapitalize ? capitalize(translation) : translation;
+      return noCapitalize ? translation : capitalize(translation);
     } catch {
       throw new Error(
         `Can't find translation for ${this.lng} locale in ${this.dictionary}`

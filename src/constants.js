@@ -71,7 +71,7 @@ const PARAMS_DATA = [
     divider: 10,
   },
   {
-    label: 'stabilizaion temperature',
+    label: 'stabilization temperature',
     units: '\u00b0C',
     name: 'stabilizationTemp',
     divider: 10,
@@ -164,7 +164,7 @@ const CONSTRAINTS = {
   fanMaxVoltage: [3, 13],
   maxTemp: [-10, 100],
   minPressure: [-1, 4],
-  minVoltage: isSmallBlock ? [-10, 20] : [-10, 40],
+  minVoltage: [-10, 100],
   shortCircuitDuration: [0, 200],
   shortCircuitDelay: [0, 100],
 };
@@ -213,11 +213,6 @@ const LOGGED_VALUES = [
 const SERIAL_DATA = {
   FCPower: { label: 'FC power', units: 'W' },
 };
-
-for (let i = 0; i < PARAMS_DATA.length; ++i)
-  SERIAL_DATA[PARAMS_DATA[i].name] = PARAMS_DATA[i];
-for (let i = 0; i < STATE_DATA.length; ++i)
-  SERIAL_DATA[STATE_DATA[i].name] = STATE_DATA[i];
 
 PARAMS_DATA.forEach(addParamToMap);
 STATE_DATA.forEach(addParamToMap);

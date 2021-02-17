@@ -7,6 +7,8 @@ const { app, BrowserWindow, ipcMain } = electron;
 const Executor = require('./src/utils/executor');
 const checkUpdate = require('./src/utils/updater');
 const { exec } = require('child_process');
+const settingsManager = require('./src/utils/settingsManager');
+const { settings } = require('cluster');
 
 let win, updateAvailable, serial, logger, executor;
 
@@ -95,7 +97,9 @@ function initSerial() {
     win.webContents.send('serialData', data);
   });
   ipcMain.on('serialCommand', (_, ...args) => serial.sendCommand(...args));
-  const initialValues = require(`${CONFIG_PATH}/initialize.json`);
+  const initialValues = settingsManager.getStartParams();
+  ipcMain.on('getStartParams', (e) => (e.returnValue = initialValues));
+  ipcMain.on('updateStartParams', settingsManager.updateStartParams);
   for (const key in initialValues) {
     serial.sendCommand(...COMMANDS[key](initialValues[key]));
   }
@@ -140,15 +144,11 @@ function initLogger() {
 }
 
 function listenRenderer() {
-  ipcMain.on('setBlockId', (_, id) => {
-    const settings = require(`${CONFIG_PATH}/settings.json`);
-    settings.id = id;
-    fs.writeFile(
-      `${CONFIG_PATH}/settings.json`,
-      JSON.stringify(settings),
-      () => {}
-    );
-  });
+  ipcMain.on(
+    'getSettings',
+    (e) => (e.returnValue = settingsManager.getSettings())
+  );
+  ipcMain.on('updateSettings', settingsManager.updateSettings);
 }
 
 function launch() {

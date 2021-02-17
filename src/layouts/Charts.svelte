@@ -88,7 +88,7 @@
 </script>
 
 <main>
-  <h2>{$__('charts', true)}</h2>
+  <h2>{$__('charts')}</h2>
   <RadioGroup
     style="grid-column: 1 / 3"
     type="horizontal"
@@ -100,7 +100,7 @@
     style="grid-column: 3 / 4; justify-self: end"
     on:click={() => window.scrollTo(0, 0)}
   >
-    {$__('back', true)}
+    {$__('back')}
   </Button>
   <div class="chart">
     <canvas id="chart" />

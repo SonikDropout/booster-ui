@@ -9,6 +9,7 @@
   import Button from '../atoms/Button';
   import { ipcRenderer } from 'electron';
   import { __ } from '../utils/translator';
+  import loadModeOptions from '../models/loadModeOptions';
 
   const initialData = getValue(serialData);
 
@@ -23,27 +24,6 @@
     'timeStep',
   ];
 
-  const loadModeOptions = [
-    { value: 0, name: '', label: 'load disabled' },
-    {
-      rangeLabel: 'Voltage',
-      value: 1,
-      name: 'Voltage',
-      label: 'voltage',
-    },
-    {
-      rangeLabel: 'Current',
-      value: 2,
-      name: 'Current',
-      label: 'current',
-    },
-    {
-      rangeLabel: 'Power',
-      value: 3,
-      name: 'Power',
-      label: 'power',
-    },
-  ];
 
   let selectedLoadMode = loadModeOptions[initialData.loadMode.value],
     isPaused,
@@ -92,12 +72,12 @@
   {#each blocks as column, idx}
     <div class="col-{idx}">
       {#if idx === 2}
-        <h3>{$__('load', true)}</h3>
+        <h3>{$__('load')}</h3>
         <Select
           onChange={selectLoadMode}
           name="loadMode"
           defaultValue={initialData.loadMode.value}
-          label={$__(initialData.loadMode.label, true)}
+          label={$__(initialData.loadMode.label)}
           options={loadModeOptions}
         />
         {#if selectedLoadMode.value}
@@ -115,7 +95,7 @@
       {/if}
       {#each column as block}
         <h3>
-          {#if block.title}{$__(block.title, true)}{/if}
+          {#if block.title}{$__(block.title)}{/if}
         </h3>
         {#if block.selects}
           {#each block.selects as { name, options }}
@@ -124,7 +104,7 @@
               {name}
               onChange={sendCommand}
               defaultValue={initialData[name].value}
-              label={$__(initialData[name].label, true)}
+              label={$__(initialData[name].label)}
             />
           {/each}
         {/if}
@@ -136,7 +116,7 @@
               step={STEPS[name]}
               range={CONSTRAINTS[name]}
               suggestedValue={$serialData[name].value}
-              label={$__(initialData[name].label, true)}
+              label={$__(initialData[name].label)}
               {name}
               onChange={sendCommand}
             />
@@ -154,7 +134,7 @@
                 : false}
               units={$__(initialData[val.name].units)}
               value={$serialData[val.name].value}
-              label={$__(initialData[val.name].label, true)}
+              label={$__(initialData[val.name].label)}
             />
           {/each}
         {/if}

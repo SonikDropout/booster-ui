@@ -4,9 +4,10 @@
   export let style;
   export let name;
   export let size = '';
+  export let type;
 </script>
 
-<button {style} {disabled} class="{className} {size}" {name} on:click>
+<button {style} {disabled} class="{className} {type} {size}" {name} on:click>
   <slot />
 </button>
 
@@ -16,9 +17,14 @@
     color: var(--bg-color);
     border: none;
     border-radius: 0.4rem;
-    padding: 1.2rem 2.4rem;
-    font-size: 2rem;
-    box-shadow: 0 3px 0 var(--corporate-grey-darken);
+    padding: 0.8rem 1.6rem;
+    font-size: 1.8rem;
+  }
+  button.outline {
+    background-color: var(--bg-color);
+    color: var(--corporate-grey-darken);
+    border: 1px solid var(--corporate-grey-darken);
+    box-shadow: none;
   }
 
   button.sm {
@@ -31,8 +37,7 @@
   }
 
   button:active {
-    box-shadow: 0 2px 0 var(--corporate-grey-darken);
-    transform: translateY(1px);
+    transform: scale(0.9);
     outline: none;
   }
 

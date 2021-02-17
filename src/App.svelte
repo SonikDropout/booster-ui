@@ -4,6 +4,7 @@
   import { appInitialized } from './stores';
   import { version } from '../package.json';
   import UpdateModal from './organisms/UpdateModal';
+  import SettingsModal from './organisms/SettingsModal';
   const { ipcRenderer } = require('electron');
   let updateAvailable = ipcRenderer.sendSync('checkUpdate');
 
@@ -26,6 +27,7 @@
 {#if $appInitialized}
   <Dashboard />
   <Charts />
+  <SettingsModal />
 {/if}
 {#if updateAvailable}
   <UpdateModal />
