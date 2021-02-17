@@ -5,25 +5,25 @@
   import { __ } from '../utils/translator';
   import Icon from '../atoms/Icon.svelte';
   import TextInput from '../molecules/TextInput';
-  import { ipcRenderer } from 'electron';
+  import { settings } from '../stores';
   import StartParamsSettings from './StartParamsSettings.svelte';
 
   let showModal = false,
-    settings = ipcRenderer.sendSync('getSettings'),
+    settingsCopy = $settings,
     showStartParamsSettings = false;
 
   const hideModal = () => (showModal = false);
 
   function changeBlockId(id) {
-    settings.id = id;
+    settingsCopy.id = id;
   }
 
   function setLogName(e) {
-    settings.logName = e.target.value;
+    settingsCopy.logName = e.target.value;
   }
 
   function updateSettings() {
-    ipcRenderer.send('updateSettings', settings);
+    settings.set(settingsCopy);
     hideModal();
   }
 </script>
@@ -41,13 +41,13 @@
       <RangeInput
         label={$__('block id')}
         onChange={changeBlockId}
-        suggestedValue={settings.id}
+        suggestedValue={settingsCopy.id}
         name="blockId"
       />
       <TextInput
         label={$__('log name')}
         on:change={setLogName}
-        defaultValue={settings.logName}
+        defaultValue={settingsCopy.logName}
         name="logName"
       />
       <Button type="outline" on:click={() => (showStartParamsSettings = true)}

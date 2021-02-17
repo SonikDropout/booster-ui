@@ -5,6 +5,10 @@ const { SERIAL_DATA } = require('./constants');
 const { formatSeconds } = require('./utils/helpers');
 const { isLoading } = require('./utils/translator');
 
+const settings = writable(ipcRenderer.sendSync('getSettings'));
+
+settings.subscribe((s) => ipcRenderer.send('updateSettings', s));
+
 const serialData = writable(clone(SERIAL_DATA));
 
 const appInitialized = writable(false);
@@ -47,4 +51,5 @@ module.exports = {
   serialData,
   appInitialized,
   getValue,
+  settings,
 };

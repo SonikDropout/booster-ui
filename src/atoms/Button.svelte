@@ -5,9 +5,17 @@
   export let name;
   export let size = '';
   export let type;
+  export let title;
 </script>
 
-<button {style} {disabled} class="{className} {type} {size}" {name} on:click>
+<button
+  {style}
+  {title}
+  {disabled}
+  class="{className} {type} {size}"
+  {name}
+  on:click
+>
   <slot />
 </button>
 

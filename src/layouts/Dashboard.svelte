@@ -10,6 +10,7 @@
   import { ipcRenderer } from 'electron';
   import { __ } from '../utils/translator';
   import loadModeOptions from '../models/loadModeOptions';
+import CalibrationModal from '../organisms/CalibrationModal.svelte';
 
   const initialData = getValue(serialData);
 
@@ -171,17 +172,11 @@
           <Exclamation size="lg" />
         {/if}
       {/if}
-      {#if idx === 1}
-        <Button
-          size="sm"
-          style="margin: 1rem auto 0"
-          on:click={startCalibration}
-        >
-          {$__('calibration')}
-        </Button>
-      {/if}
     </div>
   {/each}
+  <div class="controls">
+    <CalibrationModal />
+  </div>
 </main>
 
 <style>

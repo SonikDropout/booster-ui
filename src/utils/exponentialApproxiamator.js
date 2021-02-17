@@ -17,13 +17,16 @@ function getExpCoefficients(points) {
     ],
     [sumXY, sumY]
   );
+  if (isNaN(a1) || isNaN(a0))
+    throw new Error('Could not approximate with exponential function');
   return [Math.exp(a0), a1];
 }
 
 function solveTwoLinearEquations(A, b) {
+  const det = A[0][0] * A[1][1] - A[1][0] * A[0][1];
+  if (det === 0) throw new Error('Linear equations system has no solution');
   const x2 =
-    (A[0][0] * b[1] - b[0] * A[1][0]) /
-    (A[1][1] * A[0][0] - A[0][1] * A[1][0]);
+    (A[0][0] * b[1] - b[0] * A[1][0]) / (A[1][1] * A[0][0] - A[0][1] * A[1][0]);
   const x1 = (b[0] - A[0][1] * x2) / A[0][0];
   return [x1, x2];
 }

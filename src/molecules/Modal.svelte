@@ -40,6 +40,7 @@
     min-width: 30rem;
     border-radius: 0.8rem;
     box-shadow: 0 0 0.8rem rgba(0, 0, 0, 0.5);
+    min-height: 50vh;
     max-height: 70vh;
     overflow-y: hidden;
   }

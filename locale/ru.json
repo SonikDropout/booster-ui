@@ -43,10 +43,17 @@
   "bar": "бар",
   "ml/min": "мл/мин",
   "save": "сохранить",
-  "cancel":"отмена", 
+  "cancel": "отмена",
   "settings": "настройки",
   "change start params": "редактировать начальные параметры",
   "block id": "Номер блока",
   "log name": "Название лога",
-  "discard": "отменить"
+  "discard": "отменить",
+  "please add at least five values of consumption": "пожалуйста добавьте не менее 5 значений расхода",
+  "add point": "добавить точку",
+  "calibrate": "калибровать",
+  "added points:": "добавлены точки: ",
+  "please add more points": "пожалуйста добавьте больше точек",
+  "calibrate flowmeter": "калибровать расходомер",
+  "clear points": "очистить"
 }
