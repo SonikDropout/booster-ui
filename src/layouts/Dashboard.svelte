@@ -10,7 +10,7 @@
   import { ipcRenderer } from 'electron';
   import { __ } from '../utils/translator';
   import loadModeOptions from '../models/loadModeOptions';
-import CalibrationModal from '../organisms/CalibrationModal.svelte';
+  import CalibrationModal from '../organisms/CalibrationModal.svelte';
 
   const initialData = getValue(serialData);
 
@@ -24,7 +24,6 @@ import CalibrationModal from '../organisms/CalibrationModal.svelte';
     'endCurrent',
     'timeStep',
   ];
-
 
   let selectedLoadMode = loadModeOptions[initialData.loadMode.value],
     isPaused,
@@ -69,7 +68,7 @@ import CalibrationModal from '../organisms/CalibrationModal.svelte';
   }
 </script>
 
-<main>
+<div class="layout" id="parameters">
   {#each blocks as column, idx}
     <div class="col-{idx}">
       {#if idx === 2}
@@ -177,10 +176,10 @@ import CalibrationModal from '../organisms/CalibrationModal.svelte';
   <div class="controls">
     <CalibrationModal />
   </div>
-</main>
+</div>
 
 <style>
-  main {
+  .layout {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-column-gap: 24px;

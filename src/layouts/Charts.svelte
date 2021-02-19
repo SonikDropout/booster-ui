@@ -17,8 +17,10 @@
       config
     );
     chart.data.datasets[0].data = pointsStorage.points;
-    chart.options.scales.xAxes[0].scaleLabel.labelString = axesGroup.elements[selectedAxes].xLabel;
-    chart.options.scales.yAxes[0].scaleLabel.labelString = axesGroup.elements[selectedAxes].yLabel;
+    chart.options.scales.xAxes[0].scaleLabel.labelString =
+      axesGroup.elements[selectedAxes].xLabel;
+    chart.options.scales.yAxes[0].scaleLabel.labelString =
+      axesGroup.elements[selectedAxes].yLabel;
     chart.options.onClick = chart.resetZoom;
   });
 
@@ -87,7 +89,7 @@
   }
 </script>
 
-<main>
+<div class="layout" id="charts">
   <h2>{$__('charts')}</h2>
   <RadioGroup
     style="grid-column: 1 / 3"
@@ -105,10 +107,10 @@
   <div class="chart">
     <canvas id="chart" />
   </div>
-</main>
+</div>
 
 <style>
-  main {
+  .layout {
     display: grid;
     padding: 0 24px;
     grid-template-columns: repeat(3, 1fr);

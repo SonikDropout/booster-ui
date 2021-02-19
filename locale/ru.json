@@ -55,5 +55,6 @@
   "added points:": "добавлены точки: ",
   "please add more points": "пожалуйста добавьте больше точек",
   "calibrate flowmeter": "калибровать расходомер",
-  "clear points": "очистить"
+  "clear points": "очистить",
+  "start params": "установки при запуске блока"
 }

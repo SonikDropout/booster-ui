@@ -1,46 +1,25 @@
 <script>
   import RangeInput from '../molecules/RangeInput';
-  import Button from '../atoms/Button';
-  import { ipcRenderer } from 'electron';
+  export let params;
   import { CONSTRAINTS, SERIAL_DATA } from '../constants';
   import { __ } from '../utils/translator';
   import loadModeOptions from '../models/loadModeOptions';
   import Select from '../molecules/Select.svelte';
-  export let discard;
-
-  async function getStartParams() {
-    const params = ipcRenderer.sendSync('getStartParams');
-    return params;
-  }
-
-  let paramsPromise = getStartParams(),
-    params = {};
-
-  paramsPromise.then((o) => {
-    params = o;
-    return o;
-  });
-
-  function setStartValue(value, name) {
-    params[name] = +value;
-  }
-
-  function confirm() {
-    ipcRenderer.send('updateStartParams', params);
-    discard();
-  }
+  export let onChange;
+  $: console.log(params);
 </script>
 
+<h4>{$__('start params')}</h4>
 <div class="inputs">
-  {#await paramsPromise}
+  {#if !params}
     ...Loading
-  {:then params}
+  {:else}
     {#each Object.keys(params) as param}
       {#if param === 'loadMode'}
         <Select
           name={param}
           label={$__(SERIAL_DATA[param].label)}
-          onChange={setStartValue}
+          {onChange}
           options={loadModeOptions}
           defaultValue={params[param]}
         />
@@ -48,25 +27,20 @@
         <RangeInput
           label={$__(SERIAL_DATA[param].label)}
           range={CONSTRAINTS[param]}
-          onChange={setStartValue}
+          {onChange}
           suggestedValue={params[param]}
         />
       {/if}
     {/each}
-  {/await}
+  {/if}
 </div>
-  <div class="controls">
-    <Button on:click={confirm}>{$__('save')}</Button>
-    <Button type="outline" on:click={discard}>{$__('cancel')}</Button>
-  </div>
 
 <style>
   .inputs {
-    overflow-y: auto;
-    max-height: calc(70vh - 14rem);
+    max-width: 32rem;
   }
-  .controls {
-    text-align: right;
-    margin-top: 1.2rem;
+  h4 {
+    margin: 2.4rem 0 1.2rem;
+    text-align: left;
   }
 </style>

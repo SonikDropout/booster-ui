@@ -4,7 +4,8 @@
   import { appInitialized } from './stores';
   import { version } from '../package.json';
   import UpdateModal from './organisms/UpdateModal';
-  import SettingsModal from './organisms/SettingsModal';
+  import Settings from './layouts/Settings.svelte';
+  import NavMenu from './organisms/NavMenu.svelte';
   const { ipcRenderer } = require('electron');
   let updateAvailable = ipcRenderer.sendSync('checkUpdate');
 
@@ -16,7 +17,7 @@
     'serverAddressRequest'
   );
 
-  appInitialized.subscribe(flag => {
+  appInitialized.subscribe((flag) => {
     if (flag) {
       document.getElementById('loading').remove();
     }
@@ -27,7 +28,8 @@
 {#if $appInitialized}
   <Dashboard />
   <Charts />
-  <SettingsModal />
+  <Settings />
+  <NavMenu />
 {/if}
 {#if updateAvailable}
   <UpdateModal />

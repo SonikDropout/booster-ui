@@ -1,16 +1,19 @@
 :root {
   --text-color: #333;
   --bg-color: white;
+  --bg-darken: #ccc;
   --corporate-orange: #f07e0f;
   --corporate-blue: #1aa2dd;
   --corporate-emerald: #37abb8;
-  --corporate-emerald-darken: #1C5B57;
+  --corporate-emerald-darken: #1c5b57;
   --corporate-light-green: #8bc041;
   --corporate-blue-darken: #065b8c;
   --danger-color: #fc2c03;
   --corporate-grey: #969ba5;
   --corporate-grey-darken: #74787f;
   --warning-color: #fcee21;
+  --nav-width: 15rem;
+  --nav-sm-width: 4rem;
 }
 
 * {
@@ -47,16 +50,13 @@ header {
 }
 
 .layout {
-  width: 100vw;
+  width: calc(100% - var(--nav-widht));
   height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background-size: cover;
-  background-repeat: no-repeat;
+  margin-left: auto;
 }
 
-.layout main {
-  flex-grow: 2;
+nav {
+  width: var(--nav-width);
 }
 
 footer {
@@ -83,24 +83,41 @@ footer {
   text-align: right;
 }
 
-h1,h2,h3,h4,h5,h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: 'Oswald', sans-serif;
   font-weight: 400;
   text-align: center;
   margin: 0.5rem 0;
 }
 
-h4,h5,h6 {
+h4,
+h5,
+h6 {
   font-weight: 300;
 }
 
-h2 {font-size: 2.4rem;}
-h3 {font-size: 2rem;}
-h4 {font-size: 2rem;}
+h2 {
+  font-size: 2.4rem;
+}
+h3 {
+  font-size: 2rem;
+}
+h4 {
+  font-size: 2rem;
+}
 
 @keyframes blink {
-  from {opacity: 0;}
-  to {opacity: 1;}
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 #loading {
@@ -122,5 +139,17 @@ input.hidden {
 @keyframes spin {
   to {
     transform: rotate(360deg);
+  }
+}
+
+@media screen and (max-width: 1280px) {
+  .mobile-hidden {
+    display: none;
+  }
+  .layout {
+    width: calc(100% - var(--nav-sm-width));
+  }
+  nav {
+    width: var(--nav-sm-width);
   }
 }
