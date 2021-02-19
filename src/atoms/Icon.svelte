@@ -3,4 +3,4 @@
   export let name;
 </script>
 
-<a href="#{name}" on:click>{icon}</a>
+<a href="#{name}" {name} on:click>{icon}</a>

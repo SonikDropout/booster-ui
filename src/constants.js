@@ -40,7 +40,11 @@ const STATE_DATA = [
     name: 'shortCircuitDelay',
     prefix: 'KZ ',
   },
-  { label: 'purge before short ciricuit', units: 's', name: 'blowBeforeShortCircuit' },
+  {
+    label: 'purge before short ciricuit',
+    units: 's',
+    name: 'blowBeforeShortCircuit',
+  },
   { name: 'start' },
   { label: 'was purged', name: 'isBlow' },
   { label: 'was short-circuited', name: 'isShortCircuit' },
@@ -83,7 +87,13 @@ const PARAMS_DATA = [
     divider: 100,
     signed: true,
   },
-  { label: 'current', units: 'A', name: 'FCCurrent', divider: 100, signed: true },
+  {
+    label: 'current',
+    units: 'A',
+    name: 'FCCurrent',
+    divider: 100,
+    signed: true,
+  },
   {
     label: 'H2 pressure',
     units: 'bar',
@@ -210,6 +220,13 @@ const LOGGED_VALUES = [
   'isShortCircuit',
 ];
 
+const ALGORITHM_PARAM = [
+  { value: 'current', label: 'current' },
+  { value: 'voltage', label: 'voltage' },
+  { value: 'blowDuration', label: 'purge duration' },
+  { value: 'blowDelay', label: 'purge delay' },
+];
+
 const SERIAL_DATA = {
   FCPower: { label: 'FC power', units: 'W' },
 };
@@ -237,6 +254,14 @@ const STOP_BITS = [
 
 const BOOST_MODES = ['manual fan', 'auto fan', 'manual temp', 'auto temp'];
 
+const ALGORITHM_DIRECTIONS = [
+  { label: '', value: 'up', icon: 'arrow-up' },
+  { label: '', value: 'down', icon: 'arrow-down' },
+  { label: '', value: 'downup', icon: 'arrow-down-up' },
+  { label: '', value: 'updown', icon: 'arrow-up-down' },
+  { label: '', value: 'hold', icon: 'lock' },
+];
+
 module.exports = {
   IS_RPI,
   PORT,
@@ -254,4 +279,6 @@ module.exports = {
   SIGNALS,
   STOP_BITS,
   BOOST_MODES,
+  ALGORITHM_PARAM,
+  ALGORITHM_DIRECTIONS,
 };

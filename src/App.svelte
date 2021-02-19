@@ -6,6 +6,7 @@
   import UpdateModal from './organisms/UpdateModal';
   import Settings from './layouts/Settings.svelte';
   import NavMenu from './organisms/NavMenu.svelte';
+  import Scripting from './layouts/Scripting.svelte';
   const { ipcRenderer } = require('electron');
   let updateAvailable = ipcRenderer.sendSync('checkUpdate');
 
@@ -30,6 +31,7 @@
   <Charts />
   <Settings />
   <NavMenu />
+  <Scripting />
 {/if}
 {#if updateAvailable}
   <UpdateModal />

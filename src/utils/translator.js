@@ -57,6 +57,7 @@ class Translator {
     this.locale.set(lng);
   }
   _translate(key, noCapitalize) {
+    if (!key) return;
     try {
       const translation = getNested(this.dictionary[this.lng], key) || key;
       return noCapitalize ? translation : capitalize(translation);

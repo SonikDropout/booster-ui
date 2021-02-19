@@ -8,4 +8,5 @@ test('retrieves value form nested object correctly', () => {
   const obj = { a: { b: { c: 0 } } };
   expect(getNested(obj, 'a.b.c')).toBe(0);
   expect(getNested(obj, 'a.d.e')).toBe(void 0);
+  expect(getNested(obj, '')).toBe(undefined);
 });
