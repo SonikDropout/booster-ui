@@ -37,7 +37,9 @@
 
 <style>
   .inputs {
-    max-width: 32rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 0 1.2rem;
   }
   h4 {
     margin: 2.4rem 0 1.2rem;

@@ -60,12 +60,12 @@
 <style>
   .layout {
     padding: 2.4rem;
-  }
-  h3 {
-    margin-bottom: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
   }
   .controls {
-    margin-top: 1.2rem;
+    margin-top: auto;
     text-align: right;
   }
 </style>
