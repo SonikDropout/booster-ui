@@ -15,7 +15,10 @@
 <style>
   input {
     width: 100%;
-    border: none;
     box-shadow: none;
+    height: 3.2rem;
+    font-size: 2rem;
+    line-height: 3.2rem;
+    padding-left: 1.2rem;
   }
 </style>
