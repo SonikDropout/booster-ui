@@ -1,42 +1,15 @@
 <script>
   import { __ } from '../utils/translator';
-  let navItems = [
-    {
-      label: 'parameters',
-      icon: 'fas fa-cogs',
-      href: '#parameters',
-      active: true,
-    },
-    {
-      label: 'charts',
-      icon: 'fas fa-chart-line',
-      href: '#charts',
-      active: false,
-    },
-    {
-      label: 'settings',
-      icon: 'fas fa-cog',
-      href: '#settings',
-      active: false,
-    },
-    {
-      label: 'script',
-      icon: 'fas fa-terminal',
-      href: '#script',
-      active: false,
-    },
-  ];
-  function activate(id) {
-    return function activator() {
-      navItems.forEach((a, i) => (a.active = i === id));
-      navItems = navItems; // trigger render
-    };
+  import navItems from '../models/navMenu';
+  let active = navItems[0].href;
+  function activate(e) {
+    active = new URL(e.currentTarget.href).hash;
   }
 </script>
 
 <nav>
-  {#each navItems as { label, icon, href, active }, i}
-    <a {href} class:active on:click={activate(i)}
+  {#each navItems as { label, icon, href }, i}
+    <a {href} class:active={href === active} on:click={activate}
       ><i class={icon} /><span class="mobile-hidden">{$__(label)}</span></a
     >
   {/each}
