@@ -255,11 +255,11 @@ const STOP_BITS = [
 const BOOST_MODES = ['manual fan', 'auto fan', 'manual temp', 'auto temp'];
 
 const ALGORITHM_DIRECTIONS = [
-  { label: '', value: 'up', icon: 'arrow-up' },
-  { label: '', value: 'down', icon: 'arrow-down' },
-  { label: '', value: 'downup', icon: 'arrow-down-up' },
-  { label: '', value: 'updown', icon: 'arrow-up-down' },
-  { label: '', value: 'hold', icon: 'lock' },
+  { label: '', value: 'up', icon: '&#xf30c;' },
+  { label: '', value: 'down', icon: '&#xf309;' },
+  { label: '', value: 'downup', icon: '&#xf338;' },
+  { label: '', value: 'updown', icon: '&#xf338;' },
+  { label: '', value: 'hold', icon: '&#xf023;' },
 ];
 
 module.exports = {

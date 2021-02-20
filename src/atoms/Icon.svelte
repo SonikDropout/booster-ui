@@ -1,6 +1,17 @@
 <script>
   export let icon;
   export let name;
+  export let interactive;
 </script>
 
-<a href="#{name}" {name} on:click>{icon}</a>
+<i class="fas fa-{icon}" class:interactive {name} on:click />
+
+<style>
+  .interactive {
+    cursor: pointer;
+    font-size: 2rem;
+  }
+  .interactive:hover {
+    color: var(--corporate-grey-darken);
+  }
+</style>
