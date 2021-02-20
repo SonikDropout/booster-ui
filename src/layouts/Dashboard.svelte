@@ -10,9 +10,8 @@
   import { ipcRenderer } from 'electron';
   import { __ } from '../utils/translator';
   import loadModeOptions from '../models/loadModeOptions';
-  import CalibrationModal from '../organisms/CalibrationModal.svelte';
 
-  const initialData = getValue(serialData);
+  const initialData = $serialData;
 
   const disabledOnStart = [
     'boostMode',
@@ -25,15 +24,7 @@
     'timeStep',
   ];
 
-  let selectedLoadMode = loadModeOptions[initialData.loadMode.value],
-    isPaused,
-    isExecuting,
-    isRejected;
-
-  ipcRenderer.on('executionRejected', () => {
-    isPaused = true;
-    isRejected = true;
-  });
+  let selectedLoadMode = loadModeOptions[initialData.loadMode.value];
 
   function sendCommand(value, name) {
     ipcRenderer.send('serialCommand', ...COMMANDS[name](+value));
@@ -42,29 +33,6 @@
   function selectLoadMode(mode) {
     selectedLoadMode = loadModeOptions[mode];
     ipcRenderer.send('serialCommand', ...COMMANDS.loadMode(+mode));
-  }
-
-  function startCalibration() {
-    ipcRenderer.send('serialCommand', ...COMMANDS.startCalibration());
-  }
-
-  function toggleExecution() {
-    if (!isExecuting) {
-      isExecuting = true;
-      isRejected = false;
-      ipcRenderer.send('execute');
-    } else {
-      ipcRenderer.send(isPaused ? 'resumeExecution' : 'pauseExecution');
-      isPaused = !isPaused;
-      isRejected = false;
-    }
-    ipcRenderer.once('executed', () => (isExecuting = false));
-  }
-
-  function stopExecution() {
-    ipcRenderer.send('stopExecution');
-    isExecuting = false;
-    isRejected = false;
   }
 </script>
 
@@ -139,46 +107,8 @@
           {/each}
         {/if}
       {/each}
-      {#if idx === 0}
-        <Button
-          size="sm"
-          style="margin: 1rem auto 0"
-          on:click={() => window.scrollTo(0, window.innerHeight)}
-        >
-          {$__('charts')}
-        </Button>
-        <Button
-          size="sm"
-          style="margin: 1rem auto 0"
-          on:click={toggleExecution}
-        >
-          {#if isExecuting && !isPaused}
-            <span class="pause" />
-          {:else}
-            <span class="play" />
-          {/if}
-        </Button>
-        {#if isExecuting}
-          <Button
-            size="sm"
-            style="margin: 1rem auto 0"
-            on:click={stopExecution}
-          >
-            <span class="stop" />
-          </Button>
-        {/if}
-        {#if isRejected}
-          <Exclamation size="lg" />
-        {/if}
-      {/if}
     </div>
   {/each}
-  <div class="controls">
-    <CalibrationModal />
-    <Button on:click={() => window.scrollTo(0, window.innerHeight * 2)}
-      >{$__('scripts')}</Button
-    >
-  </div>
 </div>
 
 <style>
