@@ -7,6 +7,32 @@
   import SelectCell from '../molecules/SelectCell.svelte';
   import InputCell from '../molecules/InputCell.svelte';
 
+  let isPaused, isExecuting, isRejected, algorithmChanged;
+
+  ipcRenderer.on('executionRejected', () => {
+    isPaused = true;
+    isRejected = true;
+  });
+
+  function toggleExecution() {
+    if (!isExecuting) {
+      isExecuting = true;
+      isRejected = false;
+      ipcRenderer.send('execute');
+    } else {
+      ipcRenderer.send(isPaused ? 'resumeExecution' : 'pauseExecution');
+      isPaused = !isPaused;
+      isRejected = false;
+    }
+    ipcRenderer.once('executed', () => (isExecuting = false));
+  }
+
+  function stopExecution() {
+    ipcRenderer.send('stopExecution');
+    isExecuting = false;
+    isRejected = false;
+  }
+
   let algorithm = [
     {
       param: 'voltage',
@@ -24,8 +50,11 @@
       timeStep: 60,
     },
   ];
+  const initialAlgorithm = JSON.parse(JSON.stringify(algorithm));
 
   $: isValidAlgorithm = isValid(algorithm);
+  $: algorithmChanged =
+    JSON.stringify(algorithm) !== JSON.stringify(initialAlgorithm);
 
   function isValid(script) {
     if (algorithm.length < 1) return false;
@@ -57,80 +86,82 @@
   function startSelectedAlgoritm() {
     ipcRenderer.send('startExecution');
   }
-  const validateAlgorithm = () => (isValidAlgorithm = isValid(algorithm));
-  const deleteStep = (stepToDelete) => () =>
-    (algorithm = algorithm.filter((_, i) => i !== stepToDelete));
+  function reassignAlgorithm() {
+    algorithm = algorithm;
+  }
+  const deleteStep = (stepToDelete) =>
+    function desctructor() {
+      algorithm = algorithm.filter((_, i) => i !== stepToDelete);
+    };
 </script>
 
 <div class="layout" id="script">
-  <div class="main">
-    <table>
-      <thead>
-        <th>{$__('param')}</th>
-        <th>{$__('direction')}</th>
-        <th>{$__('min')}</th>
-        <th>{$__('max')}</th>
-        <th>{$__('loops')}</th>
-        <th>{$__('time step')}</th>
-        <th class="row-controls" />
-      </thead>
-      {#each algorithm as step, i}
-        <tr>
-          <SelectCell
-            on:change={validateAlgorithm}
-            bind:value={step.param}
-            options={ALGORITHM_PARAM}
-          />
-          <SelectCell
-            on:change={validateAlgorithm}
-            options={ALGORITHM_DIRECTIONS}
-            bind:value={step.direction}
+  <table>
+    <thead>
+      <th>{$__('param')}</th>
+      <th>{$__('direction')}</th>
+      <th>{$__('min')}</th>
+      <th>{$__('max')}</th>
+      <th>{$__('loops')}</th>
+      <th>{$__('time step')}</th>
+      <th class="row-controls" />
+    </thead>
+    {#each algorithm as step, i}
+      <tr>
+        <SelectCell
+          on:change={reassignAlgorithm}
+          bind:value={step.param}
+          options={ALGORITHM_PARAM}
+        />
+        <SelectCell
+          on:change={reassignAlgorithm}
+          options={ALGORITHM_DIRECTIONS}
+          bind:value={step.direction}
+        />
+        <InputCell
+          on:change={reassignAlgorithm}
+          type="number"
+          bind:value={step.min}
+          name="min"
+        />
+        {#if step.direction === 'hold'}
+          <td class="spacer" />
+          <td class="spacer" />
+        {:else}
+          <InputCell
+            on:change={reassignAlgorithm}
+            type="number"
+            bind:value={step.max}
+            name="max"
           />
           <InputCell
-            on:change={validateAlgorithm}
+            on:change={reassignAlgorithm}
             type="number"
-            bind:value={step.min}
-            name="min"
+            bind:value={step.loops}
+            name="loops"
           />
-          {#if step.direction === 'hold'}
-            <td class="spacer" />
-            <td class="spacer" />
-          {:else}
-            <InputCell
-              on:change={validateAlgorithm}
-              type="number"
-              bind:value={step.max}
-              name="max"
-            />
-            <InputCell
-              on:change={validateAlgorithm}
-              type="number"
-              bind:value={step.loops}
-              name="loops"
-            />
-          {/if}
-          <InputCell
-            on:change={validateAlgorithm}
-            type="number"
-            bind:value={step.timeStep}
-            name="timeStep"
-          />
-          <td>
-            <Icon icon="cross" on:click={deleteStep(i)} />
-          </td>
-        </tr>
-      {/each}
-    </table>
-    <div class="controls">
-      <Button on:click={addStep}>{$__('add')}</Button>
-      <Button on:click={saveChanges}>{$__('save')}</Button>
-      <Button on:click={startSelectedAlgoritm} disabled={!isValidAlgorithm}
-        >{$__('start')}</Button
-      >
-    </div>
-  </div>
-  <div class="footer">
-    <Button on:click={() => window.scrollTo(0, 0)}>{$__('back')}</Button>
+        {/if}
+        <InputCell
+          on:change={reassignAlgorithm}
+          type="number"
+          bind:value={step.timeStep}
+          name="timeStep"
+        />
+        <td>
+          <Icon interactive icon="trash-alt" on:click={deleteStep(i)} />
+        </td>
+      </tr>
+    {/each}
+  </table>
+  <div class="controls">
+    <Button on:click={addStep}>{$__('add')}</Button>
+    <Button
+      on:click={saveChanges}
+      disabled={!isValidAlgorithm || !algorithmChanged}>{$__('save')}</Button
+    >
+    <Button on:click={startSelectedAlgoritm} disabled={!isValidAlgorithm}
+      >{$__('start')}</Button
+    >
   </div>
 </div>
 
@@ -141,14 +172,16 @@
   .controls {
     text-align: right;
   }
-  .main {
-    padding: 5rem 2.4rem;
-  }
-  .footer {
-    margin-top: auto;
+  .layout {
+    padding: 5rem 2.4rem 2.4rem;
+    display: flex;
+    flex-direction: column;
   }
   table {
     width: 100%;
     table-layout: fixed;
+  }
+  th {
+    font: 1.8rem 'Oswald';
   }
 </style>
