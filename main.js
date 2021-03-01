@@ -159,7 +159,6 @@ function launch() {
     frame: false,
     webPreferences: {
       nodeIntegration: true,
-      preload: path.join(__dirname, 'preload.js'),
     },
   });
 
