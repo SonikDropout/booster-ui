@@ -262,6 +262,8 @@ const ALGORITHM_DIRECTIONS = [
   { label: '', value: 'hold', icon: '&#xf023;' },
 ];
 
+const LOAD_MODES = ['none', 'voltage', 'current', 'power'];
+
 module.exports = {
   IS_RPI,
   PORT,
@@ -281,4 +283,5 @@ module.exports = {
   BOOST_MODES,
   ALGORITHM_PARAM,
   ALGORITHM_DIRECTIONS,
+  LOAD_MODES,
 };

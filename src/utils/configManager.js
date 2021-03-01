@@ -3,7 +3,7 @@ const fs = require('fs');
 const { CONFIG_PATH } = require('../constants');
 
 const writeJSON = (path, content) =>
-  fs.writeFile(path, JSON.stringify(content), {}, Function.prototype);
+  fs.writeFile(path, JSON.stringify(content, null, 2), {}, Function.prototype);
 
 const startParamsPath = path.join(CONFIG_PATH, 'initialize.json');
 const startParams = require(startParamsPath);
@@ -24,3 +24,9 @@ exports.updateSettings = function updateSettings(_, newSettings) {
   for (let key in newSettings) settings[key] = newSettings[key];
   writeJSON(settingsPath, settings);
 };
+
+const algorithmPath = path.join(CONFIG_PATH, 'algorithm.json');
+
+exports.updateAlgorithm = function updateAlgorithm(_, newAlgorithm) {
+  writeJSON(algorithmPath, newAlgorithm);
+}

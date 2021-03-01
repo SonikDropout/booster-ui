@@ -7,7 +7,10 @@ const { isLoading } = require('./utils/translator');
 
 const settings = writable(ipcRenderer.sendSync('getSettings'));
 
+const algorithm = writable(ipcRenderer.sendSync('getScript'));
+
 settings.subscribe((s) => ipcRenderer.send('updateSettings', s));
+algorithm.subscribe((a) => ipcRenderer.send('updateAlgorithm', a));
 
 const serialData = writable(clone(SERIAL_DATA));
 
@@ -52,4 +55,5 @@ module.exports = {
   getValue,
   settings,
   elapsed: elapsedStore,
+  algorithm,
 };

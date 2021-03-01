@@ -1,14 +1,12 @@
 const path = require('path');
 const url = require('url');
-const fs = require('fs');
 const electron = require('electron');
-const { IS_RPI: isPi, CONFIG_PATH, COMMANDS } = require('./src/constants');
+const { IS_RPI: isPi, CONFIG_PATH, COMMANDS, LOAD_MODES } = require('./src/constants');
 const { app, BrowserWindow, ipcMain } = electron;
 const Executor = require('./src/utils/executor');
 const checkUpdate = require('./src/utils/updater');
 const { exec } = require('child_process');
-const settingsManager = require('./src/utils/settingsManager');
-const { settings } = require('cluster');
+const configManager = require('./src/utils/configManager');
 
 let win, updateAvailable, serial, logger, executor;
 
@@ -58,20 +56,18 @@ function initUpdater() {
 function initExecutor() {
   let currentMode;
   const algorithm = require(`${CONFIG_PATH}/algorithm.json`);
-  executor = new Executor(algorithm, ({ voltage, current }) => {
-    if (voltage) {
-      if (currentMode !== 1) {
-        currentMode = 1;
+  ipcMain.on('getScript', (e) => (e.returnValue = algorithm));
+  executor = new Executor((param, value) => {
+    if (LOAD_MODES.includes(param)) {
+      let newMode = LOAD_MODES.indexOf(param);
+      if (currentMode !== newMode) {
+        currentMode = newMode;
         serial.sendCommand(...COMMANDS.loadMode(currentMode));
       }
-      serial.sendCommand(...COMMANDS.load(voltage));
+      serial.sendCommand(...COMMANDS.load(value));
     }
-    if (current) {
-      if (currentMode !== 2) {
-        currentMode = 2;
-        serial.sendCommand(...COMMANDS.loadMode(currentMode));
-      }
-      serial.sendCommand(...COMMANDS.load(current));
+    else {
+      serial.sendCommand(...COMMANDS[param](value))
     }
   });
   serial.on('data', (data) => {
@@ -80,15 +76,16 @@ function initExecutor() {
       win.webContents.send('executionRejected');
     }
   });
-  ipcMain.on('execute', () =>
+  ipcMain.on('execute', (_, algorithm) =>
     executor
-      .start()
+      .start(algorithm)
       .then(() => win.webContents.send('executed'))
       .catch(() => win.webContents.send('executionAborted'))
   );
   ipcMain.on('stopExecution', executor.abort);
   ipcMain.on('pauseExecution', executor.pause);
   ipcMain.on('resumeExecution', executor.resume);
+  ipcMain.on('updateAlgorithm', configManager.updateAlgorithm)
 }
 
 function initSerial() {
@@ -97,9 +94,9 @@ function initSerial() {
     win.webContents.send('serialData', data);
   });
   ipcMain.on('serialCommand', (_, ...args) => serial.sendCommand(...args));
-  const initialValues = settingsManager.getStartParams();
+  const initialValues = configManager.getStartParams();
   ipcMain.on('getStartParams', (e) => (e.returnValue = initialValues));
-  ipcMain.on('updateStartParams', settingsManager.updateStartParams);
+  ipcMain.on('updateStartParams', configManager.updateStartParams);
   for (const key in initialValues) {
     serial.sendCommand(...COMMANDS[key](initialValues[key]));
   }
@@ -146,9 +143,9 @@ function initLogger() {
 function listenRenderer() {
   ipcMain.on(
     'getSettings',
-    (e) => (e.returnValue = settingsManager.getSettings())
+    (e) => (e.returnValue = configManager.getSettings())
   );
-  ipcMain.on('updateSettings', settingsManager.updateSettings);
+  ipcMain.on('updateSettings', configManager.updateSettings);
 }
 
 function launch() {

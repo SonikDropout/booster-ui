@@ -1,8 +1,7 @@
 const IntervalTimer = require('./IntervalTimer');
 
 class Executor {
-  constructor(algorithm, callback) {
-    this.algorithm = algorithm;
+  constructor(callback) {
     this.callback = callback;
     this.running = false;
     this.bindMethods();
@@ -15,64 +14,52 @@ class Executor {
     this.start = this.start.bind(this);
   }
 
-  async start() {
+  async start(algorithm) {
     this.running = true;
-    for (const step of this.algorithm) {
+    for (const step of algorithm) {
       for (let i = 0; i < step.loop; ++i) {
         await this.executeStep(step);
       }
     }
   }
 
-  async executeStep(step) {
-    switch (step.direction) {
+  async executeStep(stepOptions) {
+    switch (stepOptions.direction) {
       case 'down':
-        await this.decrementVoltage(step);
+        await this.changeValue(stepOptions, true);
         break;
       case 'up':
-        await this.incrementVoltage(step);
+        await this.changeValue(stepOptions);
         break;
       case 'hold':
-        await this.holdLoad(step);
+        await this.holdValue(stepOptions);
         break;
       case 'downup':
-        await this.decIncVoltage(step);
+        await this.decIncValue(stepOptions);
         break;
       default:
         throw new Error('Unknow algorithm step type');
     }
   }
-  async decrementVoltage({ minVoltage, maxVoltage, step, stepTime }) {
-    let voltage = maxVoltage;
-    const stepsCount = Math.round((maxVoltage - minVoltage) / step);
+  async changeValue({ param, min, max, step, stepTime }, isDecrement) {
+    let value = isDecrement ? max : min;
+    const stepsCount = Math.round((max - min) / step);
     await this._executeInerval(
       () => {
-        this.callback({ voltage });
-        voltage -= step;
+        this.callback(param, value);
+        value = value + (isDecrement ? -step : step);
       },
       stepTime * 1000,
       stepsCount
     );
   }
-  async incrementVoltage({ minVoltage, maxVoltage, step, stepTime }) {
-    let voltage = minVoltage;
-    const stepsCount = Math.round((maxVoltage - minVoltage) / step);
-    await this._executeInerval(
-      () => {
-        this.callback({ voltage });
-        voltage += step;
-      },
-      stepTime * 1000,
-      stepsCount
-    );
+  async decIncValue(stepOptions) {
+    await this.changeValue(stepOptions, true);
+    await this.changeValue(stepOptions);
   }
-  async decIncVoltage(step) {
-    await this.decrementVoltage(step);
-    await this.incrementVoltage(step);
-  }
-  async holdLoad({ voltage, current, time }) {
+  async holdValue({ param, value, time }) {
     await this._executeInerval(
-      () => this.callback({ voltage, current }),
+      () => this.callback(param, value),
       time * 1000,
       1
     );
