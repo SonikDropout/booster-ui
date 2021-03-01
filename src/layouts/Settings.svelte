@@ -6,6 +6,7 @@
   import { settings } from '../stores';
   import StartParamsSettings from '../organisms/StartParamsSettings.svelte';
   import { ipcRenderer } from 'electron';
+  import CalibrationModal from '../organisms/CalibrationModal.svelte';
 
   let settingsCopy = $settings;
 
@@ -51,6 +52,9 @@
     defaultValue={settingsCopy.logName}
     name="logName"
   />
+  <div class="calibration">
+    <CalibrationModal />
+  </div>
   <StartParamsSettings onChange={changeStartParam} {params} />
   <div class="controls">
     <Button on:click={updateSettings}>{$__('save')}</Button>
