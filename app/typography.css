@@ -43,3 +43,8 @@
   src: url('./fonts/Oswald/Oswaldlight.woff2');
   font-weight: 300;
 }
+
+@font-face {
+  font-family: 'Digital';
+  src: url('./fonts/Digital-7/digital-7-mono.ttf');
+}

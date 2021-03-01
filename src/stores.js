@@ -34,22 +34,22 @@ function getValue(store) {
 
 let elapsed = 0,
   timeStart;
-const timerElement = document.getElementById('timer');
-serialData.subscribe(displayElapsedTime);
 
-function displayElapsedTime($dat) {
-  if ($dat.start.value) {
-    if (!timeStart) {
-      timeStart = Date.now();
-    }
+const elapsedStore = derived(serialData, (d) => {
+  if (d.start.value) {
+    if (!timeStart) timeStart = Date.now();
     elapsed = Math.round((Date.now() - timeStart) / 1000);
-  } else timeStart = void 0;
-  timerElement.innerText = formatSeconds(elapsed);
-}
+  } else {
+    timeStart = 0;
+    elapsed = 0;
+  }
+  return elapsed;
+});
 
 module.exports = {
   serialData,
   appInitialized,
   getValue,
   settings,
+  elapsed: elapsedStore,
 };

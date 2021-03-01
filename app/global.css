@@ -72,6 +72,10 @@ footer {
   width: 100%;
 }
 
+button {
+  cursor: pointer;
+}
+
 .meta {
   flex: 1 1;
 }

@@ -1,8 +1,9 @@
 <script>
   import Dashboard from './layouts/Dashboard';
   import Charts from './layouts/Charts';
+  import Version from './atoms/Version';
+  import BlockID from './atoms/BlockID.svelte';
   import { appInitialized } from './stores';
-  import { version } from '../package.json';
   import UpdateModal from './organisms/UpdateModal';
   import Settings from './layouts/Settings.svelte';
   import NavMenu from './organisms/NavMenu.svelte';
@@ -12,12 +13,6 @@
 
   ipcRenderer.on('updateAvailable', () => (updateAvailable = true));
 
-  document.getElementById('version').innerText = version;
-
-  const { host = 'n/a', port = 6009 } = ipcRenderer.sendSync(
-    'serverAddressRequest'
-  );
-
   appInitialized.subscribe((flag) => {
     if (flag) {
       document.getElementById('loading').remove();
@@ -25,7 +20,8 @@
   });
 </script>
 
-<div>Logi dostupny po adresy {host}:{port}</div>
+<Version />
+<BlockID />
 {#if $appInitialized}
   <Dashboard />
   <Charts />
@@ -36,13 +32,3 @@
 {#if updateAvailable}
   <UpdateModal />
 {/if}
-
-<style>
-  div {
-    position: fixed;
-    top: 4px;
-    left: 24px;
-    font-size: 1.2rem;
-    color: var(--corporate-grey-darken);
-  }
-</style>

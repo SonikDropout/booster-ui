@@ -1,15 +1,14 @@
 <script>
   import blocks from './blocks';
   import { COMMANDS, STEPS, CONSTRAINTS, SERIAL_DATA } from '../constants';
-  import { serialData, getValue } from '../stores';
+  import { serialData } from '../stores';
   import Select from '../molecules/Select';
   import Value from '../atoms/Value';
   import RangeInput from '../molecules/RangeInput';
-  import Exclamation from '../atoms/Exclamation';
-  import Button from '../atoms/Button';
   import { ipcRenderer } from 'electron';
   import { __ } from '../utils/translator';
   import loadModeOptions from '../models/loadModeOptions';
+  import ElapsedTimer from '../molecules/ElapsedTimer.svelte';
 
   const initialData = $serialData;
 
@@ -107,6 +106,9 @@
           {/each}
         {/if}
       {/each}
+      {#if idx == 0}
+        <ElapsedTimer />
+      {/if}
     </div>
   {/each}
 </div>
