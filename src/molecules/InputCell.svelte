@@ -2,11 +2,20 @@
   export let value;
   export let name;
   export let type;
+  export let step;
+  export let range = [0, 100];
 </script>
 
 <td>
   {#if type === 'number'}
-    <input type="number" bind:value {name} />
+    <input
+      type="number"
+      bind:value
+      {name}
+      {step}
+      min={range[0]}
+      max={range[1]}
+    />
   {:else if type === 'text'}
     <input type="text" bind:value {name} />
   {/if}

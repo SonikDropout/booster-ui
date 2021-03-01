@@ -1,5 +1,5 @@
 <script>
-  import { ALGORITHM_PARAM, ALGORITHM_DIRECTIONS } from '../constants';
+  import { ALGORITHM_PARAM, ALGORITHM_DIRECTIONS, CONSTRAINTS, STEPS } from '../constants';
   import Button from '../atoms/Button.svelte';
   import Icon from '../atoms/Icon.svelte';
   import { __ } from '../utils/translator';
@@ -22,7 +22,14 @@
       if (step.direction === 'hold') {
         if (!areAllDefined(step, ['param', 'min', 'stepTime'])) valid = false;
       } else if (
-        !areAllDefined(step, ['param', 'min', 'max', 'loop', 'step', 'stepTime'])
+        !areAllDefined(step, [
+          'param',
+          'min',
+          'max',
+          'loop',
+          'step',
+          'stepTime',
+        ])
       )
         valid = false;
     }
@@ -90,6 +97,8 @@
             type="number"
             bind:value={step.min}
             name="min"
+              range={CONSTRAINTS[step.param]}
+              step={STEPS[step.param]}
           />
           {#if step.direction === 'hold'}
             <td class="spacer" />
@@ -101,6 +110,8 @@
               type="number"
               bind:value={step.max}
               name="max"
+              range={CONSTRAINTS[step.param]}
+              step={STEPS[step.param]}
             />
             <InputCell
               on:change={reassignAlgorithm}
@@ -113,6 +124,8 @@
               type="number"
               bind:value={step.step}
               name="step"
+              range={CONSTRAINTS[step.param]}
+              step={STEPS[step.param]}
             />
           {/if}
           <InputCell
@@ -129,14 +142,20 @@
     </table>
   </div>
   <div class="controls">
-    <ScriptExecutionControls
-      onExecute={blockEditor}
-      disabled={!isValidAlgorithm}
-      algorithm={algorithmCopy}
-    />
-    <Button on:click={addStep} disabled={isEditorBlocked}>{$__('add')}</Button>
-    <Button on:click={saveChanges} disabled={saveDisabled}>{$__('save')}</Button
-    >
+    <div class="execute-controls">
+      <ScriptExecutionControls
+        onExecute={blockEditor}
+        disabled={!isValidAlgorithm}
+        algorithm={algorithmCopy}
+      />
+    </div>
+    <div class="script-controls">
+      <Button on:click={addStep} disabled={isEditorBlocked}>{$__('add')}</Button
+      >
+      <Button on:click={saveChanges} disabled={saveDisabled}
+        >{$__('save')}</Button
+      >
+    </div>
   </div>
 </div>
 
@@ -146,6 +165,9 @@
   }
   .controls {
     text-align: right;
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
   }
   .layout {
     padding: 5rem 2.4rem 2.4rem;

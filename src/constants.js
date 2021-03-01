@@ -167,9 +167,9 @@ const CONSTRAINTS = {
   blowDuration: [20, 10000],
   fanLoad: [0, 100],
   stabilizationTemp: [20, 60],
-  loadCurrent: [0, 100],
-  loadVoltage: [0, 100],
-  loadPower: [10, 1500],
+  current: [0, 100],
+  voltage: [0, 100],
+  power: [10, 1500],
   fanMinRPM: [0, 100],
   fanMaxVoltage: [3, 13],
   maxTemp: [-10, 100],
@@ -184,9 +184,9 @@ const STEPS = {
   blowDuration: 10,
   fanLoad: 0.5,
   stabilizationTemp: 1,
-  loadCurrent: 0.1,
-  loadVoltage: 0.1,
-  loadPower: 1,
+  current: 0.1,
+  voltage: 0.1,
+  power: 1,
   fanMinRPM: 0.5,
   fanMaxVoltage: 0.1,
   maxTemp: 1,
@@ -225,6 +225,7 @@ const ALGORITHM_PARAM = [
   { value: 'voltage', label: 'voltage' },
   { value: 'blowDuration', label: 'purge duration' },
   { value: 'blowDelay', label: 'purge delay' },
+  { value: 'fanLoad', label: 'fan load' },
 ];
 
 const SERIAL_DATA = {

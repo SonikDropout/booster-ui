@@ -6,7 +6,6 @@
   import loadModeOptions from '../models/loadModeOptions';
   import Select from '../molecules/Select.svelte';
   export let onChange;
-  $: console.log(params);
 </script>
 
 <h4>{$__('start params')}</h4>

@@ -37,16 +37,16 @@
   }
 </script>
 
-{#if isExecuting}
-  <Button on:click={stopExecution}>{$__('stop')}</Button>
-{/if}
 <Button on:click={toggleExecution} {disabled}
-  >{!isExecuting
+>{!isExecuting
     ? $__('start')
     : isPaused
     ? $__('resume')
     : $__('pause')}</Button
 >
+{#if isExecuting}
+  <Button on:click={stopExecution}>{$__('stop')}</Button>
+{/if}
 {#if isRejected}
   <Exclamation />
 {/if}
