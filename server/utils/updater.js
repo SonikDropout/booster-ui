@@ -6,7 +6,6 @@ const {
   name: packageName,
 } = require('../../package.json');
 const { exec } = require('child_process');
-const { ipcMain } = require('electron');
 
 const winGetBranch = 'git branch --show-current';
 const linuxGetBranch = 'cd ~/booster-ui && git rev-parse --abbrev-ref HEAD';
@@ -59,6 +58,3 @@ module.exports = async function checkVersions() {
   }
 };
 
-ipcMain.on('updateProgramm', () => {
-  exec(`/home/pi/${packageName}/scripts/update`);
-});

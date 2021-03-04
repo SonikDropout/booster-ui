@@ -1,16 +1,15 @@
 const fs = require('fs');
 const homeDir = require('os').homedir();
 const path = require('path');
-const { getFormatedDate, zeroPad } = require('./helpers');
+const { getFormatedDate, zeroPad } = require('../../common/helpers');
 const {
   LOGGED_VALUES,
   SERIAL_DATA,
   SIGNALS,
   BOOST_MODES,
-  STOP_BITS,
   CONFIG_PATH,
   IS_RPI: isPi,
-} = require('../constants');
+} = require('../../common/constants');
 const { Server } = require('net');
 const { exec } = require('child_process');
 const blockId = require(CONFIG_PATH + '/settings.json').id;

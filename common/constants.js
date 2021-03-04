@@ -10,16 +10,6 @@ const CONFIG_PATH = IS_RPI
   ? '/home/pi/booster-ui/config'
   : path.join(__dirname, '..', 'config');
 
-let isSmallBlock;
-
-try {
-  isSmallBlock =
-    JSON.parse(fs.readFileSync(path.join(CONFIG_PATH, 'settings.json')))
-      .size === 'small';
-} catch (e) {
-  //pass
-}
-
 const SEPARATORS = Buffer.alloc(4);
 SEPARATORS.writeUInt16BE(7589);
 SEPARATORS.writeUInt16BE(3333, 2);

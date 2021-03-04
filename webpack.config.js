@@ -5,10 +5,10 @@ const mode = process.env.NODE_ENV || 'development';
 const prod = mode === 'production';
 
 module.exports = {
-  entry: './renderer.js',
+  entry: './client/renderer.js',
   output: {
     filename: 'renderer.js',
-    path: path.resolve(__dirname, 'app'),
+    path: path.resolve(__dirname, 'static'),
   },
   resolve: {
     // see below for an explanation
@@ -48,7 +48,6 @@ module.exports = {
       callback();
     },
   ],
-  target: "electron-renderer",
   plugins: [
 		new MiniCssExtractPlugin({
 			filename: 'svelte.css'
