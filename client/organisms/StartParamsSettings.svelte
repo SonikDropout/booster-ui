@@ -1,7 +1,7 @@
 <script>
-  import RangeInput from '../molecules/RangeInput';
+  import RangeInput from '../molecules/RangeInput.svelte';
   export let params;
-  import { CONSTRAINTS, SERIAL_DATA } from '../constants';
+  import { CONSTRAINTS, SERIAL_DATA } from '../../common/constants';
   import { __ } from '../utils/translator';
   import loadModeOptions from '../models/loadModeOptions';
   import Select from '../molecules/Select.svelte';

@@ -1,5 +1,5 @@
 const { derived, writable } = require('svelte/store');
-const { getNested, capitalize } = require('./helpers');
+const { getNested, capitalize } = require('../../common/helpers');
 
 class Translator {
   /**
@@ -74,8 +74,13 @@ class Translator {
 
 const translator = new Translator();
 
-translator.register('ru', () => import('../../locale/ru.json'));
-translator.register('en', () => import('../../locale/en.json'));
+const generateLocaleLoader = url => async () => {
+  const response = await fetch(url);
+  return await response.json();
+}
+
+translator.register('ru', generateLocaleLoader('/locale/ru'));
+translator.register('en', generateLocaleLoader('/locale/en'));
 translator.setLocale(navigator.language.slice(0, 2));
 
 module.exports = translator;

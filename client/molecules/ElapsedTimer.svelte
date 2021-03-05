@@ -1,7 +1,7 @@
 <script>
   import { elapsed } from '../stores';
   import { __ } from '../utils/translator';
-  import { formatSeconds } from '../utils/helpers';
+  import { formatSeconds } from '../../common/helpers';
 </script>
 
 <div>

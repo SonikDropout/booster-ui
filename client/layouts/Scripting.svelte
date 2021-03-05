@@ -1,5 +1,5 @@
 <script>
-  import { ALGORITHM_PARAM, ALGORITHM_DIRECTIONS, CONSTRAINTS, STEPS } from '../constants';
+  import { ALGORITHM_PARAM, ALGORITHM_DIRECTIONS, CONSTRAINTS, STEPS } from '../../common/constants';
   import Button from '../atoms/Button.svelte';
   import Icon from '../atoms/Icon.svelte';
   import { __ } from '../utils/translator';

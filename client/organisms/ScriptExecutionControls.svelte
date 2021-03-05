@@ -1,6 +1,6 @@
 <script>
   import Button from '../atoms/Button.svelte';
-  import { ipcRenderer } from 'electron';
+  import wsClient from '../utils/wsClient';
   import { __ } from '../utils/translator';
   import Exclamation from '../atoms/Exclamation.svelte';
   export let onExecute;
@@ -11,26 +11,32 @@
 
   $: onExecute(isExecuting);
 
-  ipcRenderer.on('executionRejected', () => {
-    isPaused = true;
-    isRejected = true;
+  wsClient.onmessage((msg) => {
+    if (typeof msg.data === 'string') {
+      switch (msg.data) {
+        case 'executionRejected':
+          isPaused = true;
+          isRejected = true;
+        case 'executed':
+          isExecuting = false;
+      }
+    }
   });
 
   function toggleExecution() {
     if (!isExecuting) {
       isExecuting = true;
       isRejected = false;
-      ipcRenderer.send('execute', algorithm);
+      wsClient.send('execute' + JSON.stringify(algorithm));
     } else {
-      ipcRenderer.send(isPaused ? 'resumeExecution' : 'pauseExecution');
+      wsClient.send(isPaused ? 'resumeExecution' : 'pauseExecution');
       isPaused = !isPaused;
       isRejected = false;
     }
-    ipcRenderer.once('executed', () => (isExecuting = false));
   }
 
   function stopExecution() {
-    ipcRenderer.send('stopExecution');
+    wsClient.send('stopExecution');
     isExecuting = false;
     isRejected = false;
     isPaused = false;
@@ -38,7 +44,7 @@
 </script>
 
 <Button on:click={toggleExecution} {disabled}
->{!isExecuting
+  >{!isExecuting
     ? $__('start')
     : isPaused
     ? $__('resume')

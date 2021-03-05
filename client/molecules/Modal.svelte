@@ -1,5 +1,5 @@
 <script>
-  import Portal from '../atoms/Portal';
+  import Portal from '../atoms/Portal.svelte';
   import { fly } from 'svelte/transition';
   import { onDestroy } from 'svelte';
   export let onDismiss;

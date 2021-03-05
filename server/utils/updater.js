@@ -1,5 +1,5 @@
 const https = require('https');
-const { IS_RPI: isPi } = require('../constants');
+const { isPi } = require('../globals');
 const {
   version,
   repository,
@@ -15,7 +15,9 @@ function httpsGet(options) {
     https
       .get(options, (res) => {
         if (res.statusCode !== 200)
-          reject(new Error('Request Failed.\n' + `Status Code: ${res.statusCode}`));
+          reject(
+            new Error('Request Failed.\n' + `Status Code: ${res.statusCode}`)
+          );
 
         res.setEncoding('utf8');
         let rawData = '';
@@ -57,4 +59,3 @@ module.exports = async function checkVersions() {
     console.error(e.message);
   }
 };
-

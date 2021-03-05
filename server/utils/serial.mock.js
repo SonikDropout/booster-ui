@@ -1,6 +1,10 @@
 const EventEmitter = require('events');
-const { SERIAL_DATA } = require('../constants');
-const { clone } = require('./helpers');
+const {
+  SERIAL_DATA,
+  PARAMS_DATA,
+  STATE_DATA,
+} = require('../../common/constants');
+const { clone } = require('../../common/helpers');
 
 const emitter = new EventEmitter();
 
@@ -17,7 +21,7 @@ function delayStop() {
   setTimeout(() => {
     dataMap.stopPressed.value = 1;
     dataMap.start.value = 0;
-    delayStart()
+    delayStart();
   }, 5000);
 }
 
@@ -38,10 +42,8 @@ function generateData() {
   return dataMap;
 }
 
-emitter.sendCommand = (id, cmd) => {
-  const buf = Buffer.from([40, id, 0, 0, id + cmd + 40]);
-  buf.writeInt16BE(cmd, 2);
-  console.info('Sending command to serial:', [id, cmd]);
+emitter.sendCommand = (cmd) => {
+  console.info('Sending command to serial:', cmd);
 };
 
 emitter.close = () => {
@@ -50,3 +52,15 @@ emitter.close = () => {
 };
 
 module.exports = emitter;
+
+emitter.convertToBytes = function convertToBytes(data) {
+  const buffer = Buffer.alloc(PARAMS_DATA.length * 2 + STATE_DATA.length);
+  let i = 0;
+  for (; i < PARAMS_DATA.length * 2; i += 2) {
+    buffer.writeInt16BE(data[PARAMS_DATA[i / 2].name].value, i);
+  }
+  for (let j = 0; j < STATE_DATA.length; ++j) {
+    buffer.writeUInt8(data[STATE_DATA[j].name].value, i + j);
+  }
+  return buffer;
+}

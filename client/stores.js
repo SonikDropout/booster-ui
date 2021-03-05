@@ -1,16 +1,28 @@
 const { writable, derived } = require('svelte/store');
-const { ipcRenderer } = require('electron');
-const { clone } = require('./utils/helpers');
-const { SERIAL_DATA } = require('./constants');
-const { formatSeconds } = require('./utils/helpers');
+const { clone } = require('../common/helpers');
+const { SERIAL_DATA } = require('../common/constants');
 const { isLoading } = require('./utils/translator');
+const client = require('./utils/wsClient');
+const parseMessage = require('./utils/messageParser');
 
-const settings = writable(ipcRenderer.sendSync('getSettings'));
+const settings = writable({});
 
-const algorithm = writable(ipcRenderer.sendSync('getScript'));
+const algorithm = writable([]);
 
-settings.subscribe((s) => ipcRenderer.send('updateSettings', s));
-algorithm.subscribe((a) => ipcRenderer.send('updateAlgorithm', a));
+const subscribeSettings = () =>
+  settings.subscribe((s) =>
+    fetch('./config/settings', {
+      method: 'post',
+      body: JSON.stringify(s),
+    }).catch(console.error)
+  );
+const subscribeAlgorithm = () =>
+  algorithm.subscribe((a) =>
+    fetch('./config/algorithm', {
+      method: 'post',
+      body: JSON.stringify(a),
+    }).catch(console.error)
+  );
 
 const serialData = writable(clone(SERIAL_DATA));
 
@@ -19,15 +31,38 @@ const appInitialized = writable(false);
 const localeLoaded = new Promise(
   (res) => void isLoading.subscribe((f) => (f ? void 0 : res()))
 );
-const serialRecieved = new Promise(
-  (res) => void ipcRenderer.once('serialData', res)
-);
+const settingsPromise = fetch('./config/settings')
+  .then((r) => r.json())
+  .then(settings.set)
+  .then(subscribeSettings);
+const algorithmPromise = fetch('./config/algorithm')
+  .then((r) => r.json())
+  .then(algorithm.set)
+  .then(subscribeAlgorithm);
 
-Promise.all([localeLoaded, serialRecieved]).then(() =>
-  appInitialized.set(true)
-);
+const connectionEstablished = new Promise((resolve, reject) => {
+  client.onerror = reject;
+  client.onopen = resolve;
+});
 
-ipcRenderer.on('serialData', (_, data) => serialData.set(data));
+Promise.all([
+  settingsPromise,
+  algorithmPromise,
+  localeLoaded,
+  connectionEstablished,
+])
+  .then(([s, a]) => {
+    settings.set(s);
+    algorithm.set(a);
+    appInitialized.set(true);
+  })
+  .catch(console.error);
+
+client.onmessage = (msg) => {
+  if (typeof msg.data !== 'string') {
+    serialData.set(parseMessage(msg.data));
+  }
+};
 
 function getValue(store) {
   let $val;

@@ -1,4 +1,4 @@
-const { BOOST_MODES } = require('../constants');
+const { BOOST_MODES } = require('../../common/constants');
 module.exports = [
   [
     {

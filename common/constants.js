@@ -1,18 +1,4 @@
-const path = require('path');
-const fs = require('fs');
-const IS_RPI = process.platform === 'linux' && process.arch == 'arm';
-const PORT = {
-  name: IS_RPI ? '/dev/ttyS0' : 'COM5',
-  baudRate: 230400,
-};
 
-const CONFIG_PATH = IS_RPI
-  ? '/home/pi/booster-ui/config'
-  : path.join(__dirname, '..', 'config');
-
-const SEPARATORS = Buffer.alloc(4);
-SEPARATORS.writeUInt16BE(7589);
-SEPARATORS.writeUInt16BE(3333, 2);
 
 const STATE_DATA = [
   { label: 'purge delay', units: 's', name: 'blowDelay', prefix: 'P ' },
@@ -133,7 +119,7 @@ const PARAMS_DATA = [
 ];
 
 const DATA_BYTE_LENGTH =
-  STATE_DATA.length + PARAMS_DATA.length * 2 + SEPARATORS.length + 2;
+  STATE_DATA.length + PARAMS_DATA.length * 2 + 6; // last six bytes sent for validation
 
 const COMMANDS = {
   loadMode: (v) => [4, v],
@@ -256,14 +242,10 @@ const ALGORITHM_DIRECTIONS = [
 const LOAD_MODES = ['none', 'voltage', 'current', 'power'];
 
 module.exports = {
-  IS_RPI,
-  PORT,
-  SEPARATORS,
   COMMANDS,
   PARAMS_DATA,
   STATE_DATA,
   DATA_BYTE_LENGTH,
-  CONFIG_PATH,
   CONSTRAINTS,
   STEPS,
   LOGGED_VALUES,

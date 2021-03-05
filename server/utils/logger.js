@@ -7,9 +7,8 @@ const {
   SERIAL_DATA,
   SIGNALS,
   BOOST_MODES,
-  CONFIG_PATH,
-  IS_RPI: isPi,
 } = require('../../common/constants');
+const { isPi, CONFIG_PATH } = require('../globals');
 const { Server } = require('net');
 const { exec } = require('child_process');
 const blockId = require(CONFIG_PATH + '/settings.json').id;

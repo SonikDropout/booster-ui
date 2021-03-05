@@ -1,11 +1,11 @@
 <script>
   import blocks from './blocks';
-  import { COMMANDS, STEPS, CONSTRAINTS, SERIAL_DATA } from '../constants';
+  import { COMMANDS, STEPS, CONSTRAINTS, SERIAL_DATA } from '../../common/constants';
   import { serialData } from '../stores';
-  import Select from '../molecules/Select';
-  import Value from '../atoms/Value';
-  import RangeInput from '../molecules/RangeInput';
-  import { ipcRenderer } from 'electron';
+  import Select from '../molecules/Select.svelte';
+  import Value from '../atoms/Value.svelte';
+  import RangeInput from '../molecules/RangeInput.svelte';
+  import wsClient from '../utils/wsClient';
   import { __ } from '../utils/translator';
   import loadModeOptions from '../models/loadModeOptions';
   import ElapsedTimer from '../molecules/ElapsedTimer.svelte';
@@ -26,12 +26,12 @@
   let selectedLoadMode = loadModeOptions[initialData.loadMode.value];
 
   function sendCommand(value, name) {
-    ipcRenderer.send('serialCommand', ...COMMANDS[name](+value));
+    wsClient.send(new Uint8Array(COMMANDS[name](+value)));
   }
 
   function selectLoadMode(mode) {
     selectedLoadMode = loadModeOptions[mode];
-    ipcRenderer.send('serialCommand', ...COMMANDS.loadMode(+mode));
+    wsClient.send(new Uint8Array(COMMANDS.loadMode(+mode)));
   }
 </script>
 

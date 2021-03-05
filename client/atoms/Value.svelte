@@ -1,5 +1,5 @@
 <script>
-  import Exclamation from './Exclamation';
+  import Exclamation from './Exclamation.svelte';
   export let value = 0;
   export let label = '';
   export let units = '';

@@ -1,4 +1,4 @@
-const App = require('./src/App.svelte').default;
+const App = require('./App.svelte').default;
 
 const app = new App({
 	target: document.getElementById('content'),

@@ -1,17 +1,14 @@
+const fs = require('fs');
 const path = require('path');
 const polka = require('polka');
-const {
-  IS_RPI: isPi,
-  CONFIG_PATH,
-  COMMANDS,
-  LOAD_MODES,
-} = require('../common/constants');
-const Executor = require('../client/utils/executor');
-const configManager = require('../client/utils/configManager');
+const { COMMANDS, LOAD_MODES } = require('../common/constants');
+const { isPi, CONFIG_PATH } = require('./globals');
+const Executor = require('./utils/executor');
+const configManager = require('./utils/configManager');
 const http = require('http');
-const websocket = require('websocket');
-const { fstat, readFile } = require('fs');
-const { default: sirv } = require('sirv');
+const WebSocketServer = require('websocket').server;
+const sirv = require('sirv');
+const { json } = require('body-parser');
 
 let connection = { sendBytes: Function.prototype },
   logger,
@@ -25,28 +22,30 @@ const app = polka({ server }).listen(PORT, (err) => {
   console.log(`> Running on localhost:${PORT}`);
 });
 
-const wsServer = websocket.server({
+const wsServer = new WebSocketServer({
   httpServer: server,
   autoAcceptConnections: true,
 });
 
 wsServer.on('request', (req) => {
   connection = req.accept(null, req.origin);
-  serial.on('data', connection.sendBytes);
+  serial.on('data', (data) =>
+    connection.sendBytes(serial.convertToBytes(data))
+  );
   serial.on('data', (data) => {
     if (!data.start.value && executor.running) {
       executor.pause();
-      connection.send('executionRejected');
+      connection.sendUTF('executionRejected');
     }
   });
   connection.on('message', (msg) => {
     if (msg.type === 'utf8') {
       switch (msg.utf8Data) {
-        case 'execute':
+        case /^execute\[.*\]$/.test(msg.utf8Data):
           executor
-            .start(algorithm)
-            .then(() => connection.send('executed'))
-            .catch(() => connection.send('executionAborted'));
+            .start(JSON.parse(msg.utf8Data.slice(7)))
+            .then(() => connection.sendUTF('executed'))
+            .catch(() => connection.sendUTF('executionAborted'));
         case 'stopExecution':
           executor.stop();
         case 'pauseExecution':
@@ -63,7 +62,7 @@ wsServer.on('request', (req) => {
 
 // serial initialization
 
-const serial = require(`./src/utils/serial${isPi ? '' : '.mock'}`);
+const serial = require(`./utils/serial${isPi ? '' : '.mock'}`);
 const initialValues = configManager.getStartParams();
 for (const key in initialValues) {
   serial.sendCommand(...COMMANDS[key](initialValues[key]));
@@ -86,36 +85,38 @@ executor = new Executor((param, value) => {
   }
 });
 
-
 // config path handlers
 
 app.get('/config/:file', (req, res) => {
   const configFile = req.params.file;
   switch (configFile) {
     case 'settings':
-      res.json(configManager.getSettings());
+      res.end(JSON.stringify(configManager.getSettings()));
     case 'initialize':
-      res.json(initialValues);
+      res.end(JSON.stringify(initialValues));
     case 'algorithm':
-      res.json(algorithm);
+      res.end(JSON.stringify(algorithm));
     default:
-      res.sendStatus(404);
+      res.statusCode = 404;
+      res.end();
   }
-  res.end();
 });
-app.post('/config', (req, res) => {
+app.post('/config/:file', (req, res) => {
   const configFile = req.params.file;
   switch (configFile) {
     case 'settings':
       configManager.updateSettings(req.body);
+      res.end('Updated settings!');
     case 'initialize':
       configManager.updateStartParams(req.body);
+      res.end('Updated start parameters!');
     case 'algorithm':
       configManager.updateAlgorithm(req.body);
+      res.end('Updated algorithm');
     default:
-      res.status(404);
+      res.statusCode = 404;
+      res.end();
   }
-  res.end();
 });
 
 // logger initializition
@@ -145,5 +146,15 @@ function writeDataToLog(data) {
   logger.writeRow(data);
 }
 
-const files = sirv('static');
-app.use(files);
+app.get('/locale/:file', (req, res) => {
+  const filename = req.params.file;
+  const filePath = path.resolve('locale', filename + '.json');
+  console.log(filePath);
+  if (fs.existsSync(filePath)) {
+    res.end(JSON.stringify(require(filePath)));
+  } else {
+    res.statusCode = 404;
+    res.end();
+  }
+});
+app.use(sirv('public', 'dev'), json());

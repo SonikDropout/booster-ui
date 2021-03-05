@@ -1,6 +1,6 @@
 <script>
   import { settings } from '../stores';
-  import { zeroPad } from '../utils/helpers';
+  import { zeroPad } from '../../common/helpers';
 </script>
 
 <div>#{zeroPad($settings.id, 2)}</div>

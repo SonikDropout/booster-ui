@@ -1,5 +1,5 @@
 <script>
-  import Modal from '../molecules/Modal';
+  import Modal from '../molecules/Modal.svelte';
   import Button from '../atoms/Button.svelte';
   import RangeInput from '../molecules/RangeInput.svelte';
   import { __ } from '../utils/translator';

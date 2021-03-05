@@ -2,10 +2,9 @@
   import Button from '../atoms/Button.svelte';
   import RangeInput from '../molecules/RangeInput.svelte';
   import { __ } from '../utils/translator';
-  import TextInput from '../molecules/TextInput';
+  import TextInput from '../molecules/TextInput.svelte';
   import { settings } from '../stores';
   import StartParamsSettings from '../organisms/StartParamsSettings.svelte';
-  import { ipcRenderer } from 'electron';
   import CalibrationModal from '../organisms/CalibrationModal.svelte';
 
   let settingsCopy = $settings;
@@ -20,12 +19,12 @@
 
   function updateSettings() {
     settings.set(settingsCopy);
-    ipcRenderer.send('updateStartParams', params);
+    fetch('./config/initialize', { method: 'post', body: params });
     hideModal();
   }
   async function getStartParams() {
-    const params = ipcRenderer.sendSync('getStartParams');
-    return params;
+    const response = await fetch('./config/initialize');
+    return await response.json();
   }
 
   let params;

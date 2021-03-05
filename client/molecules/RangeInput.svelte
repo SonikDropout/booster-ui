@@ -1,5 +1,5 @@
 <script>
-  import { constraint } from '../utils/helpers';
+  import { constraint } from '../../common/helpers';
   export let range = [0, 100];
   export let disabled;
   export let onChange;
@@ -9,7 +9,6 @@
   export let step = 1;
   export let label;
   export let errorMessage = '';
-  import Exclamation from '../atoms/Exclamation';
 
   $: min = Math.min.apply(null, range);
   $: max = Math.max.apply(null, range);
