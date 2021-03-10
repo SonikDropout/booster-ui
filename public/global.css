@@ -12,16 +12,12 @@
   --corporate-grey: #969ba5;
   --corporate-grey-darken: #74787f;
   --warning-color: #fcee21;
-  --nav-width: 15rem;
+  --nav-width: 20rem;
   --nav-sm-width: 4rem;
 }
 
 * {
   box-sizing: border-box;
-}
-
-html {
-  font-size: 62.5%;
 }
 
 html,
@@ -50,7 +46,7 @@ header {
 }
 
 .layout {
-  width: calc(100% - var(--nav-widht));
+  width: calc(100% - var(--nav-width));
   height: 100vh;
   margin-left: auto;
 }
@@ -147,6 +143,9 @@ input.hidden {
 }
 
 @media screen and (max-width: 1280px) {
+  html {
+    font-size: 62.5%;
+  }
   .mobile-hidden {
     display: none;
   }

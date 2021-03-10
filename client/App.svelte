@@ -16,8 +16,8 @@
 </script>
 
 <Version />
-<BlockID />
 {#if $appInitialized}
+  <BlockID />
   <Dashboard />
   <Charts />
   <Settings />

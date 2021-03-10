@@ -1,5 +1,5 @@
 <script>
-  import { settings } from '../stores';
+  import { settings, serialData } from '../stores';
   import { zeroPad } from '../../common/helpers';
 </script>
 

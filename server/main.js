@@ -8,7 +8,7 @@ const configManager = require('./utils/configManager');
 const http = require('http');
 const WebSocketServer = require('socket.io').Server;
 const sirv = require('sirv');
-const { json } = require('body-parser');
+const { text, json } = require('body-parser');
 
 const PORT = process.env.PORT || 80;
 
@@ -19,6 +19,7 @@ const app = polka({ server }).listen(PORT, (err) => {
 });
 
 const wsServer = new WebSocketServer(server);
+let wsSockets = [];
 
 // serial initialization
 
@@ -27,6 +28,9 @@ const initialValues = configManager.getStartParams();
 for (const key in initialValues) {
   serial.sendCommand(...COMMANDS[key](initialValues[key]));
 }
+serial.on('data', (data) =>
+  wsSockets.forEach((sock) => sock.emit('serial data', data))
+);
 
 // executor initialization
 
@@ -44,6 +48,12 @@ const executor = new Executor((param, value) => {
     serial.sendCommand(...COMMANDS[param](value));
   }
 });
+serial.on('data', (data) => {
+  if (!data.start.value && executor.running) {
+    executor.pause();
+    wsSockets.forEach((sock) => sock.emit('executionRejected'));
+  }
+});
 
 // logger initializition
 
@@ -55,7 +65,6 @@ serial.on('data', (data) => {
     logger
       .start(data)
       .then((logPath) => {
-        console.log(logPath);
         logStarted = true;
         serial.on('data', writeDataToLog);
       })
@@ -73,13 +82,11 @@ function writeDataToLog(data) {
 }
 
 wsServer.on('connection', (socket) => {
-  serial.on('data', (data) => socket.emit('serial data', data));
-  serial.on('data', (data) => {
-    if (!data.start.value && executor.running) {
-      executor.pause();
-      socket.emit('executionRejected');
-    }
-  });
+  wsSockets.push(socket);
+  socket.on(
+    'disconnect',
+    () => (wsSockets = wsSockets.filter((sock) => sock.id !== socket.id))
+  );
   socket.on('execute', executor.start);
   socket.on('stopExecution', executor.abort);
   socket.on('pauseExecution', executor.pause);
@@ -107,13 +114,13 @@ app.post('/config/:file', (req, res) => {
   const configFile = req.params.file;
   switch (configFile) {
     case 'settings':
-      configManager.updateSettings(req.body);
+      configManager.updateSettings((req.body));
       res.end('Updated settings!');
     case 'initialize':
-      configManager.updateStartParams(req.body);
+      configManager.updateStartParams((req.body));
       res.end('Updated start parameters!');
     case 'algorithm':
-      configManager.updateAlgorithm(req.body);
+      configManager.updateAlgorithm((req.body));
       res.end('Updated algorithm');
     default:
       res.statusCode = 404;
@@ -124,7 +131,6 @@ app.post('/config/:file', (req, res) => {
 app.get('/locale/:file', (req, res) => {
   const filename = req.params.file;
   const filePath = path.resolve('locale', filename + '.json');
-  console.log(filePath);
   if (fs.existsSync(filePath)) {
     res.end(JSON.stringify(require(filePath)));
   } else {
@@ -132,4 +138,4 @@ app.get('/locale/:file', (req, res) => {
     res.end();
   }
 });
-app.use(sirv('public', 'dev'), json());
+app.use(sirv('public', { dev: process.env.ROLLUP_WATCH }), json());

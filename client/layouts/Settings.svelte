@@ -7,7 +7,7 @@
   import StartParamsSettings from '../organisms/StartParamsSettings.svelte';
   import CalibrationModal from '../organisms/CalibrationModal.svelte';
 
-  let settingsCopy = $settings;
+  const settingsCopy = $settings;
 
   function changeBlockId(id) {
     settingsCopy.id = id;
@@ -19,8 +19,8 @@
 
   function updateSettings() {
     settings.set(settingsCopy);
+    console.log(settingsCopy);
     fetch('./config/initialize', { method: 'post', body: params });
-    hideModal();
   }
   async function getStartParams() {
     const response = await fetch('./config/initialize');
