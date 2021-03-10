@@ -3,7 +3,6 @@ const { clone } = require('../common/helpers');
 const { SERIAL_DATA } = require('../common/constants');
 const { isLoading } = require('./utils/translator');
 const client = require('./utils/wsClient');
-const parseMessage = require('./utils/messageParser');
 
 const settings = writable({});
 
@@ -41,8 +40,9 @@ const algorithmPromise = fetch('./config/algorithm')
   .then(subscribeAlgorithm);
 
 const connectionEstablished = new Promise((resolve, reject) => {
-  client.onerror = reject;
-  client.onopen = resolve;
+  client.once('serial data', resolve);
+  client.once('serial data', console.log);
+  client.on('connect_error', reject);
 });
 
 Promise.all([
@@ -58,11 +58,7 @@ Promise.all([
   })
   .catch(console.error);
 
-client.onmessage = (msg) => {
-  if (typeof msg.data !== 'string') {
-    serialData.set(parseMessage(msg.data));
-  }
-};
+client.on('serial data', serialData.set);
 
 function getValue(store) {
   let $val;

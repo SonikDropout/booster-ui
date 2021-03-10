@@ -11,32 +11,28 @@
 
   $: onExecute(isExecuting);
 
-  wsClient.onmessage((msg) => {
-    if (typeof msg.data === 'string') {
-      switch (msg.data) {
-        case 'executionRejected':
-          isPaused = true;
-          isRejected = true;
-        case 'executed':
-          isExecuting = false;
-      }
-    }
+  wsClient.on('executionRejected', () => {
+    isPaused = true;
+    isRejected = true;
+  });
+  wsClient.on('executed', () => {
+    isExecuting = false;
   });
 
   function toggleExecution() {
     if (!isExecuting) {
       isExecuting = true;
       isRejected = false;
-      wsClient.send('execute' + JSON.stringify(algorithm));
+      wsClient.emit('execute', algorithm);
     } else {
-      wsClient.send(isPaused ? 'resumeExecution' : 'pauseExecution');
+      wsClient.emit(isPaused ? 'resumeExecution' : 'pauseExecution');
       isPaused = !isPaused;
       isRejected = false;
     }
   }
 
   function stopExecution() {
-    wsClient.send('stopExecution');
+    wsClient.emit('stopExecution');
     isExecuting = false;
     isRejected = false;
     isPaused = false;

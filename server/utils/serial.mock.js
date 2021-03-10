@@ -53,6 +53,7 @@ emitter.close = () => {
 
 module.exports = emitter;
 
+// TODO get rid of this conversion
 emitter.convertToBytes = function convertToBytes(data) {
   const buffer = Buffer.alloc(PARAMS_DATA.length * 2 + STATE_DATA.length);
   let i = 0;

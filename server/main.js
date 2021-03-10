@@ -6,13 +6,9 @@ const { isPi, CONFIG_PATH } = require('./globals');
 const Executor = require('./utils/executor');
 const configManager = require('./utils/configManager');
 const http = require('http');
-const WebSocketServer = require('websocket').server;
+const WebSocketServer = require('socket.io').Server;
 const sirv = require('sirv');
 const { json } = require('body-parser');
-
-let connection = { sendBytes: Function.prototype },
-  logger,
-  executor;
 
 const PORT = process.env.PORT || 80;
 
@@ -22,43 +18,7 @@ const app = polka({ server }).listen(PORT, (err) => {
   console.log(`> Running on localhost:${PORT}`);
 });
 
-const wsServer = new WebSocketServer({
-  httpServer: server,
-  autoAcceptConnections: true,
-});
-
-wsServer.on('request', (req) => {
-  connection = req.accept(null, req.origin);
-  serial.on('data', (data) =>
-    connection.sendBytes(serial.convertToBytes(data))
-  );
-  serial.on('data', (data) => {
-    if (!data.start.value && executor.running) {
-      executor.pause();
-      connection.sendUTF('executionRejected');
-    }
-  });
-  connection.on('message', (msg) => {
-    if (msg.type === 'utf8') {
-      switch (msg.utf8Data) {
-        case /^execute\[.*\]$/.test(msg.utf8Data):
-          executor
-            .start(JSON.parse(msg.utf8Data.slice(7)))
-            .then(() => connection.sendUTF('executed'))
-            .catch(() => connection.sendUTF('executionAborted'));
-        case 'stopExecution':
-          executor.stop();
-        case 'pauseExecution':
-          executor.pause();
-        case 'resumeExecution':
-          executor.resume();
-      }
-    }
-  });
-  connection.on('message', (msg) => {
-    if (msg.type === 'binary') serial.sendCommand(msg.binaryData);
-  });
-});
+const wsServer = new WebSocketServer(server);
 
 // serial initialization
 
@@ -72,7 +32,7 @@ for (const key in initialValues) {
 
 let currentMode;
 const algorithm = require(`${CONFIG_PATH}/algorithm.json`);
-executor = new Executor((param, value) => {
+const executor = new Executor((param, value) => {
   if (LOAD_MODES.includes(param)) {
     let newMode = LOAD_MODES.indexOf(param);
     if (currentMode !== newMode) {
@@ -83,6 +43,48 @@ executor = new Executor((param, value) => {
   } else {
     serial.sendCommand(...COMMANDS[param](value));
   }
+});
+
+// logger initializition
+
+const logger = require('./utils/logger');
+logger.init().catch(console.error);
+let logStarted;
+serial.on('data', (data) => {
+  if (!logStarted && data.start.value) {
+    logger
+      .start(data)
+      .then((logPath) => {
+        console.log(logPath);
+        logStarted = true;
+        serial.on('data', writeDataToLog);
+      })
+      .catch(console.error);
+  }
+});
+function writeDataToLog(data) {
+  if (!data.start.value) {
+    serial.removeListener('data', writeDataToLog);
+    logger.stop(data);
+    logStarted = false;
+    return;
+  }
+  logger.writeRow(data);
+}
+
+wsServer.on('connection', (socket) => {
+  serial.on('data', (data) => socket.emit('serial data', data));
+  serial.on('data', (data) => {
+    if (!data.start.value && executor.running) {
+      executor.pause();
+      socket.emit('executionRejected');
+    }
+  });
+  socket.on('execute', executor.start);
+  socket.on('stopExecution', executor.abort);
+  socket.on('pauseExecution', executor.pause);
+  socket.on('resumeExecution', executor.resume);
+  socket.on('serial command', serial.sendCommand);
 });
 
 // config path handlers
@@ -118,33 +120,6 @@ app.post('/config/:file', (req, res) => {
       res.end();
   }
 });
-
-// logger initializition
-
-logger = require('./utils/logger');
-logger.init().catch(console.error);
-let logStarted;
-serial.on('data', (data) => {
-  if (!logStarted && data.start.value) {
-    logger
-      .start(data)
-      .then((logPath) => {
-        console.log(logPath);
-        logStarted = true;
-        serial.on('data', writeDataToLog);
-      })
-      .catch(console.error);
-  }
-});
-function writeDataToLog(data) {
-  if (!data.start.value) {
-    serial.removeListener('data', writeDataToLog);
-    logger.stop(data);
-    logStarted = false;
-    return;
-  }
-  logger.writeRow(data);
-}
 
 app.get('/locale/:file', (req, res) => {
   const filename = req.params.file;

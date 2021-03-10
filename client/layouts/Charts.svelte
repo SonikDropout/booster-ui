@@ -7,7 +7,6 @@
   import { onMount, onDestroy } from 'svelte';
   import pointsStorage from '../utils/pointsStorage';
   import { serialData } from '../stores';
-  import { dataGenerator } from '../utils/dataGenerator';
   import { __ } from '../utils/translator';
 
   onMount(() => {
@@ -57,11 +56,6 @@
   function startDrawing() {
     unsubscribeStartMonitor();
     pointsStorage.drain();
-    if (process.env.NODE_ENV == 'development') {
-      for (let row of dataGenerator()) {
-        pointsStorage.addRow(row);
-      }
-    }
     timeStart = Date.now();
     chart.data.datasets[0].data = pointsStorage.points;
     unsubscribeStopMonitor = serialData.subscribe(handleData);
