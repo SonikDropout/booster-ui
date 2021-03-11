@@ -3,9 +3,11 @@
   import Button from '../atoms/Button.svelte';
   import RangeInput from '../molecules/RangeInput.svelte';
   import { __ } from '../utils/translator';
+  import { PASSWORD } from '../../common/constants';
   import { serialData, settings } from '../stores';
   import { approximate } from '../utils/exponentialApproxiamator';
   import { onDestroy } from 'svelte';
+  import sha256 from 'crypto-js/sha256';
 
   onDestroy(() => clearTimeout(timeout));
 
@@ -25,6 +27,14 @@
     }));
   const setPoint = (p) => (currentPoint = p);
 
+  function startCalibration() {
+    const password = prompt($__('enter password'));
+    if (sha256(password) === PASSWORD) {
+      showCalibrationModal = true;
+    } else {
+      alert($__('wrong password'));
+    }
+  }
   function setConsumptionCoefficiets() {
     try {
       const [Ka, Kb] = approximate(points);
@@ -51,9 +61,7 @@
   }
 </script>
 
-<Button on:click={() => (showCalibrationModal = true)}
-  >{$__('calibration')}</Button
->
+<Button on:click={startCalibration}>{$__('calibration')}</Button>
 {#if showCalibrationModal}
   <Modal onDismiss={closeModal}>
     {#if calibrateMessage}
