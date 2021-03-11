@@ -101,10 +101,13 @@ app.get('/config/:file', (req, res) => {
   switch (configFile) {
     case 'settings':
       res.end(JSON.stringify(configManager.getSettings()));
+      break;
     case 'initialize':
       res.end(JSON.stringify(initialValues));
+      break;
     case 'algorithm':
       res.end(JSON.stringify(algorithm));
+      break;
     default:
       res.statusCode = 404;
       res.end();
@@ -115,13 +118,16 @@ app.post('/config/:file', (req, res) => {
   switch (configFile) {
     case 'settings':
       configManager.updateSettings((req.body));
-      res.end('Updated settings!');
+      res.end('OK');
+      break;
     case 'initialize':
       configManager.updateStartParams((req.body));
-      res.end('Updated start parameters!');
+      res.end('OK');
+      break;
     case 'algorithm':
       configManager.updateAlgorithm((req.body));
-      res.end('Updated algorithm');
+      res.end('OK');
+      break;
     default:
       res.statusCode = 404;
       res.end();
