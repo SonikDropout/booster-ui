@@ -5,7 +5,8 @@
   import TextInput from '../molecules/TextInput.svelte';
   import { settings, initialize } from '../stores';
   import StartParamsSettings from '../organisms/StartParamsSettings.svelte';
-  import CalibrationModal from '../organisms/CalibrationModal.svelte';
+  import wsClient from '../utils/wsClient';
+  import { COMMANDS } from '../../common/constants';
 
   const settingsCopy = $settings;
   const startParamsCopy = $initialize;
@@ -25,6 +26,9 @@
   function changeStartParam(value, name) {
     startParamsCopy[name] = value;
   }
+  function sendCalibrationSignal() {
+    wsClient.emit('serial command', ...COMMANDS.startCalibration);
+  }
 </script>
 
 <div class="layout" id="settings">
@@ -42,7 +46,7 @@
     name="logName"
   />
   <div class="calibration">
-    <CalibrationModal />
+    <Button on:click={sendCalibrationSignal}>{$__('calibration')}</Button>
   </div>
   <StartParamsSettings onChange={changeStartParam} params={startParamsCopy} />
   <div class="controls">
