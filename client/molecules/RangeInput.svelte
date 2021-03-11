@@ -16,17 +16,10 @@
   $: if (Math.abs(value - suggestedValue) > step && !updateBlocked)
     value = suggestedValue;
 
-  function updateValue() {
-    value = suggestedValue;
-  }
-
   let timeout,
     interval,
-    updateTimeout,
     updateBlocked,
-    input,
-    startX,
-    showControls = false;
+    input;
 
   $: precision = Math.max(0, -step.toExponential().split('e')[1]);
 
@@ -72,34 +65,12 @@
     updateBlocked = false;
     clearTimers();
     e.target.releasePointerCapture(e.pointerId);
-    onChange(value, name);
-  }
-
-  function startMoveIncrement(e) {
-    // e.preventDefault();
-    startX = e.clientX;
-    e.target.setPointerCapture(e.pointerId);
-  }
-
-  function incrementOnMove(e) {
-    if (startX === void 0) return;
-    e.preventDefault();
-    const diff = startX - e.clientX;
-    const inc = (diff / 100) * (max - min) * 0.5;
-    value = constraint(value - inc, range);
-    startX = e.clientX;
-  }
-
-  function releaseMoveIncrement(e) {
-    e.preventDefault();
-    startX = void 0;
-    e.target.releasePointerCapture(e.pointerId);
-    onChange(value, name);
+    onChange(+value.toFixed(precision), name);
   }
 
   function handleInputChange(e) {
     value = Math.max(min, Math.min(max, +e.target.value));
-    onChange(value, name);
+    onChange(+value.toFixed(precision), name);
   }
 
   function handleFocus(e) {
