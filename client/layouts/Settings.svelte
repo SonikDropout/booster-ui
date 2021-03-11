@@ -3,11 +3,12 @@
   import RangeInput from '../molecules/RangeInput.svelte';
   import { __ } from '../utils/translator';
   import TextInput from '../molecules/TextInput.svelte';
-  import { settings } from '../stores';
+  import { settings, initialize } from '../stores';
   import StartParamsSettings from '../organisms/StartParamsSettings.svelte';
   import CalibrationModal from '../organisms/CalibrationModal.svelte';
 
   const settingsCopy = $settings;
+  const startParamsCopy = $initialize;
 
   function changeBlockId(id) {
     settingsCopy.id = id;
@@ -19,21 +20,10 @@
 
   function updateSettings() {
     settings.set(settingsCopy);
-    console.log(settingsCopy);
-    fetch('./config/initialize', { method: 'post', body: params });
+    initialize.set(startParamsCopy);
   }
-  async function getStartParams() {
-    const response = await fetch('./config/initialize');
-    return await response.json();
-  }
-
-  let params;
-
-  getStartParams().then((o) => {
-    params = o;
-  });
   function changeStartParam(value, name) {
-    params[name] = value;
+    startParamsCopy[name] = value;
   }
 </script>
 
@@ -54,7 +44,7 @@
   <div class="calibration">
     <CalibrationModal />
   </div>
-  <StartParamsSettings onChange={changeStartParam} {params} />
+  <StartParamsSettings onChange={changeStartParam} params={startParamsCopy} />
   <div class="controls">
     <Button on:click={updateSettings}>{$__('save')}</Button>
   </div>

@@ -1,5 +1,3 @@
-
-
 const STATE_DATA = [
   { label: 'purge delay', units: 's', name: 'blowDelay', prefix: 'P ' },
   { label: 'load mode', name: 'loadMode' },
@@ -107,19 +105,18 @@ const PARAMS_DATA = [
     label: 'min voltage',
     units: 'V',
     name: 'minVoltage',
-    sined: true,
+    signed: true,
     divider: 10,
   },
   {
     label: 'H2 consumption',
     units: 'ml/min',
     name: 'hydrogenConsumption',
-    sined: true,
+    signed: true,
   },
 ];
 
-const DATA_BYTE_LENGTH =
-  STATE_DATA.length + PARAMS_DATA.length * 2 + 6; // last six bytes sent for validation
+const DATA_BYTE_LENGTH = STATE_DATA.length + PARAMS_DATA.length * 2 + 6; // last six bytes sent for validation
 
 const COMMANDS = {
   loadMode: (v) => [4, v],
@@ -163,6 +160,7 @@ const STEPS = {
   current: 0.1,
   voltage: 0.1,
   power: 1,
+  load: 0.1,
   fanMinRPM: 0.5,
   fanMaxVoltage: 0.1,
   maxTemp: 1,

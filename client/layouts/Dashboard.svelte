@@ -1,10 +1,9 @@
 <script>
-  import blocks from './blocks';
+  import blocks from '../models/paramsLayout';
   import {
     COMMANDS,
     STEPS,
     CONSTRAINTS,
-    SERIAL_DATA,
   } from '../../common/constants';
   import { serialData } from '../stores';
   import Select from '../molecules/Select.svelte';
@@ -31,12 +30,12 @@
   let selectedLoadMode = loadModeOptions[initialData.loadMode.value];
 
   function sendCommand(value, name) {
-    wsClient.emit('serial command', COMMANDS[name](+value));
+    wsClient.emit('serial command', ...COMMANDS[name](+value));
   }
 
   function selectLoadMode(mode) {
     selectedLoadMode = loadModeOptions[mode];
-    wsClient.emit('serial command', COMMANDS.loadMode(+mode));
+    wsClient.emit('serial command', ...COMMANDS.loadMode(+mode));
   }
 </script>
 

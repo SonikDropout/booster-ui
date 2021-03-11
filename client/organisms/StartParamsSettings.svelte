@@ -1,37 +1,36 @@
 <script>
   import RangeInput from '../molecules/RangeInput.svelte';
   export let params;
-  import { CONSTRAINTS, SERIAL_DATA } from '../../common/constants';
+  import { CONSTRAINTS, SERIAL_DATA, STEPS } from '../../common/constants';
   import { __ } from '../utils/translator';
   import loadModeOptions from '../models/loadModeOptions';
   import Select from '../molecules/Select.svelte';
+  import startParams from '../models/startParams';
   export let onChange;
 </script>
 
 <h4>{$__('start params')}</h4>
 <div class="inputs">
-  {#if !params}
-    ...Loading
-  {:else}
-    {#each Object.keys(params) as param}
-      {#if param === 'loadMode'}
-        <Select
-          name={param}
-          label={$__(SERIAL_DATA[param].label)}
-          {onChange}
-          options={loadModeOptions}
-          defaultValue={params[param]}
-        />
-      {:else}
-        <RangeInput
-          label={$__(SERIAL_DATA[param].label)}
-          range={CONSTRAINTS[param]}
-          {onChange}
-          suggestedValue={params[param]}
-        />
-      {/if}
-    {/each}
-  {/if}
+  {#each startParams as param}
+    {#if param === 'loadMode'}
+      <Select
+        name={param}
+        label={$__(SERIAL_DATA[param].label)}
+        {onChange}
+        options={loadModeOptions}
+        defaultValue={params[param]}
+      />
+    {:else}
+      <RangeInput
+        label={$__(SERIAL_DATA[param].label)}
+        range={CONSTRAINTS[param]}
+        step={STEPS[param]}
+        name={param}
+        {onChange}
+        suggestedValue={params[param]}
+      />
+    {/if}
+  {/each}
 </div>
 
 <style>

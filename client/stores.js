@@ -5,7 +5,7 @@ const { isLoading } = require('./utils/translator');
 const client = require('./utils/wsClient');
 
 const settings = writable({});
-
+const initialize = writable({});
 const algorithm = writable([]);
 
 const post = (path) => (body) =>
@@ -20,6 +20,9 @@ function subscribeSettings() {
 }
 function subscribeAlgorithm() {
   algorithm.subscribe(post('./config/algorithm'));
+}
+function subscribeInitialize() {
+  initialize.subscribe(post('./config/initialize'));
 }
 
 const serialData = writable(clone(SERIAL_DATA));
@@ -37,6 +40,10 @@ const algorithmPromise = fetch('./config/algorithm')
   .then((r) => r.json())
   .then(algorithm.set)
   .then(subscribeAlgorithm);
+const initializePromise = fetch('./config/initialize')
+  .then((r) => r.json())
+  .then(initialize.set)
+  .then(subscribeInitialize);
 
 const connectionEstablished = new Promise((resolve, reject) => {
   client.once('serial data', resolve);
@@ -46,6 +53,7 @@ const connectionEstablished = new Promise((resolve, reject) => {
 Promise.all([
   settingsPromise,
   algorithmPromise,
+  initializePromise,
   localeLoaded,
   connectionEstablished,
 ])
@@ -83,4 +91,5 @@ module.exports = {
   settings,
   elapsed: elapsedStore,
   algorithm,
+  initialize,
 };
