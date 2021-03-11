@@ -11,9 +11,10 @@ const {
 const { isPi, CONFIG_PATH } = require('../globals');
 const { Server } = require('net');
 const { exec } = require('child_process');
+const { getSettings } = require('./configManager');
 const blockId = require(CONFIG_PATH + '/settings.json').id;
 
-let log;
+let log, logPath, logName;
 const sockPool = [];
 const server = new Server((sock) => {
   sockPool.push(sock);
@@ -56,10 +57,10 @@ function start(boosterState, expNumber) {
       if (err) {
         reject(err);
       } else {
-        const logPath = path.join(
-          logDir,
-          getFormatedDate('YYYY-MM-DD--HH-mm-ss') + '.tsv'
-        );
+        logName = `${getSettings().logName || ''}_${getFormatedDate(
+          'YYYY-MM-DD--HH-mm-ss'
+        )}.tsv`;
+        logPath = path.join(logDir, logName);
         log = fs.createWriteStream(logPath);
         writeLogData(generateLogHeader(boosterState, expNumber));
         writeLogData(tableHeader);
@@ -129,4 +130,10 @@ module.exports = {
   start,
   writeRow,
   stop,
+  get logName() {
+    return logName;
+  },
+  get logPath() {
+    return logPath;
+  },
 };

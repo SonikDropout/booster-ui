@@ -9,6 +9,7 @@ const http = require('http');
 const WebSocketServer = require('socket.io').Server;
 const sirv = require('sirv');
 const { text, json } = require('body-parser');
+const send = require('@polka/send-type');
 
 const PORT = process.env.PORT || 80;
 
@@ -117,15 +118,15 @@ app.post('/config/:file', (req, res) => {
   const configFile = req.params.file;
   switch (configFile) {
     case 'settings':
-      configManager.updateSettings((req.body));
+      configManager.updateSettings(req.body);
       res.end('OK');
       break;
     case 'initialize':
-      configManager.updateStartParams((req.body));
+      configManager.updateStartParams(req.body);
       res.end('OK');
       break;
     case 'algorithm':
-      configManager.updateAlgorithm((req.body));
+      configManager.updateAlgorithm(req.body);
       res.end('OK');
       break;
     default:
@@ -145,3 +146,15 @@ app.get('/locale/:file', (req, res) => {
   }
 });
 app.use(sirv('public', { dev: process.platform === 'win32' }), json());
+app.get('/log', (req, res) => {
+  try {
+    const log = fs.createReadStream(logger.logPath);
+    send(res, 206, log, {
+      'Content-Disposition': `attachment; filename=${logger.logName}`,
+    });
+  } catch (err) {
+    console.error(err);
+    res.statusCode = 500;
+    res.end();
+  }
+});

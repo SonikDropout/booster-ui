@@ -1,10 +1,6 @@
 <script>
   import blocks from '../models/paramsLayout';
-  import {
-    COMMANDS,
-    STEPS,
-    CONSTRAINTS,
-  } from '../../common/constants';
+  import { COMMANDS, STEPS, CONSTRAINTS } from '../../common/constants';
   import { serialData } from '../stores';
   import Select from '../molecules/Select.svelte';
   import Value from '../atoms/Value.svelte';
@@ -13,6 +9,7 @@
   import { __ } from '../utils/translator';
   import loadModeOptions from '../models/loadModeOptions';
   import ElapsedTimer from '../molecules/ElapsedTimer.svelte';
+  import Button from '../atoms/Button.svelte';
 
   const initialData = $serialData;
 
@@ -36,6 +33,9 @@
   function selectLoadMode(mode) {
     selectedLoadMode = loadModeOptions[mode];
     wsClient.emit('serial command', ...COMMANDS.loadMode(+mode));
+  }
+  function getLog() {
+    window.location.assign('./log');
   }
 </script>
 
@@ -112,6 +112,7 @@
       {/each}
       {#if idx == 0}
         <ElapsedTimer />
+        <Button on:click={getLog}>{$__('get log')}</Button>
       {/if}
     </div>
   {/each}

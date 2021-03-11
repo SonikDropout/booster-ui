@@ -30,6 +30,7 @@
     "svelte": "^3.0.0"
   },
   "dependencies": {
+    "@polka/send-type": "^0.5.2",
     "body-parser": "^1.19.0",
     "chart.js": "^2.9.3",
     "chartjs-plugin-zoom": "^0.7.5",
