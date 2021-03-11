@@ -144,4 +144,4 @@ app.get('/locale/:file', (req, res) => {
     res.end();
   }
 });
-app.use(sirv('public', { dev: process.env.ROLLUP_WATCH }), json());
+app.use(sirv('public', { dev: process.platform === 'win32' }), json());
