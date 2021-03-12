@@ -8,21 +8,49 @@ const settings = writable({});
 const initialize = writable({});
 const algorithm = writable([]);
 
+const notification = writable();
+
 const post = (path) => (body) =>
   void fetch(path, {
     method: 'post',
     body: JSON.stringify(body),
     headers: { 'Content-Type': 'application/json' },
-  }).catch(console.error);
+  })
+    .then((res) => res.text())
+    .then((res) => {
+      if (res === 'OK') {
+        notification.set({
+          type: 'info',
+          message: 'save success',
+          timeout: 3000,
+        });
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      notification.set({
+        type: 'error',
+        message: 'save failed',
+        timeout: 3000,
+      });
+    });
+
+const ignoreFirstCall = (fn) => {
+  let firstCall = true;
+  return (...args) => {
+    if (firstCall) firstCall = false;
+    else fn(...args);
+  };
+};
 
 function subscribeSettings() {
-  settings.subscribe(post('./config/settings'));
+  settings.subscribe(ignoreFirstCall(post('./config/settings')));
 }
 function subscribeAlgorithm() {
-  algorithm.subscribe(post('./config/algorithm'));
+  algorithm.subscribe(ignoreFirstCall(post('./config/algorithm')));
 }
 function subscribeInitialize() {
-  initialize.subscribe(post('./config/initialize'));
+  initialize.subscribe(ignoreFirstCall(post('./config/initialize')));
 }
 
 const serialData = writable(clone(SERIAL_DATA));
@@ -92,4 +120,5 @@ module.exports = {
   elapsed: elapsedStore,
   algorithm,
   initialize,
+  notification,
 };
