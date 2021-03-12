@@ -73,5 +73,8 @@
   "save success": "измененения сохранены",
   "save failed": "Не удалось сохранить именения",
   "automatic operation interrupted": "автоматическое выполнение прервано!",
+  "current value": "текущее значение",
+  "setting value": "задать значение",
+  "setting": "изменение",
   "get log": "скачать лог"
 }

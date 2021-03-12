@@ -36,7 +36,7 @@
   <RangeInput
     label={$__('block id')}
     onChange={changeBlockId}
-    suggestedValue={settingsCopy.id}
+    currentValue={settingsCopy.id}
     name="blockId"
   />
   <TextInput

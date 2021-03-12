@@ -27,7 +27,7 @@
         step={STEPS[param]}
         name={param}
         {onChange}
-        suggestedValue={params[param]}
+        currentValue={params[param]}
       />
     {/if}
   {/each}

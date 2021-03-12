@@ -73,7 +73,7 @@
       <h5>{$__('please add at least five values of consumption')}</h5>
       <RangeInput
         label={$__('H2 consumption')}
-        suggestedValue={currentPoint}
+        currentValue={currentPoint}
         range={[0, 10000]}
         onChange={setPoint}
       />

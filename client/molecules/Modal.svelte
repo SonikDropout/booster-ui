@@ -2,6 +2,8 @@
   import Portal from '../atoms/Portal.svelte';
   import { fly } from 'svelte/transition';
   import { onDestroy } from 'svelte';
+  export let size = 'md';
+  export let position = 'center';
   export let onDismiss;
 
   document.addEventListener('keydown', closeOnEsc);
@@ -15,7 +17,7 @@
 
 <Portal>
   <div class="overlay" on:click|self={onDismiss}>
-    <div class="modal" transition:fly={{ y: -200 }}>
+    <div class="modal {size} {position}" transition:fly={{ y: -200 }}>
       <slot />
     </div>
   </div>
@@ -43,5 +45,14 @@
     min-height: 50vh;
     max-height: 70vh;
     overflow-y: hidden;
+  }
+  .modal.top {
+    margin-top: 10vh;
+  }
+  .modal.sm {
+    width: 30%;
+    min-height: 20vh;
+    min-width: 20rem;
+    padding: 0.8rem 1.2rem;
   }
 </style>

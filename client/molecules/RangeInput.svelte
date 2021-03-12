@@ -1,5 +1,6 @@
 <script>
   import { constraint } from '../../common/helpers';
+  import { __ } from '../utils/translator';
   import Modal from './Modal.svelte';
   export let range = [0, 100];
   export let disabled;
@@ -16,12 +17,35 @@
   $: precision = Math.max(0, -step.toExponential().split('e')[1]);
 
   let showInputModal;
+
+  function handleChange(e) {
+    const { name, value } = e.target;
+    onChange(value, name);
+    showInputModal = false;
+  }
+  let userInput;
+  $: if (userInput) userInput.focus();
 </script>
 
 {#if showInputModal}
-  <Modal onDismiss={() => (showInputModal = false)}>
-    <input type="number" {name} readonly value={currentValue} />
-    <input type="number" {name} on:change={onChange} {min} {max} {step} />
+  <Modal onDismiss={() => (showInputModal = false)} position="top" size="sm">
+    <h4>{$__('setting')} {$__(label, true)}</h4>
+    <label>
+      <span class="label">{$__('current value:')}</span>
+      <input type="number" {name} readonly value={currentValue} />
+    </label>
+    <label>
+      <span class="label">{$__('set value:')}</span>
+      <input
+        type="number"
+        {name}
+        on:change={handleChange}
+        {min}
+        {max}
+        {step}
+        bind:this={userInput}
+      />
+    </label>
   </Modal>
 {/if}
 <label {style}>
@@ -45,6 +69,9 @@
 </label>
 
 <style>
+  h4 {
+    margin-bottom: 3.2rem;
+  }
   label {
     display: flex;
     margin-bottom: 1.2rem;
@@ -57,17 +84,7 @@
   }
   input {
     width: 8rem;
-    border: none;
     font-size: 2rem;
-    text-align: center;
-    outline: none;
-  }
-  input:focus {
-    outline: none;
-  }
-  input::-webkit-outer-spin-button,
-  input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
   }
   .error {
     color: var(--danger-color);

@@ -54,7 +54,7 @@
         {#if selectedLoadMode.value}
           <RangeInput
             name="load"
-            suggestedValue={$serialData.load.value}
+            currentValue={$serialData.load.value}
             step={STEPS[selectedLoadMode.name]}
             label={$__(selectedLoadMode.label)}
             range={CONSTRAINTS[selectedLoadMode.name]}
@@ -86,7 +86,7 @@
                 disabledOnStart.includes(name)}
               step={STEPS[name]}
               range={CONSTRAINTS[name]}
-              suggestedValue={$serialData[name].value}
+              currentValue={$serialData[name].value}
               label={$__(initialData[name].label)}
               {name}
               onChange={sendCommand}

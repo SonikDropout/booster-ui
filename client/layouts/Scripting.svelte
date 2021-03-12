@@ -135,7 +135,7 @@
             name="stepTime"
           />
           <td>
-            <Icon interactive icon="trash-alt" on:click={deleteStep(i)} />
+            <Icon interactive icon="trash" on:click={deleteStep(i)} />
           </td>
         </tr>
       {/each}
