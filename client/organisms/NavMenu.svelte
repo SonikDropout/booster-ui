@@ -28,7 +28,6 @@
     text-decoration: none;
     display: block;
     padding: 1.2rem 0.8rem;
-    font-size: 2rem;
   }
   a:hover {
     color: var(--bg-darken);

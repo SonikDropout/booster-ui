@@ -26,7 +26,6 @@
     border: none;
     border-radius: 0.4rem;
     padding: 0.8rem 1.6rem;
-    font-size: 1.8rem;
   }
   button.outline {
     background-color: var(--bg-color);
@@ -45,7 +44,7 @@
   }
 
   button:active {
-    transform: scale(0.9);
+    transform: scale(0.95);
     outline: none;
   }
 
