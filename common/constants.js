@@ -230,11 +230,11 @@ const STOP_BITS = [
 const BOOST_MODES = ['manual fan', 'auto fan', 'manual temp', 'auto temp'];
 
 const ALGORITHM_DIRECTIONS = [
-  { label: '', value: 'up', icon: '&#xf30c;' },
-  { label: '', value: 'down', icon: '&#xf309;' },
-  { label: '', value: 'downup', icon: '&#xf338;' },
-  { label: '', value: 'updown', icon: '&#xf338;' },
-  { label: '', value: 'hold', icon: '&#xf023;' },
+  { label: '', value: 'up', icon: '&#xe809;' },
+  { label: '', value: 'down', icon: '&#xe807;' },
+  { label: '', value: 'downup', icon: '&#xe808;' },
+  { label: '', value: 'updown', icon: '&#xe800;' },
+  { label: '', value: 'hold', icon: '&#xe804;' },
 ];
 
 const LOAD_MODES = ['none', 'voltage', 'current', 'power'];

@@ -1,22 +1,22 @@
 module.exports = [
   {
     label: 'parameters',
-    icon: 'fas fa-chart-bar',
+    icon: 'icon-sliders',
     href: '#parameters',
   },
   {
     label: 'charts',
-    icon: 'fas fa-chart-line',
+    icon: 'icon-chart',
     href: '#charts',
   },
   {
     label: 'settings',
-    icon: 'fas fa-cog',
+    icon: 'icon-cog',
     href: '#settings',
   },
   {
     label: 'script',
-    icon: 'fas fa-robot',
+    icon: 'icon-cog-play',
     href: '#script',
   },
 ];

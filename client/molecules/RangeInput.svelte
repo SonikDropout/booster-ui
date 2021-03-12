@@ -1,92 +1,29 @@
 <script>
   import { constraint } from '../../common/helpers';
+  import Modal from './Modal.svelte';
   export let range = [0, 100];
   export let disabled;
   export let onChange;
   export let name;
-  export let suggestedValue = range[0];
   export let style;
   export let step = 1;
   export let label;
+  export let currentValue = range[0];
   export let errorMessage = '';
 
   $: min = Math.min.apply(null, range);
   $: max = Math.max.apply(null, range);
-  $: value = min;
-  $: if (Math.abs(value - suggestedValue) > step && !updateBlocked)
-    value = suggestedValue;
-
-  let timeout,
-    interval,
-    updateBlocked,
-    input;
-
   $: precision = Math.max(0, -step.toExponential().split('e')[1]);
 
-  function increment() {
-    if (value + step <= max) {
-      value += step;
-    } else {
-      clearTimers();
-    }
-  }
-
-  function decrement() {
-    if (value - step >= min) {
-      value -= step;
-    } else {
-      clearTimers();
-    }
-  }
-
-  function stickyCall(fn) {
-    fn();
-    clearTimers();
-    timeout = setTimeout(() => {
-      fn();
-      interval = setInterval(fn, 50);
-    }, 500);
-  }
-
-  function press(cb) {
-    return function(e) {
-      updateBlocked = true;
-      stickyCall(cb);
-      e.target.setPointerCapture(e.pointerId);
-    };
-  }
-
-  function clearTimers() {
-    clearInterval(interval);
-    clearTimeout(timeout);
-  }
-
-  function release(e) {
-    updateBlocked = false;
-    clearTimers();
-    e.target.releasePointerCapture(e.pointerId);
-    onChange(+value.toFixed(precision), name);
-  }
-
-  function handleInputChange(e) {
-    value = Math.max(min, Math.min(max, +e.target.value));
-    onChange(+value.toFixed(precision), name);
-  }
-
-  function handleFocus(e) {
-    updateBlocked = true;
-    e.target.select();
-  }
-
-  function handleKeyPress(e) {
-    if (e.code == 'Enter' || e.code == 'Tab') {
-      e.target.blur();
-      setTimeout(() => (e.target.value = value));
-      updateBlocked = false;
-    }
-  }
+  let showInputModal;
 </script>
 
+{#if showInputModal}
+  <Modal onDismiss={() => (showInputModal = false)}>
+    <input type="number" {name} readonly value={currentValue} />
+    <input type="number" {name} on:change={onChange} {min} {max} {step} />
+  </Modal>
+{/if}
 <label {style}>
   {#if label}
     <span class="label">
@@ -97,39 +34,14 @@
       <slot />
     </span>
   {/if}
-  <span class="input-wrapper" class:disabled>
-    <button
-      disabled={value <= min || disabled}
-      tabindex="-1"
-      class="decrementer"
-      on:pointerdown={press(decrement)}
-      on:pointercancel={release}
-      on:pointerup={release}>
-      <span>-</span>
-    </button>
-    <input
-      on:focus={handleFocus}
-      on:blur={() => (updateBlocked = false)}
-      on:keypress={handleKeyPress}
-      type="number"
-      {min}
-      {max}
-      {step}
-      {name}
-      bind:this={input}
-      value={value.toFixed(precision)}
-      on:change={handleInputChange} />
-    <button
-      disabled={value >= max || disabled}
-      tabindex="-1"
-      class="incrementer"
-      on:pointerdown={press(increment)}
-      on:pointercancel={release}
-      on:pointerup={release}>
-      <span>+</span>
-    </button>
-  </span>
-
+  <input
+    type="number"
+    value={currentValue.toFixed(precision)}
+    readonly
+    {disabled}
+    {name}
+    on:click={() => (showInputModal = true)}
+  />
 </label>
 
 <style>
@@ -142,15 +54,6 @@
   }
   .label {
     margin-bottom: 0.8rem;
-  }
-  .input-wrapper {
-    max-width: 16rem;
-    min-width: 16rem;
-    height: 3.2rem;
-    line-height: 3.2rem;
-  }
-  .input-wrapper.disabled {
-    opacity: 0.6;
   }
   input {
     width: 8rem;
@@ -165,23 +68,6 @@
   input::-webkit-outer-spin-button,
   input::-webkit-inner-spin-button {
     -webkit-appearance: none;
-  }
-  button {
-    border-radius: 50%;
-    padding: 0;
-    border: 1px solid var(--text-color);
-    background-color: transparent;
-    width: 3.2rem;
-    font-size: 2.4rem;
-    line-height: 3rem;
-    font-weight: 300;
-    outline: none;
-  }
-  button:focus {
-    outline: none;
-  }
-  button:disabled {
-    opacity: 0.5;
   }
   .error {
     color: var(--danger-color);
