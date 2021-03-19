@@ -1,7 +1,7 @@
 const Serial = require('serialport');
 const { PORT, SEPARATORS } = require('../globals');
 const EventEmitter = require('events');
-const validate = require('./serialDataValidator');
+const parse = require('./serialParser');
 
 const emitter = new EventEmitter();
 const serial = new Serial(PORT.name, { baudRate: PORT.baudRate });
@@ -16,8 +16,7 @@ function handleData(buf) {
   if (idx != -1) {
     buffer = Buffer.concat([buffer, buf.slice(0, idx)]);
     try {
-      validate(buffer);
-      emitter.emit('data', buffer);
+      emitter.emit('data', parse(buffer));
     } catch (e) {
       console.error(e.message);
     }
