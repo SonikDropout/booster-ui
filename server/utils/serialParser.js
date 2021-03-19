@@ -1,11 +1,11 @@
+const { SEPARATORS } = require('../globals');
 const {
-  SEPARATORS,
   PARAMS_DATA,
-  STATE_DATA,
-  DATA_BYTE_LENGTH,
   SERIAL_DATA,
-} = require('../constants');
-const { clone } = require('./helpers');
+  DATA_BYTE_LENGTH,
+  STATE_DATA,
+} = require('../../common/constants');
+const { clone } = require('../../common/helpers');
 
 const dataMap = clone(SERIAL_DATA);
 
@@ -24,7 +24,7 @@ module.exports = function parse(buf) {
   }
   for (let j = 0; j < PARAMS_DATA.length; j++) {
     const { name, divider = 1 } = PARAMS_DATA[j];
-    dataMap[name].value = +(buf.readInt16BE(i) / divider).toPrecision(4);;
+    dataMap[name].value = +(buf.readInt16BE(i) / divider).toPrecision(4);
     checkSum += buf.readInt16BE(i);
     i += 2;
   }
@@ -32,10 +32,14 @@ module.exports = function parse(buf) {
     checkSum += buf[i];
     dataMap[STATE_DATA[j].name].value = buf[i++];
   }
-  dataMap.start.value = dataMap.start.value !== 127
+  dataMap.start.value = dataMap.start.value !== 127;
   checkSum = checkSum % Math.pow(2, 16);
   if (checkSum != buf.readUInt16BE(i)) {
-    throw new Error(`Check sums don't match calculated: ${checkSum}, recieved: ${buf.readUInt16BE(i)}`);
+    throw new Error(
+      `Check sums don't match calculated: ${checkSum}, recieved: ${buf.readUInt16BE(
+        i
+      )}`
+    );
   }
   dataMap.FCPower.value = +Math.abs(
     dataMap.FCCurrent.value * dataMap.FCVoltage.value
