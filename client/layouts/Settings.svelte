@@ -27,7 +27,7 @@
     startParamsCopy[name] = value;
   }
   function sendCalibrationSignal() {
-    wsClient.emit('serial command', ...COMMANDS.startCalibration);
+    wsClient.emit('serial command', ...COMMANDS.startCalibration());
   }
 </script>
 
