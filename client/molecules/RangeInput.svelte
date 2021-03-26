@@ -1,5 +1,4 @@
 <script>
-  import { constraint } from '../../common/helpers';
   import { __ } from '../utils/translator';
   import Modal from './Modal.svelte';
   export let range = [0, 100];
@@ -23,8 +22,13 @@
     onChange(value, name);
     showInputModal = false;
   }
-  let userInput;
+  let userInput, triggerInput;
   $: if (userInput) userInput.focus();
+  $: if (!showInputModal && triggerInput && userInput) triggerInput.focus();
+
+  function handleTriggerInput(e) {
+    if (/\d/.test(e.key) && !e.ctrlKey) showInputModal = true;
+  }
 </script>
 
 {#if showInputModal}
@@ -64,7 +68,9 @@
     readonly
     {disabled}
     {name}
+    bind:this={triggerInput}
     on:click={() => (showInputModal = true)}
+    on:keydown={handleTriggerInput}
   />
 </label>
 
