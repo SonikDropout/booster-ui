@@ -9,7 +9,7 @@
   document.addEventListener('keydown', closeOnEsc);
 
   function closeOnEsc(e) {
-    if (e.key === 'Esc') onDismiss();
+    if (e.key === 'Escape') onDismiss();
   }
 
   onDestroy(() => document.removeEventListener('keydown', closeOnEsc));

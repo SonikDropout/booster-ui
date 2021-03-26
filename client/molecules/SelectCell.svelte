@@ -21,6 +21,7 @@
     width: 100%;
     font-size: 2rem;
     line-height: 3.2rem;
+    border-radius: 0.4rem;
     height: 3.2rem;
     font-family: 'boost-block', sans-serif;
   }
