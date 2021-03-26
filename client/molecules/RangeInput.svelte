@@ -90,7 +90,6 @@
   }
   input {
     width: 8rem;
-    font-size: 2rem;
   }
   .error {
     color: var(--danger-color);

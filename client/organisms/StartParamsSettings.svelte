@@ -1,5 +1,6 @@
 <script>
   import RangeInput from '../molecules/RangeInput.svelte';
+  import Input from '../molecules/GenericInput.svelte';
   export let params;
   import { CONSTRAINTS, SERIAL_DATA, STEPS } from '../../common/constants';
   import { __ } from '../utils/translator';
@@ -21,13 +22,15 @@
         defaultValue={params[param]}
       />
     {:else}
-      <RangeInput
+      <Input
+        type="number"
         label={$__(SERIAL_DATA[param].label)}
-        range={CONSTRAINTS[param]}
+        min={CONSTRAINTS[param] && CONSTRAINTS[param][0]}
+        max={CONSTRAINTS[param] && CONSTRAINTS[param][1]}
         step={STEPS[param]}
         name={param}
-        {onChange}
-        currentValue={params[param]}
+        on:change = {e => onChange(e.target.value, e.target.name)}
+        value={params[param]}
       />
     {/if}
   {/each}

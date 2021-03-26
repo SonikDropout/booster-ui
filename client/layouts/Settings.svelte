@@ -2,7 +2,7 @@
   import Button from '../atoms/Button.svelte';
   import RangeInput from '../molecules/RangeInput.svelte';
   import { __ } from '../utils/translator';
-  import TextInput from '../molecules/TextInput.svelte';
+  import Input from '../molecules/GenericInput.svelte';
   import { settings, initialize } from '../stores';
   import StartParamsSettings from '../organisms/StartParamsSettings.svelte';
   import wsClient from '../utils/wsClient';
@@ -11,8 +11,8 @@
   const settingsCopy = $settings;
   const startParamsCopy = $initialize;
 
-  function changeBlockId(id) {
-    settingsCopy.id = id;
+  function changeBlockId(e) {
+    settingsCopy.id = +e.target.value || 0;
   }
 
   function setLogName(e) {
@@ -33,16 +33,17 @@
 
 <div class="layout" id="settings">
   <h2>{$__('settings')}</h2>
-  <RangeInput
+  <Input
+    type="number"
     label={$__('block id')}
-    onChange={changeBlockId}
-    currentValue={settingsCopy.id}
+    on:change={changeBlockId}
+    value={settingsCopy.id}
     name="blockId"
   />
-  <TextInput
+  <Input
     label={$__('log name')}
     on:change={setLogName}
-    defaultValue={settingsCopy.logName}
+    value={settingsCopy.logName}
     name="logName"
   />
   <div class="calibration">
