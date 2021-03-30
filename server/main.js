@@ -141,7 +141,7 @@ app.post('/config/:file', (req, res) => {
 
 app.get('/locale/:file', (req, res) => {
   const filename = req.params.file;
-  const filePath = path.resolve('locale', filename + '.json');
+  const filePath = path.join(__dirname, '..', 'locale', filename + '.json');
   if (fs.existsSync(filePath)) {
     res.end(JSON.stringify(require(filePath)));
   } else {
@@ -149,7 +149,12 @@ app.get('/locale/:file', (req, res) => {
     res.end();
   }
 });
-app.use(sirv('public', { dev: process.platform === 'win32' }), json());
+app.use(
+  sirv(path.join(__dirname, '..', 'public'), {
+    dev: process.platform === 'win32',
+  }),
+  json()
+);
 app.get('/log', (req, res) => {
   try {
     const log = fs.createReadStream(logger.logPath);

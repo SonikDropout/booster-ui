@@ -9,9 +9,7 @@ exports.PORT = {
   baudRate: 230400,
 };
 
-exports.CONFIG_PATH = IS_RPI
-  ? '/home/pi/booster-ui/config'
-  : path.join(__dirname, '..', 'config');
+exports.CONFIG_PATH = path.join(__dirname, '..', 'config');
 
 const SEPARATORS = Buffer.alloc(4);
 SEPARATORS.writeUInt16BE(7589);
