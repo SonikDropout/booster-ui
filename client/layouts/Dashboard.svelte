@@ -1,7 +1,7 @@
 <script>
   import blocks from '../models/paramsLayout';
   import { COMMANDS, STEPS, CONSTRAINTS } from '../../common/constants';
-  import { serialData } from '../stores';
+  import { serialData, logExists } from '../stores';
   import Select from '../molecules/Select.svelte';
   import Value from '../atoms/Value.svelte';
   import RangeInput from '../molecules/RangeInput.svelte';
@@ -112,7 +112,7 @@
       {/each}
       {#if idx == 0}
         <ElapsedTimer />
-        <Button on:click={getLog}>{$__('get log')}</Button>
+        <Button on:click={getLog} disabled={!$logExists}>{$__('get log')}</Button>
       {/if}
     </div>
   {/each}

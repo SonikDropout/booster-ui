@@ -56,6 +56,7 @@ function subscribeInitialize() {
 const serialData = writable(clone(SERIAL_DATA));
 
 const appInitialized = writable(false);
+const logExists = writable(false);
 
 const localeLoaded = new Promise(
   (res) => void isLoading.subscribe((f) => (f ? void 0 : res()))
@@ -90,7 +91,9 @@ Promise.all([
   })
   .catch(console.error);
 
-client.on('serial data', serialData.set);
+client.on('serial data', serialData.set).on('serial data', (d) => {
+  if (d.start.value && !getValue(logExists)) logExists.set(true);
+});
 
 function getValue(store) {
   let $val;
@@ -112,6 +115,7 @@ const elapsedStore = derived(serialData, (d) => {
   return elapsed;
 });
 
+
 module.exports = {
   serialData,
   appInitialized,
@@ -121,4 +125,5 @@ module.exports = {
   algorithm,
   initialize,
   notification,
+  logExists,
 };
