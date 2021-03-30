@@ -61,6 +61,7 @@ function writeCommandFromQueue() {
       }
     } else {
       failedAttempts = 0;
+      serial.emit('command sent')
     }
     if (Date.now() - startTx < 200) {
       setTimeout(writeCommandFromQueue, 200);

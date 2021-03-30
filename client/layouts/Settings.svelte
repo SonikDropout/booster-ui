@@ -3,10 +3,11 @@
   import RangeInput from '../molecules/RangeInput.svelte';
   import { __ } from '../utils/translator';
   import Input from '../molecules/GenericInput.svelte';
-  import { settings, initialize } from '../stores';
+  import { settings, initialize, notification } from '../stores';
   import StartParamsSettings from '../organisms/StartParamsSettings.svelte';
   import wsClient from '../utils/wsClient';
   import { COMMANDS } from '../../common/constants';
+  import FlowmeterCalibrator from '../organisms/FlowmeterCalibrator.svelte';
 
   const settingsCopy = $settings;
   const startParamsCopy = $initialize;
@@ -24,10 +25,13 @@
     initialize.set(startParamsCopy);
   }
   function changeStartParam(value, name) {
-    startParamsCopy[name] = value;
+    startParamsCopy[name] = +value;
   }
   function sendCalibrationSignal() {
     wsClient.emit('serial command', ...COMMANDS.startCalibration());
+    wsClient.once('command sent', () =>
+      notification.set({ message: 'calibration done!', timeout: 1000 })
+    );
   }
 </script>
 
@@ -47,7 +51,8 @@
     name="logName"
   />
   <div class="calibration">
-    <Button on:click={sendCalibrationSignal}>{$__('calibration')}</Button>
+    <Button on:click={sendCalibrationSignal}>{$__('calibrate I, V, P')}</Button>
+    <FlowmeterCalibrator />
   </div>
   <StartParamsSettings onChange={changeStartParam} params={startParamsCopy} />
   <div class="controls">

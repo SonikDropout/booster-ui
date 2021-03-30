@@ -42,8 +42,9 @@ function generateData() {
   return dataMap;
 }
 
-emitter.sendCommand = (cmd) => {
+emitter.sendCommand = (...cmd) => {
   console.info('Sending command to serial:', cmd);
+  emitter.emit('command sent')
 };
 
 emitter.close = () => {

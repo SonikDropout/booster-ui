@@ -1,13 +1,11 @@
 <script>
   import Modal from '../molecules/Modal.svelte';
   import Button from '../atoms/Button.svelte';
-  import RangeInput from '../molecules/RangeInput.svelte';
+  import Input from '../molecules/GenericInput.svelte';
   import { __ } from '../utils/translator';
-  import { PASSWORD } from '../../common/constants';
   import { serialData, settings } from '../stores';
   import { approximate } from '../utils/exponentialApproxiamator';
   import { onDestroy } from 'svelte';
-  import sha256 from 'crypto-js/sha256';
 
   onDestroy(() => clearTimeout(timeout));
 
@@ -28,12 +26,7 @@
   const setPoint = (p) => (currentPoint = p);
 
   function startCalibration() {
-    const password = prompt($__('enter password'));
-    if (sha256(password) === PASSWORD) {
-      showCalibrationModal = true;
-    } else {
-      alert($__('wrong password'));
-    }
+    showCalibrationModal = true;
   }
   function setConsumptionCoefficiets() {
     try {
@@ -61,7 +54,7 @@
   }
 </script>
 
-<Button on:click={startCalibration}>{$__('calibration')}</Button>
+<Button on:click={startCalibration}>{$__('calibrate flowmeter')}</Button>
 {#if showCalibrationModal}
   <Modal onDismiss={closeModal}>
     {#if calibrateMessage}
@@ -71,10 +64,12 @@
     {:else}
       <h3>{$__('calibration')}</h3>
       <h5>{$__('please add at least five values of consumption')}</h5>
-      <RangeInput
+      <Input
+        type="number"
         label={$__('H2 consumption')}
-        currentValue={currentPoint}
-        range={[0, 10000]}
+        defaultValue={currentPoint}
+        min={0}
+        max={10000}
         onChange={setPoint}
       />
       <Button on:click={addCurrentPoint}>{$__('add point')}</Button>

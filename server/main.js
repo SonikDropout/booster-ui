@@ -29,9 +29,13 @@ const initialValues = configManager.getStartParams();
 for (const key in initialValues) {
   serial.sendCommand(...COMMANDS[key](initialValues[key]));
 }
-serial.on('data', (data) =>
-  wsSockets.forEach((sock) => sock.emit('serial data', data))
-);
+serial
+  .on('data', (data) =>
+    wsSockets.forEach((sock) => sock.emit('serial data', data))
+  )
+  .on('command sent', () =>
+    wsSockets.forEach((sock) => sock.emit('command sent'))
+  );
 
 // executor initialization
 
