@@ -1,61 +1,49 @@
-const https = require('https');
-const { isPi } = require('../globals');
-const {
-  version,
-  repository,
-  name: packageName,
-} = require('../../package.json');
+const path = require('path');
+const getJSON = require('./getJSON');
+const { version, repository } = require('../../package.json');
 const { exec } = require('child_process');
 
+const getBranchCommand = 'git branch --show-current';
 const winGetBranch = 'git branch --show-current';
 const linuxGetBranch = 'cd ~/booster-ui && git rev-parse --abbrev-ref HEAD';
 
-function httpsGet(options) {
-  return new Promise((resolve, reject) => {
-    https
-      .get(options, (res) => {
-        if (res.statusCode !== 200)
-          reject(
-            new Error('Request Failed.\n' + `Status Code: ${res.statusCode}`)
-          );
-
-        res.setEncoding('utf8');
-        let rawData = '';
-        res.on('data', (chunk) => {
-          rawData += chunk;
-        });
-        res.on('end', () => {
-          try {
-            resolve(JSON.parse(rawData));
-          } catch (e) {
-            reject(e);
-          }
-        });
-      })
-      .on('error', reject);
-  });
-}
-
 function getBranchName() {
   return new Promise((resolve, reject) => {
-    exec(isPi ? linuxGetBranch : winGetBranch, (err, stdout) => {
+    exec(getBranchCommand, (err, stdout) => {
       if (err) reject(err);
       resolve(stdout.trim());
     });
   });
 }
 
-module.exports = async function checkVersions() {
+exports.checkUpdate = async function checkVersions() {
   try {
     const repoName = new URL(repository.url).pathname;
     const branch = await getBranchName();
-    const remotePackageInfo = await httpsGet({
+    const remotePackageInfo = await getJSON({
       hostname: 'raw.githubusercontent.com',
       port: 443,
       path: `${repoName}/${branch}/package.json`,
     });
-    return remotePackageInfo.version !== version;
+    const remoteVersion = +remotePackageInfo.version.split('.').join('');
+    const currentVersion = +version.split('.').join('');
+    return remoteVersion > currentVersion;
   } catch (e) {
     console.error(e.message);
   }
+};
+
+exports.update = function update() {
+  return new Promise((resolve, reject) => {
+    exec(
+      `git pull && npm run dev && reboot`,
+      {
+        cwd: path.join(__dirname, '..', '..'),
+      },
+      (err) => {
+        if (err) reject(err);
+        else resolve();
+      }
+    );
+  });
 };
