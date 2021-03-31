@@ -12,7 +12,7 @@ const { json } = require('body-parser');
 const send = require('@polka/send-type');
 const updater = require('./utils/updater');
 
-const PORT = process.env.PORT || 80;
+const PORT = process.env.PORT || 8080;
 
 const server = http.createServer();
 const app = polka({ server }).listen(PORT, (err) => {
