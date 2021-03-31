@@ -112,7 +112,7 @@
       {/each}
       {#if idx == 0}
         <ElapsedTimer />
-        <a href={$logExists ? './log' : ''}>{$__('get log')}</a>
+        <a href={$logExists ? './log' : void 0}>{$__('get log')}</a>
       {/if}
     </div>
   {/each}
