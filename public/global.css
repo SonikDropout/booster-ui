@@ -12,8 +12,6 @@
   --corporate-grey: #969ba5;
   --corporate-grey-darken: #74787f;
   --warning-color: #fcee21;
-  --nav-width: 20rem;
-  --nav-sm-width: 5rem;
 }
 
 * {
@@ -45,10 +43,17 @@ header {
   font-family: 'Oswald', sans-serif;
 }
 
+#content {
+  height: 100%;
+  --nav-width: 20rem;
+}
+
 .layout {
-  width: calc(100% - var(--nav-width));
+  width: calc(100vw - var(--nav-width));
   height: 100vh;
-  margin-left: auto;
+  position: relative;
+  left: var(--nav-width);
+  display: inline-block;
 }
 
 nav {
@@ -139,10 +144,11 @@ input:focus {
   font-family: 'Oswald';
   font-size: 3rem;
   display: flex;
-  align-items: center;
   justify-content: center;
-  height: calc(100vh - 2rem);
+  align-items: center;
+  height: 100%;
 }
+
 
 input.hidden {
   position: absolute;
@@ -170,11 +176,8 @@ input.hidden {
   .mobile-hidden {
     display: none;
   }
-  .layout {
-    width: calc(100% - var(--nav-sm-width));
-  }
-  nav {
-    width: var(--nav-sm-width);
+  #content {
+    --nav-width: 5rem;
   }
 }
 
