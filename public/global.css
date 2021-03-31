@@ -79,6 +79,10 @@ button {
   font-size: 1.6rem;
 }
 
+button:disabled {
+  cursor: default;
+}
+
 .meta {
   flex: 1 1;
 }

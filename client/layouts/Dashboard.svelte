@@ -112,7 +112,7 @@
       {/each}
       {#if idx == 0}
         <ElapsedTimer />
-        <Button on:click={getLog} disabled={!$logExists}>{$__('get log')}</Button>
+        <a href={$logExists ? './log' : ''}>{$__('get log')}</a>
       {/if}
     </div>
   {/each}
