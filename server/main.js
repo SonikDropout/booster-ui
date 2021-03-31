@@ -152,6 +152,7 @@ app.get('/locale/:file', (req, res) => {
 app.use(
   sirv(path.join(__dirname, '..', 'public'), {
     dev: process.platform === 'win32',
+    setHeaders: disableCache,
   }),
   json()
 );
@@ -167,3 +168,9 @@ app.get('/log', (req, res) => {
     res.end();
   }
 });
+
+function disableCache(res, path) {
+  if (/.*(.html|.js|.css)/.test(path)) {
+    res.setHeader('Cache-Control', 'no-cache')
+  }
+}
