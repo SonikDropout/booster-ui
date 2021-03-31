@@ -8,8 +8,9 @@ const configManager = require('./utils/configManager');
 const http = require('http');
 const WebSocketServer = require('socket.io').Server;
 const sirv = require('sirv');
-const { text, json } = require('body-parser');
+const { json } = require('body-parser');
 const send = require('@polka/send-type');
+const updater = require('./utils/updater');
 
 const PORT = process.env.PORT || 80;
 
@@ -92,11 +93,22 @@ wsServer.on('connection', (socket) => {
     'disconnect',
     () => (wsSockets = wsSockets.filter((sock) => sock.id !== socket.id))
   );
+  socket.on('check update', () => {
+    updater
+      .checkUpdate()
+      .then((f) => {
+        if (f) socket.emit('update available');
+      })
+      .catch(console.error);
+  });
   socket.on('execute', executor.start);
   socket.on('stopExecution', executor.abort);
   socket.on('pauseExecution', executor.pause);
   socket.on('resumeExecution', executor.resume);
   socket.on('serial command', serial.sendCommand);
+  socket.on('update programm', () =>
+    updater.update().catch((err) => socket.emit('udpate failed', err))
+  );
 });
 
 // config path handlers
@@ -171,6 +183,6 @@ app.get('/log', (req, res) => {
 
 function disableCache(res, path) {
   if (/.*(.html|.js|.css)/.test(path)) {
-    res.setHeader('Cache-Control', 'no-cache')
+    res.setHeader('Cache-Control', 'no-cache');
   }
 }

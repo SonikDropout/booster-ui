@@ -8,6 +8,7 @@
   import NavMenu from './organisms/NavMenu.svelte';
   import Scripting from './layouts/Scripting.svelte';
   import Notification from './organisms/Notification.svelte';
+  import UpdateModal from './organisms/UpdateModal.svelte';
 
   appInitialized.subscribe((flag) => {
     if (flag) {
@@ -18,6 +19,7 @@
 
 <Version />
 {#if $appInitialized}
+  <UpdateModal />
   <BlockID />
   <Dashboard />
   <Charts />

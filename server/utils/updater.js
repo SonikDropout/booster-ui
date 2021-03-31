@@ -2,14 +2,15 @@ const path = require('path');
 const getJSON = require('./getJSON');
 const { version, repository } = require('../../package.json');
 const { exec } = require('child_process');
+const { isPi } = require('../globals');
 
-const getBranchCommand = 'git branch --show-current';
+const cwd = path.join(__dirname, '..', '..');
+const linuxGetBranch = 'git rev-parse --abbrev-ref HEAD';
 const winGetBranch = 'git branch --show-current';
-const linuxGetBranch = 'cd ~/booster-ui && git rev-parse --abbrev-ref HEAD';
 
 function getBranchName() {
   return new Promise((resolve, reject) => {
-    exec(getBranchCommand, (err, stdout) => {
+    exec(isPi ? linuxGetBranch : winGetBranch, { cwd }, (err, stdout) => {
       if (err) reject(err);
       resolve(stdout.trim());
     });
@@ -27,7 +28,7 @@ exports.checkUpdate = async function checkVersions() {
     });
     const remoteVersion = +remotePackageInfo.version.split('.').join('');
     const currentVersion = +version.split('.').join('');
-    return remoteVersion > currentVersion;
+    return remoteVersion != currentVersion;
   } catch (e) {
     console.error(e.message);
   }
@@ -38,7 +39,7 @@ exports.update = function update() {
     exec(
       `git pull && npm run dev && reboot`,
       {
-        cwd: path.join(__dirname, '..', '..'),
+        cwd,
       },
       (err) => {
         if (err) reject(err);
