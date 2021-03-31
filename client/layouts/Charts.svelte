@@ -91,12 +91,6 @@
     on:change={changeAxes}
     value={selectedAxes}
   />
-  <Button
-    style="grid-column: 3 / 4; justify-self: end"
-    on:click={() => window.scrollTo(0, 0)}
-  >
-    {$__('back')}
-  </Button>
   <div class="chart">
     <canvas id="chart" />
   </div>
