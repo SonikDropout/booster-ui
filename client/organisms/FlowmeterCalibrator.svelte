@@ -72,19 +72,21 @@
         max={10000}
         onChange={setPoint}
       />
-      <Button on:click={addCurrentPoint}>{$__('add point')}</Button>
-      <Button
-        on:click={() => (points = [])}
-        type="outline"
-        disabled={!points.length}>{$__('clear points')}</Button
-      >
+      <div class="controls">
+        <Button on:click={addCurrentPoint}>{$__('add point')}</Button>
+        <Button
+          on:click={() => (points = [])}
+          type="outline"
+          disabled={!points.length}>{$__('clear points')}</Button
+        >
+      </div>
       <p>
         {$__('added points:')}
         {#each points as p}
           <strong class="point">{' ' + p.y}</strong>
         {/each}
       </p>
-      <div class="controls">
+      <div class="footer">
         <Button
           on:click={setConsumptionCoefficiets}
           disabled={points.length < 5}
@@ -117,7 +119,7 @@
     text-align: left;
     margin-bottom: 1.2rem;
   }
-  .controls {
+  .footer {
     text-align: right;
   }
 </style>

@@ -24,8 +24,8 @@
 </script>
 
 {#if showModal}
-  <Modal>
-    <h2 class:error={updateError}>
+  <Modal onDismiss={closeModal}>
+    <h2 class:error={updateError} >
       {#if !isUpdating}Доступно обновление!{:else if updateError}Не удалось
         обновить{:else}Обновление программы...{/if}
     </h2>
@@ -42,13 +42,11 @@
 {/if}
 
 <style>
-  h2 {
-    margin-bottom: auto;
-  }
   h2.error {
     color: var(--danger-color);
   }
   .buttons {
-    margin-top: 3rem;
+    text-align: right;
+    margin-top: auto;
   }
 </style>
