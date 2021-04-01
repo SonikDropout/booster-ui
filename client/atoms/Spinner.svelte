@@ -2,7 +2,7 @@
   export let size = 'md';
 </script>
 
-<img src="../app/icons/spinner.svg" alt="spinner" class={size}/>
+<img src="../icons/spinner.svg" alt="spinner" class={size}/>
 
 <style>
   img {
