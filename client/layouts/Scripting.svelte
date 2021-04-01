@@ -83,12 +83,12 @@
       {#each algorithmCopy as step, i}
         <tr>
           <SelectCell
-            on:change={reassignAlgorithm}
+            on:blur={reassignAlgorithm}
             bind:value={step.param}
             options={ALGORITHM_PARAM}
           />
           <SelectCell
-            on:change={reassignAlgorithm}
+            on:blur={reassignAlgorithm}
             options={ALGORITHM_DIRECTIONS}
             bind:value={step.direction}
           />

@@ -7,7 +7,7 @@
 </script>
 
 <td>
-  <select class:fas={hasIcons} bind:value {name} on:change>
+  <select class:fas={hasIcons} bind:value {name} on:blur>
     {#each options as { value, label, icon }}
       <option class:fas={!!icon} {value}
         >{@html icon || ''}{$__(label) || ''}</option
