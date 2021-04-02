@@ -47,6 +47,6 @@ module.exports = function parse(buf) {
   ).toPrecision(4);
   const hydrogenConsumption = dataMap.hydrogenConsumption.value
   dataMap.hydrogenConsumption.raw = hydrogenConsumption;
-  dataMap.hydrogenConsumption.value = Ka * Math.exp(Kb * hydrogenConsumption);
+  dataMap.hydrogenConsumption.value = +(Ka * Math.exp(Kb * hydrogenConsumption)).toPrecision(2)
   return dataMap;
 };
