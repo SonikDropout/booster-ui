@@ -18,12 +18,16 @@
     currentPoint = 0;
 
   const closeModal = () => (showCalibrationModal = false);
+
   const addCurrentPoint = () =>
     (points = points.concat({
       x: $serialData.hydrogenConsumption,
       y: currentPoint,
     }));
-  const setPoint = (p) => (currentPoint = p);
+
+  const setPoint = (e) => {
+    currentPoint = +e.target.value;
+  };
 
   function startCalibration() {
     showCalibrationModal = true;
@@ -67,10 +71,10 @@
       <Input
         type="number"
         label={$__('H2 consumption')}
-        defaultValue={currentPoint}
+        value={currentPoint}
         min={0}
         max={10000}
-        onChange={setPoint}
+        on:change={setPoint}
       />
       <div class="controls">
         <Button on:click={addCurrentPoint}>{$__('add point')}</Button>
