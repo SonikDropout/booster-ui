@@ -19,11 +19,12 @@
 
   const closeModal = () => (showCalibrationModal = false);
 
-  const addCurrentPoint = () =>
-    (points = points.concat({
-      x: $serialData.hydrogenConsumption,
+  const addCurrentPoint = () => {
+    points = points.concat({
+      x: $serialData.hydrogenConsumption.value,
       y: currentPoint,
-    }));
+    });
+  };
 
   const setPoint = (e) => {
     currentPoint = +e.target.value;
@@ -34,6 +35,7 @@
   }
   function setConsumptionCoefficiets() {
     try {
+      console.log(points);
       const [Ka, Kb] = approximate(points);
       settings.update((s) => {
         s.Ka = Ka;
@@ -41,8 +43,9 @@
         return s;
       });
       calibrateMessage = $__('calibration done');
-    } catch {
+    } catch (err) {
       calibrateMessage = $__('calibration failed');
+      console.error(err);
       isError = true;
     } finally {
       timeout = setTimeout(clearSelf, 1500);
