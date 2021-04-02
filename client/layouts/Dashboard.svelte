@@ -9,7 +9,6 @@
   import { __ } from '../utils/translator';
   import loadModeOptions from '../models/loadModeOptions';
   import ElapsedTimer from '../molecules/ElapsedTimer.svelte';
-  import Button from '../atoms/Button.svelte';
 
   const initialData = $serialData;
 

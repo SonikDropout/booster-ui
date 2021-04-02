@@ -1,6 +1,5 @@
 <script>
   import RadioGroup from '../molecules/RadioGroup.svelte';
-  import Button from '../atoms/Button.svelte';
   import Chart from 'chart.js';
   import 'chartjs-plugin-zoom';
   import { config, axesGroup } from './chart.config';
