@@ -42,8 +42,12 @@ exports.update = function update() {
         cwd,
       },
       (err) => {
-        if (err) reject(err);
-        else resolve();
+        if (err) {
+          reject(err);
+          console.error(err);
+        } else {
+          resolve();
+        }
       }
     );
   });
