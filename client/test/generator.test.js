@@ -1,4 +1,4 @@
-const {dataGenerator} = require('../dataGenerator');
+const {dataGenerator} = require('../utils/dataGenerator');
 
 test('generates data correctly', () => {
   const generatedArray = [...dataGenerator()];
