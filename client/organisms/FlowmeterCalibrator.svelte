@@ -6,6 +6,7 @@
   import { serialData, settings } from '../stores';
   import { approximate } from '../utils/exponentialApproxiamator';
   import { onDestroy } from 'svelte';
+  import Value from '../atoms/Value.svelte';
 
   onDestroy(() => clearTimeout(timeout));
 
@@ -21,7 +22,7 @@
 
   const addCurrentPoint = () => {
     points = points.concat({
-      x: $serialData.hydrogenConsumption.value,
+      x: $serialData.hydrogenConsumption.raw,
       y: currentPoint,
     });
   };
@@ -78,6 +79,10 @@
         min={0}
         max={10000}
         on:change={setPoint}
+      />
+      <Value
+        value={$serialData.hydrogenConsumption.raw}
+        label={$__('current ADC readings')}
       />
       <div class="controls">
         <Button on:click={addCurrentPoint}>{$__('add point')}</Button>

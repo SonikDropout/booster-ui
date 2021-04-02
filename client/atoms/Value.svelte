@@ -9,10 +9,12 @@
 <div class="wrap" class:error>
   <div class="label">
     {@html label}
-    ,
-    <em>
-      {@html units}
-    </em>
+    {#if units}
+      ,
+      <em>
+        {@html units}
+      </em>
+    {/if}
   </div>
   <div class="value">
     <strong>{value}</strong>

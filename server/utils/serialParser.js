@@ -6,6 +6,7 @@ const {
   STATE_DATA,
 } = require('../../common/constants');
 const { clone } = require('../../common/helpers');
+const { Ka, Kb } = require('./configManager').getSettings();
 
 const dataMap = clone(SERIAL_DATA);
 
@@ -44,5 +45,8 @@ module.exports = function parse(buf) {
   dataMap.FCPower.value = +Math.abs(
     dataMap.FCCurrent.value * dataMap.FCVoltage.value
   ).toPrecision(4);
+  const hydrogenConsumption = dataMap.hydrogenConsumption.value
+  dataMap.hydrogenConsumption.raw = hydrogenConsumption;
+  dataMap.hydrogenConsumption.value = Ka * Math.exp(Kb * hydrogenConsumption);
   return dataMap;
 };
