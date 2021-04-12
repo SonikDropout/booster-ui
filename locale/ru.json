@@ -78,5 +78,11 @@
   "setting": "изменение",
   "get log": "скачать лог",
   "current ADC readings": "текущие показания АЦП",
-  "calibrate I, V, P": "калибровать I, V, P"
+  "calibrate I, V, P": "калибровать I, V, P",
+  "new version is available!": "доступна новая версия!",
+  "update now?": "обновить сейчас?",
+  "yes": "да",
+  "no": "нет",
+  "installing update... It may take a long time": "установка обновления... Это может тянуться долго...",
+  "failed to update the programm": "не удалось обновить программу"
 }
