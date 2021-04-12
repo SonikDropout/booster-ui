@@ -28,7 +28,7 @@ exports.checkUpdate = async function checkVersions() {
     });
     const remoteVersion = +remotePackageInfo.version.split('.').join('');
     const currentVersion = +version.split('.').join('');
-    return remoteVersion != currentVersion;
+    return remoteVersion > currentVersion;
   } catch (e) {
     console.error(e.message);
   }
