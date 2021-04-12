@@ -32,7 +32,7 @@
           'new version is available!'
         )}{:else if updateError}{$__(
           'failed to update the programm'
-        )}{:else}{$__('installing update... It may take a long time')}{/if}
+        )}{:else}{$__('installing update, it may take a long time')}{/if}
     </h2>
     {#if isUpdating}
       <Spinner size="lg" />
