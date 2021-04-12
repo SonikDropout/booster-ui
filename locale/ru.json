@@ -77,5 +77,6 @@
   "set value:": "задать значение:",
   "setting": "изменение",
   "get log": "скачать лог",
-  "current ADC readings": "текущие показания АЦП"
+  "current ADC readings": "текущие показания АЦП",
+  "calibrate I, V, P": "калибровать I, V, P"
 }

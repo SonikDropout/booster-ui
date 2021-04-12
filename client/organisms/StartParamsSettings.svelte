@@ -14,6 +14,7 @@
 <div class="inputs">
   {#each startParams as param}
     {#if param === 'loadMode'}
+    <div>
       <Select
         name={param}
         label={$__(SERIAL_DATA[param].label)}
@@ -21,6 +22,7 @@
         options={loadModeOptions}
         defaultValue={params[param]}
       />
+    </div>
     {:else}
       <Input
         type="number"
@@ -41,6 +43,7 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 0 1.2rem;
+    align-items: end;
   }
   h4 {
     margin: 2.4rem 0 1.2rem;

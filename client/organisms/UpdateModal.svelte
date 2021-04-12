@@ -3,6 +3,7 @@
   import Button from '../atoms/Button.svelte';
   import Spinner from '../atoms/Spinner.svelte';
   import Modal from '../molecules/Modal.svelte';
+  import { __ } from '../utils/translator';
   let showModal = false,
     isUpdating,
     updateError;
@@ -25,17 +26,20 @@
 
 {#if showModal}
   <Modal onDismiss={closeModal}>
-    <h2 class:error={updateError} >
-      {#if !isUpdating}Доступно обновление!{:else if updateError}Не удалось
-        обновить{:else}Обновление программы...{/if}
+    <h2 class:error={updateError}>
+      {#if !isUpdating}{$__(
+          'new version is available!'
+        )}{:else if updateError}{$__(
+          'failed to update the programm'
+        )}{:else}{$__('installing update... It may take a long time')}{/if}
     </h2>
     {#if isUpdating}
       <Spinner size="lg" />
     {:else if !updateError}
-      <p>Обновить сейчас?</p>
+      <p>{$__('update now?')}</p>
       <div class="buttons">
-        <Button on:click={startUpdate}>Да</Button>
-        <Button on:click={closeModal}>Нет</Button>
+        <Button on:click={startUpdate}>{$__('yes')}</Button>
+        <Button on:click={closeModal}>{$__('no')}</Button>
       </div>
     {/if}
   </Modal>

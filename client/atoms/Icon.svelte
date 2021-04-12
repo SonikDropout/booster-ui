@@ -4,7 +4,7 @@
   export let interactive;
 </script>
 
-<i class="fas fa-{icon}" class:interactive {name} on:click />
+<i class="icon icon-{icon}" class:interactive {name} on:click />
 
 <style>
   .interactive {
