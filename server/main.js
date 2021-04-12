@@ -107,7 +107,10 @@ wsServer.on('connection', (socket) => {
   socket.on('resumeExecution', executor.resume);
   socket.on('serial command', serial.sendCommand);
   socket.on('update programm', () =>
-    updater.update().catch((err) => socket.emit('update failed', err))
+    updater
+      .update()
+      .then(() => wsSockets.forEach((sock) => sock.emit('update done')))
+      .catch((err) => socket.emit('update failed', err))
   );
 });
 
