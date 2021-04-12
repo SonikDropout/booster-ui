@@ -109,7 +109,7 @@ wsServer.on('connection', (socket) => {
   socket.on('update programm', () =>
     updater
       .update()
-      .then(() => wsSockets.forEach((sock) => sock.emit('update done')))
+      .then(() => socket.emit('update done'))
       .catch((err) => socket.emit('update failed', err))
   );
 });

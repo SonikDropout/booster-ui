@@ -83,6 +83,6 @@
   "update now?": "обновить сейчас?",
   "yes": "да",
   "no": "нет",
-  "installing update... It may take a long time": "установка обновления... Это может тянуться долго...",
+  "installing update, it may take a long time": "установка обновления... Это может тянуться долго...",
   "failed to update the programm": "не удалось обновить программу"
 }
