@@ -101,7 +101,14 @@ wsServer.on('connection', (socket) => {
       })
       .catch(console.error);
   });
-  socket.on('execute', executor.start);
+  socket.on('execute', (algorithm) =>
+    executor
+      .start(algorithm)
+      .then(() => wsSockets.forEach((sock) => sock.emit('executed')))
+      .catch((err) =>
+        wsSockets.forEach((sock) => sock.emit('executionAborted', err))
+      )
+  );
   socket.on('stopExecution', executor.abort);
   socket.on('pauseExecution', executor.pause);
   socket.on('resumeExecution', executor.resume);
