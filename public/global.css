@@ -186,9 +186,6 @@ input.hidden {
 }
 
 @media (any-pointer: coarse) {
-  html {
-    cursor: none;
-  }
   input[type='number']::-webkit-outer-spin-button,
   input[type='number']::-webkit-inner-spin-button {
     -webkit-appearance: none;
