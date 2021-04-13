@@ -18,6 +18,7 @@
   "load": "нагрузка",
   "temperatures": "температуры",
   "temperature stabilization": "стабилизация температуры",
+  "stabilization temperature": "температура стабилизации",
   "load disabled": "нагрузка отключена",
   "max temperature": "максимальная температура",
   "min voltage": "минимальное напряжение",
@@ -84,5 +85,7 @@
   "yes": "да",
   "no": "нет",
   "installing update, it may take a long time": "установка обновления... Это может тянуться долго...",
-  "failed to update the programm": "не удалось обновить программу"
+  "failed to update the programm": "не удалось обновить программу",
+  "parameters": "параметры",
+  "script": "алгоритм"
 }

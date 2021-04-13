@@ -203,7 +203,7 @@ const ALGORITHM_PARAM = [
 ];
 
 const SERIAL_DATA = {
-  FCPower: { label: 'FC power', units: 'W' },
+  FCPower: { label: 'power', units: 'W' },
 };
 
 PARAMS_DATA.forEach(addParamToMap);
