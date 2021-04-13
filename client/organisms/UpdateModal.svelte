@@ -15,7 +15,7 @@
     console.error(err);
     isUpdating = false;
   });
-  wsClient.on('update done', window.location.reload);
+  wsClient.on('update done', () => window.location.reload());
   function startUpdate() {
     wsClient.emit('update programm');
     isUpdating = true;
