@@ -37,6 +37,9 @@ class Executor {
       case 'downup':
         await this.decIncValue(stepOptions);
         break;
+      case 'updown':
+        await this.incDecValue(stepOptions);
+        break;
       default:
         throw new Error('Unknow algorithm step type');
     }
@@ -52,6 +55,10 @@ class Executor {
       stepTime * 1000,
       stepsCount
     );
+  }
+  async incDecValue(stepOptions) {
+    await this.changeValue(stepOptions);
+    await this.changeValue(stepOptions, true);
   }
   async decIncValue(stepOptions) {
     await this.changeValue(stepOptions, true);
