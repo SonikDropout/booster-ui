@@ -1,4 +1,3 @@
-const { BOOST_MODES } = require('../../common/constants');
 module.exports = [
   [
     {
@@ -18,12 +17,6 @@ module.exports = [
   ],
   [
     {
-      selects: [
-        {
-          name: 'boostMode',
-          options: BOOST_MODES.map((label, value) => ({ value, label })),
-        },
-      ],
       inputs: [
         'maxTemp',
         'minPressure',

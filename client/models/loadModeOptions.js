@@ -10,9 +10,4 @@ module.exports = [
     name: 'current',
     label: 'current',
   },
-  {
-    value: 3,
-    name: 'power',
-    label: 'power',
-  },
 ];
