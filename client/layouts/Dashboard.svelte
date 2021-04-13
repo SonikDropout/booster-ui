@@ -23,7 +23,8 @@
     'timeStep',
   ];
 
-  let selectedLoadMode = loadModeOptions[initialData.loadMode.value];
+  let selectedLoadMode =
+    loadModeOptions[initialData.loadMode.value] || loadModeOptions[0];
 
   function sendCommand(value, name) {
     wsClient.emit('serial command', ...COMMANDS[name](+value));
@@ -32,9 +33,6 @@
   function selectLoadMode(mode) {
     selectedLoadMode = loadModeOptions[mode];
     wsClient.emit('serial command', ...COMMANDS.loadMode(+mode));
-  }
-  function getLog() {
-    window.location.assign('./log');
   }
 </script>
 
