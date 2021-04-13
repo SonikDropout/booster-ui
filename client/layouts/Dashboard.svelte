@@ -85,6 +85,7 @@
               range={CONSTRAINTS[name]}
               currentValue={$serialData[name].value}
               label={$__(initialData[name].label)}
+              units={$__(initialData[name].units, true)}
               {name}
               onChange={sendCommand}
             />

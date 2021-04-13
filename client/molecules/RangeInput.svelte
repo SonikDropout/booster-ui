@@ -8,6 +8,7 @@
   export let style;
   export let step = 1;
   export let label;
+  export let units;
   export let currentValue = range[0];
   export let errorMessage = '';
 
@@ -55,7 +56,7 @@
 <label {style}>
   {#if label}
     <span class="label">
-      {label}
+      {label + (units ? ', ' + units : '')}
       {#if errorMessage}
         <span class="error">{errorMessage}</span>
       {/if}
