@@ -17,11 +17,16 @@
     isRejected = true;
     notification.set({
       type: 'error',
-      message: 'automatic operation interrupted'
-    })
+      message: 'automatic operation interrupted',
+    });
   });
   wsClient.on('executed', () => {
     isExecuting = false;
+    notification.set({
+      message: 'script executed!',
+      type: 'info',
+      timeout: 3000,
+    });
   });
 
   function toggleExecution() {
