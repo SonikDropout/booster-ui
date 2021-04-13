@@ -23,8 +23,8 @@
     'timeStep',
   ];
 
-  let selectedLoadMode =
-    loadModeOptions[initialData.loadMode.value] || loadModeOptions[0];
+  $: selectedLoadMode =
+    loadModeOptions[$serialData.loadMode.value] || loadModeOptions[0];
 
   function sendCommand(value, name) {
     wsClient.emit('serial command', ...COMMANDS[name](+value));
@@ -44,8 +44,8 @@
         <Select
           onChange={selectLoadMode}
           name="loadMode"
-          defaultValue={initialData.loadMode.value}
-          label={$__(initialData.loadMode.label)}
+          defaultValue={$serialData.loadMode.value}
+          label={$__($serialData.loadMode.label)}
           options={loadModeOptions}
         />
         {#if selectedLoadMode.value}
