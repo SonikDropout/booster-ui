@@ -89,7 +89,7 @@ function getLogRow(boosterState) {
   row.pop();
   row.pop();
   row.push(boosterState.isBlow.value ? 'P' : '-');
-  row.push(boosterState.isShortCircuit.value ? 'KZ' : '-');
+  row.push(boosterState.isShortCircuit.value ? 'SC' : '-');
   return row.concat('\n').join('\t');
 }
 
@@ -97,8 +97,8 @@ function generateLogHeader(boosterState, expNumber) {
   return `
 Start
 ${BOOST_MODES[boosterState.boostMode.value]}
-Block nomer ${blockId}
-Otsechka: ${boosterState.minPressure.value}bar, ${
+Block number ${blockId}
+Constraints: ${boosterState.minPressure.value}bar, ${
     boosterState.minVoltage.value
   }V, ${boosterState.maxTemp.value}C
   `;
@@ -107,6 +107,7 @@ Otsechka: ${boosterState.minPressure.value}bar, ${
 function stop(boosterState) {
   writeInterruptMessage(boosterState);
   log.end();
+  log = void 0;
 }
 
 function writeInterruptMessage(boosterState) {
@@ -125,15 +126,27 @@ function writeLogData(row) {
   }
 }
 
+function rename(newName) {
+  log.end();
+  const newPath = path.join(path.dirname(logPath), newName + logPath.slice(-25));
+  fs.promises.rename(logPath, newPath).then(() => {
+    log = fs.createWriteStream(newPath);
+  });
+}
+
 module.exports = {
   init,
   start,
   writeRow,
   stop,
+  rename,
   get logName() {
     return logName;
   },
   get logPath() {
     return logPath;
+  },
+  get isLogging() {
+    return !!log;
   },
 };

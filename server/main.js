@@ -144,16 +144,19 @@ app.post('/config/:file', (req, res) => {
   const configFile = req.params.file;
   switch (configFile) {
     case 'settings':
-      configManager.updateSettings(req.body);
-      res.end('OK');
+      if (
+        req.body.logName &&
+        req.body.logName !== configManager.getSettings().logName &&
+        logger.isLogging
+      )
+        logger.rename(req.body.logName);
+      configManager.updateSettings(req.body).then(() => res.end('OK'));
       break;
     case 'initialize':
-      configManager.updateStartParams(req.body);
-      res.end('OK');
+      configManager.updateStartParams(req.body).then(() => res.end('OK'));
       break;
     case 'algorithm':
-      configManager.updateAlgorithm(req.body);
-      res.end('OK');
+      configManager.updateAlgorithm(req.body).then(() => res.end('OK'));
       break;
     default:
       res.statusCode = 404;
