@@ -1,9 +1,17 @@
 <script>
-  export let value;
-  export let name;
-  export let type;
-  export let step;
+  import Button from '../atoms/Button.svelte';
+
+  export let name = '';
+  export let type = '';
+  export let step = 1;
   export let range = [0, 100];
+  export let value = range[0];
+  $: min = range[0];
+  $: max = range[1];
+  $: if (!range) range = [0, 100];
+  function normalizeValue() {
+    value = Math.max(min, Math.min(value, max));
+  }
 </script>
 
 <td>
@@ -11,10 +19,11 @@
     <input
       type="number"
       bind:value
+      on:blur={normalizeValue}
       {name}
       {step}
-      min={range[0]}
-      max={range[1]}
+      {min}
+      {max}
     />
   {:else if type === 'text'}
     <input type="text" bind:value {name} />

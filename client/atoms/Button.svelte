@@ -1,11 +1,11 @@
 <script>
   export let className = '';
-  export let disabled;
-  export let style;
-  export let name;
+  export let disabled = false;
+  export let style = '';
+  export let name = '';
   export let size = '';
-  export let type;
-  export let title;
+  export let type = '';
+  export let title = '';
 </script>
 
 <button

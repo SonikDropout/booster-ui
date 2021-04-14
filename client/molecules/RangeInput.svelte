@@ -2,13 +2,13 @@
   import { __ } from '../utils/translator';
   import Modal from './Modal.svelte';
   export let range = [0, 100];
-  export let disabled;
-  export let onChange;
-  export let name;
-  export let style;
+  export let disabled = false;
+  export let onChange = Function.prototype;
+  export let name = '';
+  export let style = '';
   export let step = 1;
-  export let label;
-  export let units;
+  export let label = '';
+  export let units = '';
   export let currentValue = range[0];
   export let errorMessage = '';
 

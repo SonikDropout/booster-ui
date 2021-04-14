@@ -1,7 +1,7 @@
 <script>
-  export let icon;
-  export let name;
-  export let interactive;
+  export let icon = '';
+  export let name = '';
+  export let interactive = false;
 </script>
 
 <i class="icon icon-{icon}" class:interactive {name} on:click />
