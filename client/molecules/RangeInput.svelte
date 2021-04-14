@@ -19,7 +19,8 @@
   let showInputModal;
 
   function handleChange(e) {
-    const { name, value } = e.target;
+    let { name, value } = e.target;
+    value = Math.max(min, Math.min(+value, max));
     onChange(value, name);
     showInputModal = false;
   }
