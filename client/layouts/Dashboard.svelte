@@ -79,7 +79,7 @@
         {#if block.inputs}
           {#each block.inputs as name}
             <RangeInput
-              disabeld={$serialData.start.value &&
+              disabled={$serialData.start.value &&
                 disabledOnStart.includes(name)}
               step={STEPS[name]}
               range={CONSTRAINTS[name]}
