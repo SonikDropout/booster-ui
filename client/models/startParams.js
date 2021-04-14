@@ -5,6 +5,7 @@ const removedEntries = [
   'shortCircuitDuration',
   'shortCircuitDelay',
   'boostMode',
+  'stabilizationTemp',
 ];
 
 module.exports = Object.keys(COMMANDS).filter(
