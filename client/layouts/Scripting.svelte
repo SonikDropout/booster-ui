@@ -1,10 +1,15 @@
 <script>
-  import { ALGORITHM_PARAM, ALGORITHM_DIRECTIONS, CONSTRAINTS, STEPS } from '../../common/constants';
+  import {
+    ALGORITHM_PARAM,
+    ALGORITHM_DIRECTIONS,
+    CONSTRAINTS,
+    STEPS,
+  } from '../../common/constants';
   import Button from '../atoms/Button.svelte';
   import Icon from '../atoms/Icon.svelte';
   import { __ } from '../utils/translator';
   import { algorithm } from '../stores';
-  import SelectCell from '../molecules/SelectCell.svelte';
+  import Select from '../molecules/Select.svelte';
   import InputCell from '../molecules/InputCell.svelte';
   import ScriptExecutionControls from '../organisms/ScriptExecutionControls.svelte';
   let algorithmChanged;
@@ -49,7 +54,9 @@
   function saveChanges() {
     algorithm.set(algorithmCopy);
   }
-  function reassignAlgorithm() {
+  function updateAlgorithm(value, name) {
+    const [param, i] = name.split('-');
+    algorithmCopy[i][param] = value;
     algorithmCopy = algorithmCopy;
   }
   let isEditorBlocked;
@@ -82,23 +89,31 @@
       </thead>
       {#each algorithmCopy as step, i}
         <tr>
-          <SelectCell
-            on:blur={reassignAlgorithm}
-            bind:value={step.param}
-            options={ALGORITHM_PARAM}
-          />
-          <SelectCell
-            on:blur={reassignAlgorithm}
-            options={ALGORITHM_DIRECTIONS}
-            bind:value={step.direction}
-          />
+          <td>
+            <Select
+              onChange={updateAlgorithm}
+              name={`param-${i}`}
+              defaultValue={step.param}
+              options={ALGORITHM_PARAM}
+              standalone={false}
+            />
+          </td>
+          <td>
+            <Select
+              standalone={false}
+              onChange={updateAlgorithm}
+              name={`direction-${i}`}
+              options={ALGORITHM_DIRECTIONS}
+              defaultValue={step.direction}
+            />
+          </td>
           <InputCell
-            on:change={reassignAlgorithm}
+            on:change={updateAlgorithm}
             type="number"
             bind:value={step.min}
             name="min"
-              range={CONSTRAINTS[step.param]}
-              step={STEPS[step.param]}
+            range={CONSTRAINTS[step.param]}
+            step={STEPS[step.param]}
           />
           {#if step.direction === 'hold'}
             <td class="spacer" />
@@ -106,7 +121,7 @@
             <td class="spacer" />
           {:else}
             <InputCell
-              on:change={reassignAlgorithm}
+              on:change={updateAlgorithm}
               type="number"
               bind:value={step.max}
               name="max"
@@ -114,13 +129,13 @@
               step={STEPS[step.param]}
             />
             <InputCell
-              on:change={reassignAlgorithm}
+              on:change={updateAlgorithm}
               type="number"
               bind:value={step.loop}
               name="loop"
             />
             <InputCell
-              on:change={reassignAlgorithm}
+              on:change={updateAlgorithm}
               type="number"
               bind:value={step.step}
               name="step"
@@ -129,9 +144,10 @@
             />
           {/if}
           <InputCell
-            on:change={reassignAlgorithm}
+            on:change={updateAlgorithm}
             type="number"
             bind:value={step.stepTime}
+            range={[0, Number.MAX_SAFE_INTEGER]}
             name="stepTime"
           />
           <td>

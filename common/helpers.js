@@ -1,5 +1,13 @@
 exports.clone = (obj) => JSON.parse(JSON.stringify(obj));
 
+exports.debounce = (fn, ms) => {
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(fn, ms, ...args);
+  };
+};
+
 exports.mergeRename = (objects, names) => {
   const result = {};
   for (let i = 0; i < objects.length; i++) {
