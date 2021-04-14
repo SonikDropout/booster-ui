@@ -1,5 +1,4 @@
 <script>
-  import RangeInput from '../molecules/RangeInput.svelte';
   import Input from '../molecules/GenericInput.svelte';
   export let params;
   import { CONSTRAINTS, SERIAL_DATA, STEPS } from '../../common/constants';
