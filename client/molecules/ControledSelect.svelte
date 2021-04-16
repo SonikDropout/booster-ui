@@ -1,12 +1,19 @@
 <script>
   import { __ } from '../utils/translator';
+  import { debounce } from '../../common/helpers';
   export let options = [];
+  export let defaultValue = '';
   export let name = '';
   export let label = '';
   export let standalone = true;
   export let onChange = Function.prototype;
-  let value = '';
-  export { value as defaultValue };
+  let value = defaultValue;
+  const debouncedValueReset = debounce(() => {
+    if (value != defaultValue) value = defaultValue;
+  }, 500);
+  $: if (value != defaultValue) {
+    value = defaultValue;
+  }
 </script>
 
 {#if label}
@@ -15,7 +22,7 @@
 <select
   bind:value
   {name}
-  on:change={(e) => onChange(value, name)}
+  on:blur={() => onChange(value, name)}
   class:standalone
 >
   {#each options as { value, label, icon }}

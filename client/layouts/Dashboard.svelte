@@ -2,7 +2,7 @@
   import blocks from '../models/paramsLayout';
   import { COMMANDS, STEPS, CONSTRAINTS } from '../../common/constants';
   import { serialData, logExists } from '../stores';
-  import Select from '../molecules/Select.svelte';
+  import Select from '../molecules/ControledSelect.svelte';
   import Value from '../atoms/Value.svelte';
   import RangeInput from '../molecules/RangeInput.svelte';
   import wsClient from '../utils/wsClient';
