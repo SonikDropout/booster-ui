@@ -10,7 +10,7 @@
   import { __ } from '../utils/translator';
   import { algorithm } from '../stores';
   import Select from '../molecules/Select.svelte';
-  import InputCell from '../molecules/InputCell.svelte';
+  import Input from '../molecules/GenericInput.svelte';
   import ScriptExecutionControls from '../organisms/ScriptExecutionControls.svelte';
   let algorithmChanged;
 
@@ -107,49 +107,59 @@
               defaultValue={step.direction}
             />
           </td>
-          <InputCell
-            on:change={updateAlgorithm}
-            type="number"
-            bind:value={step.min}
-            name="min"
-            range={CONSTRAINTS[step.param]}
-            step={STEPS[step.param]}
-          />
+          <td
+            ><Input
+              onChange={updateAlgorithm}
+              type="number"
+              bind:value={step.min}
+              name={`min-${i}`}
+              range={CONSTRAINTS[step.param]}
+              step={STEPS[step.param]}
+            /></td
+          >
           {#if step.direction === 'hold'}
             <td class="spacer" />
             <td class="spacer" />
             <td class="spacer" />
           {:else}
-            <InputCell
-              on:change={updateAlgorithm}
-              type="number"
-              bind:value={step.max}
-              name="max"
-              range={CONSTRAINTS[step.param]}
-              step={STEPS[step.param]}
-            />
-            <InputCell
-              on:change={updateAlgorithm}
-              type="number"
-              bind:value={step.loop}
-              name="loop"
-            />
-            <InputCell
-              on:change={updateAlgorithm}
-              type="number"
-              bind:value={step.step}
-              name="step"
-              range={CONSTRAINTS[step.param]}
-              step={STEPS[step.param]}
-            />
+            <td>
+              <Input
+                onChange={updateAlgorithm}
+                type="number"
+                bind:value={step.max}
+                name={`max-${i}`}
+                range={CONSTRAINTS[step.param]}
+                step={STEPS[step.param]}
+              /></td
+            >
+            <td>
+              <Input
+                onChange={updateAlgorithm}
+                type="number"
+                bind:value={step.loop}
+                name={`loop-${i}`}
+              /></td
+            >
+            <td>
+              <Input
+                onChange={updateAlgorithm}
+                type="number"
+                bind:value={step.step}
+                name={`step-${i}`}
+                range={CONSTRAINTS[step.param]}
+                step={STEPS[step.param]}
+              /></td
+            >
           {/if}
-          <InputCell
-            on:change={updateAlgorithm}
-            type="number"
-            bind:value={step.stepTime}
-            range={[0, Number.MAX_SAFE_INTEGER]}
-            name="stepTime"
-          />
+          <td>
+            <Input
+              onChange={updateAlgorithm}
+              type="number"
+              bind:value={step.stepTime}
+              range={[0, Number.MAX_SAFE_INTEGER]}
+              name={`stepTime-${i}`}
+            />
+          </td>
           <td>
             <Icon interactive icon="trash" on:click={deleteStep(i)} />
           </td>

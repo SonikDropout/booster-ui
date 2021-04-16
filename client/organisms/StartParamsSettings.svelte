@@ -13,24 +13,24 @@
 <div class="inputs">
   {#each startParams as param}
     {#if param === 'loadMode'}
-    <div>
-      <Select
-        name={param}
-        label={$__(SERIAL_DATA[param].label)}
-        {onChange}
-        options={loadModeOptions}
-        defaultValue={params[param]}
-      />
-    </div>
+      <div>
+        <Select
+          name={param}
+          label={$__(SERIAL_DATA[param].label)}
+          {onChange}
+          options={loadModeOptions}
+          defaultValue={params[param]}
+        />
+      </div>
     {:else}
       <Input
         type="number"
+        short={true}
         label={$__(SERIAL_DATA[param].label)}
-        min={CONSTRAINTS[param] && CONSTRAINTS[param][0]}
-        max={CONSTRAINTS[param] && CONSTRAINTS[param][1]}
+        range={CONSTRAINTS[param] && CONSTRAINTS[param]}
         step={STEPS[param]}
         name={param}
-        on:change = {e => onChange(e.target.value, e.target.name)}
+        {onChange}
         value={params[param]}
       />
     {/if}
