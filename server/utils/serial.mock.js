@@ -39,12 +39,16 @@ function sendData() {
 function generateData() {
   for (const key of ['FCVoltage', 'FCCurrent', 'FCPower'])
     dataMap[key].value = +(Math.random() * 100).toFixed(3);
+  dataMap.loadMode.value = Math.round(Math.random());
   return dataMap;
 }
 
 emitter.sendCommand = (...cmd) => {
-  console.info('Sending command to serial:', cmd);
-  emitter.emit('command sent')
+  buf = Buffer.alloc(3);
+  buf[0] = cmd[0];
+  buf.writeInt16BE(cmd[1], 1);
+  console.log('Sending command to serial:', buf);
+  emitter.emit('command sent');
 };
 
 emitter.close = () => {
@@ -65,4 +69,4 @@ emitter.convertToBytes = function convertToBytes(data) {
     buffer.writeUInt8(data[STATE_DATA[j].name].value, i + j);
   }
   return buffer;
-}
+};
