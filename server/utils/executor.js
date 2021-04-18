@@ -64,10 +64,10 @@ class Executor {
     await this.changeValue(stepOptions, true);
     await this.changeValue(stepOptions);
   }
-  async holdValue({ param, value, time }) {
+  async holdValue({ param, min, stepTime }) {
     await this._executeInerval(
-      () => this.callback(param, value),
-      time * 1000,
+      () => this.callback(param, min),
+      stepTime * 1000,
       1
     );
   }
