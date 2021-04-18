@@ -237,7 +237,7 @@ const ALGORITHM_DIRECTIONS = [
   { label: '', value: 'hold', icon: '&#xe804;' },
 ];
 
-const LOAD_MODES = ['none', 'voltage', 'current', 'power'];
+const LOAD_MODES = ['none', 'voltage', 'current'];
 
 module.exports = {
   COMMANDS,
