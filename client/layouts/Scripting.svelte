@@ -12,6 +12,7 @@
   import Select from '../molecules/Select.svelte';
   import Input from '../molecules/GenericInput.svelte';
   import ScriptExecutionControls from '../organisms/ScriptExecutionControls.svelte';
+  import { decimalAdjust } from '../../common/helpers';
   let algorithmChanged;
 
   let algorithmCopy = $algorithm;
@@ -21,11 +22,10 @@
   $: algorithmChanged = JSON.stringify(algorithmCopy) !== initialAlgorithm;
 
   function isValid(script) {
-    if (algorithmCopy.length < 1) return false;
-    let valid = true;
+    if (script.length < 1) return false;
     for (let step of script) {
       if (step.direction === 'hold') {
-        if (!areAllDefined(step, ['param', 'min', 'stepTime'])) valid = false;
+        if (!areAllDefined(step, ['param', 'min', 'stepTime'])) return false;
       } else if (
         !areAllDefined(step, [
           'param',
@@ -34,11 +34,12 @@
           'loop',
           'step',
           'stepTime',
-        ])
+        ]) ||
+        step.max <= step.min
       )
-        valid = false;
+        return false;
     }
-    return valid;
+    return true;
   }
 
   function areAllDefined(obj, keys) {
@@ -49,7 +50,11 @@
   }
 
   function addStep() {
-    algorithmCopy = algorithmCopy.concat({});
+    algorithmCopy = algorithmCopy.concat({
+      param: ALGORITHM_PARAM[0].value,
+      direction: ALGORITHM_DIRECTIONS[0].value,
+    });
+    console.log(algorithmCopy);
   }
   function saveChanges() {
     algorithm.set(algorithmCopy);
@@ -138,6 +143,7 @@
                 type="number"
                 bind:value={step.loop}
                 name={`loop-${i}`}
+                range={[1, 100]}
               /></td
             >
             <td>
@@ -146,7 +152,10 @@
                 type="number"
                 bind:value={step.step}
                 name={`step-${i}`}
-                range={CONSTRAINTS[step.param]}
+                range={[
+                  STEPS[step.param],
+                  decimalAdjust('round', step.max - step.min, -1),
+                ]}
                 step={STEPS[step.param]}
               /></td
             >
@@ -156,7 +165,7 @@
               onChange={updateAlgorithm}
               type="number"
               bind:value={step.stepTime}
-              range={[0, Number.MAX_SAFE_INTEGER]}
+              range={[1, Number.MAX_SAFE_INTEGER]}
               name={`stepTime-${i}`}
             />
           </td>
