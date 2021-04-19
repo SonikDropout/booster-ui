@@ -41,13 +41,13 @@ serial
 // executor initialization
 
 let currentMode;
+serial.on('data', (d) => (currentMode = d.loadMode.value));
 const algorithm = require(`${CONFIG_PATH}/algorithm.json`);
 const executor = new Executor((param, value) => {
   if (LOAD_MODES.includes(param)) {
     let newMode = LOAD_MODES.indexOf(param);
     if (currentMode !== newMode) {
-      currentMode = newMode;
-      serial.sendCommand(...COMMANDS.loadMode(currentMode));
+       serial.sendCommand(...COMMANDS.loadMode(currentMode));
     }
     serial.sendCommand(...COMMANDS.load(value));
   } else {
