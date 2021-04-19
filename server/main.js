@@ -47,7 +47,7 @@ const executor = new Executor((param, value) => {
   if (LOAD_MODES.includes(param)) {
     let newMode = LOAD_MODES.indexOf(param);
     if (currentMode !== newMode) {
-       serial.sendCommand(...COMMANDS.loadMode(currentMode));
+       serial.sendCommand(...COMMANDS.loadMode(newMode));
     }
     serial.sendCommand(...COMMANDS.load(value));
   } else {
