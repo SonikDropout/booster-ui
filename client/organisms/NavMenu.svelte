@@ -3,13 +3,18 @@
   import navItems from '../models/navMenu';
   let active = navItems[0].href;
   function activate(e) {
-    active = new URL(e.currentTarget.href).hash;
+    document.getElementById(e.currentTarget.dataset.target.slice(1)).scrollIntoView();
+    active = e.currentTarget.dataset.target;
   }
 </script>
 
 <nav>
   {#each navItems as { label, icon, href }, i}
-    <a {href} class:active={href === active} on:click={activate}
+    <a
+      href="javascript:void(0)"
+      data-target={href}
+      class:active={href === active}
+      on:click={activate}
       ><i class={icon} /><span class="mobile-hidden">{$__(label)}</span></a
     >
   {/each}
