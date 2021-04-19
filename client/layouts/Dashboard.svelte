@@ -53,7 +53,7 @@
             name="load"
             currentValue={$serialData.load.value}
             step={STEPS[selectedLoadMode.name]}
-            label={$__(selectedLoadMode.label)}
+            label={$__(selectedLoadMode.label) + ', ' + $__(selectedLoadMode.units)}
             range={CONSTRAINTS[selectedLoadMode.name]}
             onChange={sendCommand}
           />
@@ -110,7 +110,7 @@
       {/each}
       {#if idx == 0}
         <ElapsedTimer />
-        <a href={$logExists ? './log' : void 0}>{$__('get log')}</a>
+        <a target="blank" href={$logExists ? './log' : void 0}>{$__('get log')}</a>
       {/if}
     </div>
   {/each}

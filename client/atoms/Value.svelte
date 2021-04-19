@@ -34,7 +34,7 @@
     margin-bottom: 1.6rem;
   }
   .value {
-    min-width: 10rem;
+    min-width: 7rem;
     margin-left: auto;
   }
   .error {
