@@ -15,7 +15,7 @@
     console.error(err);
     isUpdating = false;
   });
-  wsClient.on('update done', () => window.location.reload());
+  wsClient.on('update done', () => window.location.assign('/'));
   function startUpdate() {
     wsClient.emit('update programm');
     isUpdating = true;
@@ -26,7 +26,7 @@
 </script>
 
 {#if showModal}
-  <Modal onDismiss={closeModal}>
+  <Modal onDismiss={closeModal} locked={isUpdating}>
     <h2 class:error={updateError}>
       {#if !isUpdating}{$__(
           'new version is available!'
@@ -35,7 +35,9 @@
         )}{:else}{$__('installing update, it may take a long time')}{/if}
     </h2>
     {#if isUpdating}
-      <Spinner size="lg" />
+      <div class="spinner">
+        <Spinner size="lg" />
+      </div>
     {:else if !updateError}
       <p>{$__('update now?')}</p>
       <div class="buttons">
@@ -53,5 +55,11 @@
   .buttons {
     text-align: right;
     margin-top: auto;
+  }
+  .spinner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1.2rem;
   }
 </style>

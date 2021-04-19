@@ -4,19 +4,24 @@
   import { onDestroy } from 'svelte';
   export let size = 'md';
   export let position = 'center';
-  export let onDismiss;
+  export let onDismiss = Function.prototype;
+  export let locked = false;
 
   document.addEventListener('keydown', closeOnEsc);
 
   function closeOnEsc(e) {
-    if (e.key === 'Escape') onDismiss();
+    if (e.key === 'Escape' && !locked) onDismiss();
   }
 
   onDestroy(() => document.removeEventListener('keydown', closeOnEsc));
+
+  function dismissSelf() {
+    if (!locked) onDismiss();
+  }
 </script>
 
 <Portal>
-  <div class="overlay" on:click|self={onDismiss}>
+  <div class="overlay" on:click|self={dismissSelf}>
     <div class="modal {size} {position}" transition:fly={{ y: -200 }}>
       <slot />
     </div>
