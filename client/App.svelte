@@ -6,7 +6,6 @@
   import { appInitialized } from './stores';
   import Settings from './layouts/Settings.svelte';
   import NavMenu from './organisms/NavMenu.svelte';
-  import Scripting from './layouts/Scripting.svelte';
   import Notification from './organisms/Notification.svelte';
   import UpdateModal from './organisms/UpdateModal.svelte';
 
@@ -25,6 +24,5 @@
   <Charts />
   <Settings />
   <NavMenu />
-  <Scripting />
   <Notification />
 {/if}
