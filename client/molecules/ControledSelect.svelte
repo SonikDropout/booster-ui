@@ -22,7 +22,7 @@
 <select
   bind:value
   {name}
-  on:blur={() => onChange(value, name)}
+  on:change={() => onChange(value, name)}
   class:standalone
 >
   {#each options as { value, label, icon }}
