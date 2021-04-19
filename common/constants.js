@@ -195,6 +195,7 @@ const LOGGED_VALUES = [
 ];
 
 const ALGORITHM_PARAM = [
+  { value: 'none', label: 'load disabled' },
   { value: 'current', label: 'current' },
   { value: 'voltage', label: 'voltage' },
   { value: 'blowDuration', label: 'purge duration' },
@@ -254,5 +255,5 @@ module.exports = {
   BOOST_MODES,
   ALGORITHM_PARAM,
   ALGORITHM_DIRECTIONS,
-  LOAD_MODES
+  LOAD_MODES,
 };
