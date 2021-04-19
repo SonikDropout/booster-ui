@@ -37,7 +37,7 @@ exports.checkUpdate = async function checkVersions() {
 exports.update = function update() {
   return new Promise((resolve, reject) => {
     exec(
-      `git pull && npm run build && reboot`,
+      `git pull && npm run build && sudo systemctl restart booster.service`,
       {
         cwd,
       },
