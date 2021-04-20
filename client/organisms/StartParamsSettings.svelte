@@ -25,7 +25,6 @@
     {:else}
       <Input
         type="number"
-        short={true}
         label={$__(SERIAL_DATA[param].label) +
           ', ' +
           $__(SERIAL_DATA[param].units || 'value', true)}

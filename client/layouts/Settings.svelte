@@ -12,12 +12,12 @@
   const settingsCopy = $settings;
   const startParamsCopy = $initialize;
 
-  function changeBlockId(e) {
-    settingsCopy.id = +e.target.value || 0;
+  function changeBlockId(id) {
+    settingsCopy.id = id;
   }
 
-  function setLogName(e) {
-    settingsCopy.logName = e.target.value;
+  function setLogName(newName) {
+    settingsCopy.logName = newName;
   }
 
   function updateSettings() {
@@ -25,7 +25,7 @@
     initialize.set(startParamsCopy);
   }
   function changeStartParam(value, name) {
-    startParamsCopy[name] = +value;
+    if (!isNaN(value)) startParamsCopy[name] = value;
   }
   function sendCalibrationSignal() {
     wsClient.emit('serial command', ...COMMANDS.startCalibration());
@@ -40,13 +40,13 @@
   <Input
     type="number"
     label={$__('block id')}
-    on:change={changeBlockId}
+    onChange={changeBlockId}
     value={settingsCopy.id}
     name="blockId"
   />
   <Input
     label={$__('log name')}
-    on:change={setLogName}
+    onChange={setLogName}
     value={settingsCopy.logName}
     name="logName"
   />

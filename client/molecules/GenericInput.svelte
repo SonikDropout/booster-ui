@@ -5,7 +5,7 @@
   export let label = '';
   export let step = 1;
   export let range = [0, 100];
-  export let value = range[0];
+  export let value = '';
   export let onChange = Function.prototype;
   const id = uuid();
   $: min = range[0];
@@ -34,7 +34,13 @@
       {max}
     />
   {:else}
-    <input {id} bind:value {name} class:labeled={!!label} />
+    <input
+      {id}
+      bind:value
+      on:change={() => onChange(value, name)}
+      {name}
+      class:labeled={!!label}
+    />
   {/if}
 </label>
 
