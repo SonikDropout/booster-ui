@@ -128,9 +128,14 @@ function writeLogData(row) {
 
 function rename(newName) {
   log.end();
-  const newPath = path.join(path.dirname(logPath), newName + logPath.slice(-25));
+  const newPath = path.join(
+    path.dirname(logPath),
+    newName + logPath.slice(-25)
+  );
   fs.promises.rename(logPath, newPath).then(() => {
     log = fs.createWriteStream(newPath);
+    logPath = newPath;
+    logName = newName;
   });
 }
 
