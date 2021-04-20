@@ -6,19 +6,23 @@
   import { __ } from '../utils/translator';
   let showModal = false,
     isUpdating,
+    windowMessage = 'new version is available!',
     updateError;
 
   wsClient.emit('check update');
   wsClient.on('update available', () => (showModal = true));
   wsClient.on('update failed', (err) => {
     updateError = true;
+    windowMessage = 'failed to update the programm';
     console.error(err);
     isUpdating = false;
   });
-  wsClient.on('update done', () => window.location.assign('/'));
+  wsClient.on('update done', () => (window.location.reload()));
+
   function startUpdate() {
     wsClient.emit('update programm');
     isUpdating = true;
+    windowMessage = 'installing update, it may take a long time'
   }
   function closeModal() {
     showModal = false;
@@ -28,11 +32,7 @@
 {#if showModal}
   <Modal onDismiss={closeModal} locked={isUpdating}>
     <h2 class:error={updateError}>
-      {#if !isUpdating}{$__(
-          'new version is available!'
-        )}{:else if updateError}{$__(
-          'failed to update the programm'
-        )}{:else}{$__('installing update, it may take a long time')}{/if}
+        {$__(windowMessage)}
     </h2>
     {#if isUpdating}
       <div class="spinner">
