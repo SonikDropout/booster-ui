@@ -101,7 +101,7 @@
                 ? $serialData[val.minCompare].value >
                   $serialData[val.name].value
                 : false}
-              units={$__(initialData[val.name].units)}
+              units={$__(initialData[val.name].units, true)}
               value={$serialData[val.name].value}
               label={$__(initialData[val.name].label)}
             />
