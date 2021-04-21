@@ -57,7 +57,7 @@ function start(boosterState, expNumber) {
       if (err) {
         reject(err);
       } else {
-        logName = `${getSettings().logName || ''}_${getFormatedDate(
+        logName = `${getSettings().logName || 'log'}_${getFormatedDate(
           'YYYY-MM-DD--HH-mm-ss'
         )}.tsv`;
         logPath = path.join(logDir, logName);
