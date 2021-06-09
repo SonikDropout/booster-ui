@@ -8,6 +8,7 @@
   import NavMenu from './organisms/NavMenu.svelte';
   import Notification from './organisms/Notification.svelte';
   import UpdateModal from './organisms/UpdateModal.svelte';
+  import Scripts from './layouts/Scripting.svelte';
 
   appInitialized.subscribe((flag) => {
     if (flag) {
@@ -25,4 +26,5 @@
   <Settings />
   <NavMenu />
   <Notification />
+  <Scripts />
 {/if}

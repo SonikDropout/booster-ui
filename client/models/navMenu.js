@@ -14,9 +14,9 @@ module.exports = [
     icon: 'icon-cog',
     href: '#settings',
   },
-  // {
-  //   label: 'script',
-  //   icon: 'icon-cog-play',
-  //   href: '#script',
-  // },
+  {
+    label: 'script',
+    icon: 'icon-cog-play',
+    href: '#script',
+  },
 ];
